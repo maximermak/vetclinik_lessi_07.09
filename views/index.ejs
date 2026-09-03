@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><%= clinic.name %> — ветеринарна клініка та грумінг-салон у <%= clinic.city %>і</title>
-<meta name="description" content="Ветклініка Pussy Cat: вакцинація, хірургія, стоматологія, дерматологія, УЗД та грумінг-салон. Досвідчені лікарі, сотні відгуків у Google. Запис онлайн.">
+<title><%= clinic.name %> — ветеринарна клініка та грумінг-салон у <%= clinic.cityIn %></title>
+<meta name="description" content="Ветклініка Pussy Cat у Харкові, вул. Олександра Олеся, 21: вакцинація, хірургія, стоматологія, дерматологія, лабораторна діагностика та грумінг-салон. Запис онлайн.">
 <meta property="og:title" content="<%= clinic.name %> — ветеринарна клініка та грумінг-салон">
 <meta property="og:description" content="Лікуємо, доглядаємо і любимо ваших улюбленців. Запис онлайн за хвилину.">
 <meta property="og:type" content="website">
@@ -13,6 +13,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css">
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'VeterinaryCare',
+  name: clinic.name,
+  description: clinic.tagline + ' у ' + clinic.cityIn,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: clinic.address,
+    addressLocality: clinic.city,
+    postalCode: '61000',
+    addressCountry: 'UA'
+  },
+  telephone: clinic.phones.map(function (p) { return p.raw; }),
+  openingHoursSpecification: clinic.schedule.map(function (s) {
+    return { '@type': 'OpeningHoursSpecification', dayOfWeek: s.dayOfWeek, opens: s.opens, closes: s.closes };
+  }),
+  sameAs: [clinic.googleReviewsUrl],
+  availableService: services.map(function (s) { return { '@type': 'MedicalProcedure', name: s.title }; })
+}) %>
+</script>
 </head>
 <body>
 <%- include('partials/icons') %>
@@ -24,7 +45,7 @@
     <div class="hero__paws" aria-hidden="true"></div>
     <div class="container hero__in">
       <div class="hero__text reveal">
-        <span class="eyebrow"><svg class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка та грумінг у <%= clinic.city %>і</span>
+        <span class="eyebrow"><svg class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка та грумінг у <%= clinic.cityIn %></span>
         <h1>Турбота про тих,<br>хто вас <span class="hl">безумовно любить</span></h1>
         <p class="hero__lead">
           Повний спектр ветеринарних послуг і грумінг-салон під одним дахом.
@@ -32,7 +53,7 @@
         </p>
 
         <div class="hero__cta">
-          <a class="btn btn--primary" href="#booking">Записатись на прийом</a>
+          <a class="btn btn--primary" href="#booking" data-modal-open>Записатись на прийом</a>
           <a class="btn btn--ghost" href="tel:<%= clinic.phones[0].raw %>">
             <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
             Зателефонувати
@@ -101,7 +122,7 @@
             <span class="card__icon"><svg class="icon" aria-hidden="true"><use href="#i-<%= s.icon %>"/></svg></span>
             <h3><%= s.title %></h3>
             <p><%= s.text %></p>
-            <a class="card__link" href="#booking">Записатись <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></a>
+            <a class="card__link" href="#booking" data-modal-open data-service="<%= s.title %>">Записатись <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></a>
           </article>
         <% }) %>
       </div>
@@ -124,7 +145,7 @@
             <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg><%= g %></li>
           <% }) %>
         </ul>
-        <a class="btn btn--yellow" href="#booking">Записатись на грумінг</a>
+        <a class="btn btn--yellow" href="#booking" data-modal-open data-service="Грумінг / стрижка">Записатись на грумінг</a>
       </div>
 
       <div class="grooming__art reveal" aria-hidden="true">
@@ -215,66 +236,8 @@
       </div>
 
       <div class="formwrap reveal">
-        <form class="form" id="leadForm" novalidate>
-          <h3 class="form__title">Заявка на прийом</h3>
-
-          <div class="field">
-            <label for="f-name">Ваше ім’я <span>*</span></label>
-            <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Олена" required>
-            <small class="err" data-err="name"></small>
-          </div>
-
-          <div class="field">
-            <label for="f-phone">Телефон <span>*</span></label>
-            <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+38 (0__) ___-__-__" required>
-            <small class="err" data-err="phone"></small>
-          </div>
-
-          <div class="field">
-            <label for="f-pet">Улюбленець</label>
-            <input id="f-pet" name="pet" type="text" placeholder="Кіт, 3 роки, Мурзик">
-          </div>
-
-          <div class="field">
-            <label for="f-service">Послуга</label>
-            <div class="select">
-              <select id="f-service" name="service">
-                <option value="">Оберіть послугу</option>
-                <% serviceOptions.forEach(function (o) { %>
-                  <option value="<%= o %>"><%= o %></option>
-                <% }) %>
-              </select>
-              <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="f-time">Бажаний час візиту</label>
-            <input id="f-time" name="preferredTime" type="text" placeholder="Завтра після 17:00">
-          </div>
-
-          <div class="field field--full">
-            <label for="f-msg">Що турбує?</label>
-            <textarea id="f-msg" name="message" rows="3" placeholder="Коротко опишіть симптоми або питання"></textarea>
-          </div>
-
-          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-
-          <button class="btn btn--primary btn--wide" type="submit">
-            <svg class="icon icon--fill" aria-hidden="true"><use href="#i-tg"/></svg>
-            <span class="btn__label">Надіслати заявку</span>
-          </button>
-
-          <p class="form__note">Натискаючи кнопку, ви погоджуєтесь на обробку персональних даних.</p>
-          <p class="form__status" role="status" aria-live="polite"></p>
-        </form>
-
-        <div class="form__done" hidden>
-          <span class="form__done-ic"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
-          <h3>Дякуємо, заявку прийнято!</h3>
-          <p>Адміністратор передзвонить вам найближчим часом у робочі години.</p>
-          <button class="btn btn--ghost btn--sm" type="button" data-reset>Надіслати ще одну</button>
-        </div>
+        <h3 class="form__title">Заявка на прийом</h3>
+        <%- include('partials/form', { prefix: 'sec', serviceOptions: serviceOptions }) %>
       </div>
     </div>
   </section>
@@ -310,7 +273,13 @@
         <div class="contacts__info reveal">
           <div class="cinfo">
             <span class="cinfo__ic"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
-            <div><b>Адреса</b><p><%= clinic.address %></p></div>
+            <div>
+              <b>Адреса</b>
+              <p>
+                <%= clinic.addressFull %><br>
+                <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">Відкрити в Google Maps</a>
+              </p>
+            </div>
           </div>
           <div class="cinfo">
             <span class="cinfo__ic"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span>
@@ -334,7 +303,7 @@
               </p>
             </div>
           </div>
-          <a class="btn btn--primary" href="#booking">Записатись на прийом</a>
+          <a class="btn btn--primary" href="#booking" data-modal-open>Записатись на прийом</a>
         </div>
 
         <div class="contacts__map reveal">
@@ -347,6 +316,27 @@
       </div>
     </div>
   </section>
+
+  <!-- ══ МОДАЛЬНЕ ВІКНО ЗАПИСУ ══ -->
+  <dialog class="modal" id="bookingModal" aria-labelledby="modalTitle">
+    <div class="modal__box">
+      <button class="modal__close" type="button" data-modal-close aria-label="Закрити">
+        <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+
+      <div class="modal__head">
+        <img src="/img/logo.svg" width="52" height="52" alt="">
+        <div>
+          <h2 id="modalTitle">Запис на прийом</h2>
+          <p>Передзвонимо й підберемо зручний час</p>
+        </div>
+      </div>
+
+      <div class="modal__body">
+        <%- include('partials/form', { prefix: 'mod', serviceOptions: serviceOptions }) %>
+      </div>
+    </div>
+  </dialog>
 </main>
 
 <%- include('partials/footer', { clinic: clinic }) %>

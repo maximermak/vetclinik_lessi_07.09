@@ -13,10 +13,13 @@ function escapeHtml(value) {
  * Заявка -> текст повідомлення для чату клініки.
  */
 function formatLead(lead) {
+  const petIcon = lead.petType === 'Собака' ? '🐕' : lead.petType === 'Кіт' ? '🐈' : '🐾';
+
   const rows = [
     ['👤 Ім’я', lead.name],
     ['📞 Телефон', lead.phone],
-    ['🐾 Улюбленець', lead.pet],
+    [`${petIcon} Тварина`, lead.petType],
+    ['🎂 Вік', lead.petAge],
     ['🩺 Послуга', lead.service],
     ['🗓 Бажаний час', lead.preferredTime],
     ['💬 Коментар', lead.message]

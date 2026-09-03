@@ -2,7 +2,7 @@
   <div class="container topbar__in">
     <span class="topbar__item">
       <svg class="icon icon--sm" aria-hidden="true"><use href="#i-clock"/></svg>
-      Пн–Пт 09:00–19:00 · Сб 09:00–18:00 · Нд 09:00–14:00
+      <%= clinic.scheduleShort %>
     </span>
     <span class="topbar__item topbar__item--phones">
       <svg class="icon icon--sm" aria-hidden="true"><use href="#i-phone"/></svg>
@@ -37,7 +37,7 @@
         <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
         <%= clinic.phones[0].pretty %>
       </a>
-      <a class="btn btn--primary btn--sm" href="#booking">Записатись</a>
+      <a class="btn btn--primary btn--sm" href="#booking" data-modal-open>Записатись</a>
       <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav">
         <span></span><span></span><span></span>
       </button>

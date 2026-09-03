@@ -204,7 +204,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 .grid { display: grid; gap: 22px; }
 .grid--services { grid-template-columns: repeat(4, 1fr); }
 .grid--why { grid-template-columns: repeat(4, 1fr); }
-.grid--reviews { grid-template-columns: repeat(4, 1fr); }
+/* відгуки різної довжини — розкладаємо колонками, без порожнеч */
+.grid--reviews { display: block; columns: 3; column-gap: 22px; }
+.grid--reviews .review { break-inside: avoid; margin-bottom: 22px; }
 
 .card {
   position: relative; display: flex; flex-direction: column;
@@ -286,7 +288,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .review__top small { color: var(--ink-2); font-size: .8rem; }
 .review__top .stars { margin-left: auto; font-size: .78rem; }
 .avatar { display: grid; place-items: center; width: 42px; height: 42px; background: var(--red); color: #fff; border-radius: 50%; font-weight: 800; }
-.review blockquote { margin: 0; font-size: .93rem; color: var(--ink-2); line-height: 1.62; }
+.review blockquote { margin: 0; font-size: .92rem; color: var(--ink-2); line-height: 1.62; }
 
 /* ─── Заявка ─────────────────────────────────────────────── */
 .booking { position: relative; overflow: hidden; padding: 84px 0; background: linear-gradient(135deg, var(--red-dark), var(--red) 55%, #c4402a); color: #fff; }
@@ -411,7 +413,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ─── Адаптив ────────────────────────────────────────────── */
 @media (max-width: 1080px) {
-  .grid--services, .grid--why, .grid--reviews { grid-template-columns: repeat(2, 1fr); }
+  .grid--services, .grid--why { grid-template-columns: repeat(2, 1fr); }
+  .grid--reviews { columns: 2; }
   .strip__in { grid-template-columns: repeat(2, 1fr); }
   .header__phone { display: none; }
 }
@@ -447,7 +450,171 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 @media (max-width: 520px) {
-  .grid--services, .grid--why, .grid--reviews, .strip__in { grid-template-columns: 1fr; }
+  .grid--services, .grid--why, .strip__in { grid-template-columns: 1fr; }
+  .grid--reviews { columns: 1; }
   .footer__in { grid-template-columns: 1fr; }
   .hero__cta .btn { width: 100%; }
+}
+
+/* ============================================================
+   Форма запису: сегментований перемикач, лічильник віку,
+   власний випадний список і модальне вікно
+   ============================================================ */
+
+.field__label { font-size: .86rem; font-weight: 700; color: var(--brown-2); }
+
+/* ─── Кіт / Собака / Інша ────────────────────────────────── */
+.segmented {
+  position: relative; display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 4px; padding: 5px; background: var(--cream); border-radius: 16px;
+}
+.segmented__thumb {
+  position: absolute; top: 5px; left: 5px; z-index: 0;
+  width: calc((100% - 10px) / 3); height: calc(100% - 10px);
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(59, 29, 20, .13);
+  transform: translateX(calc(var(--seg, 0) * (100% + 4px)));
+  transition: transform .32s cubic-bezier(.4, 1.4, .5, 1);
+}
+.segmented__opt {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 11px 4px 9px; border-radius: 12px; cursor: pointer;
+  font-size: .84rem; font-weight: 700; color: var(--ink-2);
+  transition: color .22s ease;
+}
+.segmented__opt input { position: absolute; opacity: 0; pointer-events: none; }
+.segmented__opt .icon { transition: transform .32s cubic-bezier(.4, 1.4, .5, 1); }
+.segmented__opt:hover { color: var(--ink); }
+.segmented__opt:has(input:checked) { color: var(--red); }
+.segmented__opt:has(input:checked) .icon { transform: scale(1.14) translateY(-1px); }
+.segmented__opt:has(input:focus-visible) { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* ─── Вік тварини ────────────────────────────────────────── */
+.agebox { display: flex; gap: 8px; }
+.stepper {
+  display: flex; align-items: center; flex: 1; min-width: 0;
+  background: var(--cream); border: 1.5px solid transparent; border-radius: 13px;
+  transition: border-color .18s ease, background .18s ease;
+}
+.stepper:focus-within { background: #fff; border-color: var(--red); }
+.stepper__btn {
+  display: grid; place-items: center; width: 38px; height: 46px; flex: none;
+  border: 0; background: none; color: var(--ink-2); cursor: pointer; border-radius: 12px;
+  transition: color .18s ease, transform .18s ease;
+}
+.stepper__btn:hover { color: var(--red); }
+.stepper__btn:active { transform: scale(.86); }
+.stepper__btn:disabled { opacity: .3; cursor: default; }
+.stepper__val {
+  width: 100%; min-width: 0; padding: 0; text-align: center;
+  font: inherit; font-weight: 800; font-size: 1.05rem; color: var(--ink);
+  background: none; border: 0;
+}
+.stepper__val:focus { outline: 0; }
+.stepper__val.is-bumped { animation: bump .3s cubic-bezier(.4, 1.5, .5, 1); }
+@keyframes bump { 0% { transform: scale(1); } 45% { transform: scale(1.28); } 100% { transform: scale(1); } }
+
+.units { display: flex; gap: 3px; padding: 4px; background: var(--cream); border-radius: 13px; }
+.units__opt { position: relative; display: grid; place-items: center; cursor: pointer; }
+.units__opt input { position: absolute; opacity: 0; pointer-events: none; }
+.units__opt span {
+  display: block; padding: 9px 12px; border-radius: 10px;
+  font-size: .82rem; font-weight: 700; color: var(--ink-2); white-space: nowrap;
+  transition: background .24s ease, color .24s ease, box-shadow .24s ease;
+}
+.units__opt:has(input:checked) span { background: #fff; color: var(--red); box-shadow: 0 3px 10px rgba(59, 29, 20, .12); }
+.units__opt:has(input:focus-visible) span { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* ─── Випадний список послуг ─────────────────────────────── */
+.dropdown { position: relative; }
+.dropdown__btn {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; padding: 13px 15px; font: inherit; font-size: .96rem; text-align: left;
+  color: var(--ink); background: var(--cream);
+  border: 1.5px solid transparent; border-radius: 13px; cursor: pointer;
+  transition: border-color .18s ease, background .18s ease;
+}
+.dropdown__btn:hover { background: #f4ead9; }
+.dropdown.is-open .dropdown__btn,
+.dropdown__btn:focus-visible { outline: 0; background: #fff; border-color: var(--red); }
+.dropdown__value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dropdown__value.is-placeholder { color: #b9a89c; }
+.dropdown__chev { flex: none; color: var(--ink-2); transform: rotate(90deg); transition: transform .28s ease; }
+.dropdown.is-open .dropdown__chev { transform: rotate(-90deg); color: var(--red); }
+
+.dropdown__list {
+  position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 7px);
+  max-height: 262px; padding: 7px; overflow-y: auto;
+  background: #fff; border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: 0 18px 44px rgba(59, 29, 20, .18);
+  opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.98);
+  transform-origin: top center;
+  transition: opacity .2s ease, transform .24s cubic-bezier(.3, 1.3, .5, 1), visibility .24s;
+}
+.dropdown.is-open .dropdown__list { opacity: 1; visibility: visible; transform: none; }
+.dropdown__opt {
+  padding: 11px 13px; border-radius: 10px; font-size: .93rem; cursor: pointer;
+  opacity: 0; transform: translateY(-6px);
+  transition: background .16s ease, color .16s ease;
+}
+.dropdown.is-open .dropdown__opt {
+  opacity: 1; transform: none;
+  transition: background .16s ease, color .16s ease,
+              opacity .26s ease calc(var(--i) * 22ms), transform .26s ease calc(var(--i) * 22ms);
+}
+.dropdown__opt:hover, .dropdown__opt.is-cursor { background: var(--yellow-soft); color: var(--red); }
+.dropdown__opt[aria-selected="true"] { background: var(--red); color: #fff; font-weight: 700; }
+
+/* ─── Модальне вікно ─────────────────────────────────────── */
+.modal { max-width: none; max-height: none; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; background: none; overflow: auto; }
+.modal::backdrop { background: rgba(43, 22, 16, .62); backdrop-filter: blur(3px); opacity: 0; transition: opacity .3s ease; }
+.modal.is-open::backdrop { opacity: 1; }
+.modal__box {
+  position: relative; display: flex; flex-direction: column;
+  width: min(660px, 100%); max-height: calc(100dvh - 44px); margin: auto;
+  padding: 32px 34px 30px; background: #fff; border-radius: var(--radius-lg);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, .4);
+  opacity: 0; transform: translateY(26px) scale(.96);
+  transition: opacity .28s ease, transform .38s cubic-bezier(.2, 1.2, .4, 1);
+}
+/* шапка лишається на місці, прокручується лише форма */
+.modal__head { flex: none; }
+.modal__body { flex: 1; min-height: 0; overflow-y: auto; margin: 0 -8px; padding: 2px 8px 4px; }
+.modal { display: none; place-items: center; padding: 22px; overflow: hidden; }
+.modal[open] { display: grid; }
+.modal.is-open .modal__box { opacity: 1; transform: none; }
+
+.modal__close {
+  position: absolute; top: 14px; right: 14px; display: grid; place-items: center;
+  width: 40px; height: 40px; border: 0; border-radius: 50%;
+  background: var(--cream); color: var(--ink-2); cursor: pointer;
+  transition: background .2s ease, color .2s ease, transform .28s ease;
+}
+.modal__close:hover { background: var(--red); color: #fff; transform: rotate(90deg); }
+
+.modal__head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; padding-right: 44px; }
+.modal__head h2 { font-size: 1.5rem; }
+.modal__head p { margin: 2px 0 0; font-size: .9rem; color: var(--ink-2); }
+.modal__body .form__title { display: none; }
+.modal .form__done { padding: 34px 10px; }
+
+/* секційна форма: заголовок тепер поза партіалом */
+.formwrap > .form__title { margin-bottom: 16px; font-size: 1.4rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .segmented__thumb, .dropdown__list, .dropdown__opt, .modal__box, .modal::backdrop,
+  .stepper__btn, .modal__close { transition: none; animation: none; }
+}
+
+@media (max-width: 780px) {
+  .modal { padding: 0; align-items: end; }
+  .modal__box {
+    width: 100%; max-height: 94dvh; margin: 0;
+    padding: 24px 20px 22px; border-radius: 24px 24px 0 0;
+    transform: translateY(100%);
+  }
+  .modal.is-open .modal__box { transform: none; }
+  .modal__head h2 { font-size: 1.3rem; }
+  .agebox { flex-wrap: wrap; }
 }

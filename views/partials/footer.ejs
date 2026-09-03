@@ -4,7 +4,7 @@
       <img src="/img/logo.svg" width="56" height="56" alt="">
       <div>
         <strong><%= clinic.name %></strong>
-        <p><%= clinic.tagline %> у <%= clinic.city %>і. Лікуємо, доглядаємо і любимо ваших улюбленців.</p>
+        <p><%= clinic.tagline %> у <%= clinic.cityIn %>. Лікуємо, доглядаємо і любимо ваших улюбленців.</p>
       </div>
     </div>
 
@@ -38,7 +38,7 @@
   </div>
 </footer>
 
-<a class="fab" href="#booking" aria-label="Записатись на прийом">
+<a class="fab" href="#booking" data-modal-open aria-label="Записатись на прийом">
   <svg class="icon icon--fill" aria-hidden="true"><use href="#i-paw"/></svg>
   <span>Записатись</span>
 </a>
