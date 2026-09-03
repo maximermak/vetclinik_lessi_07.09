@@ -283,10 +283,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ─── Відгуки ────────────────────────────────────────────── */
 .review { margin: 0; padding: 26px 24px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); transition: transform .22s ease, box-shadow .22s ease; }
 .review:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.review__top { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
-.review__top b { display: block; font-size: .96rem; }
-.review__top small { color: var(--ink-2); font-size: .8rem; }
-.review__top .stars { margin-left: auto; font-size: .78rem; }
+.review__top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.review__who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.review__who b { font-size: .96rem; line-height: 1.25; }
+.review__meta { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: var(--ink-2); }
+.review__meta .stars { font-size: .8rem; letter-spacing: 1px; }
+.review__pet { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reviews__more { margin-top: 30px; text-align: center; }
 .avatar { display: grid; place-items: center; width: 42px; height: 42px; background: var(--red); color: #fff; border-radius: 50%; font-weight: 800; }
 .review blockquote { margin: 0; font-size: .92rem; color: var(--ink-2); line-height: 1.62; }
 
@@ -512,6 +515,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: none; border: 0;
 }
 .stepper__val:focus { outline: 0; }
+.stepper__val::placeholder { color: #c3b1a4; font-weight: 600; }
 .stepper__val.is-bumped { animation: bump .3s cubic-bezier(.4, 1.5, .5, 1); }
 @keyframes bump { 0% { transform: scale(1); } 45% { transform: scale(1.28); } 100% { transform: scale(1); } }
 
@@ -618,3 +622,26 @@ ul { margin: 0; padding: 0; list-style: none; }
   .modal__head h2 { font-size: 1.3rem; }
   .agebox { flex-wrap: wrap; }
 }
+
+/* ─── Поля з іконкою ─────────────────────────────────────── */
+.control { position: relative; }
+.control__ic {
+  position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+  color: #c3b1a4; pointer-events: none; transition: color .2s ease;
+}
+.control input { padding-left: 43px; }
+.control:focus-within .control__ic { color: var(--red); }
+.field.has-error .control__ic { color: #d64b34; }
+
+/* ─── Акцент картки форми ────────────────────────────────── */
+.formwrap { border-top: 6px solid var(--yellow); }
+.formwrap > .form__title { display: flex; align-items: center; gap: 10px; }
+.formwrap > .form__title::before {
+  content: ""; width: 26px; height: 26px; flex: none;
+  background: var(--yellow-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b0331f'%3E%3Cellipse cx='6.5' cy='10' rx='2.1' ry='2.6'/%3E%3Cellipse cx='10.5' cy='6.5' rx='2.1' ry='2.6'/%3E%3Cellipse cx='15' cy='6.8' rx='2.1' ry='2.6'/%3E%3Cellipse cx='18.5' cy='10.6' rx='2' ry='2.4'/%3E%3Cpath d='M12.4 12.4c2.6 0 5.4 2 5.4 4.6 0 1.8-1.4 3-3.2 3-1 0-1.6-.4-2.4-.4s-1.4.4-2.4.4c-1.8 0-3.2-1.2-3.2-3 0-2.6 2.6-4.6 5.8-4.6Z'/%3E%3C/svg%3E") center / 17px no-repeat;
+  border-radius: 8px;
+}
+
+/* трохи повітря між групами полів */
+.form { row-gap: 17px; }
+.field__label { display: block; margin-bottom: -1px; }

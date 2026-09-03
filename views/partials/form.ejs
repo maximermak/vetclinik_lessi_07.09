@@ -27,14 +27,20 @@
 
   <div class="field">
     <label for="<%= p %>-name">Ваше ім’я <span>*</span></label>
-    <input id="<%= p %>-name" name="name" type="text" autocomplete="name" placeholder="Олена" required>
+    <div class="control">
+      <svg class="control__ic icon icon--sm" aria-hidden="true"><use href="#i-user"/></svg>
+      <input id="<%= p %>-name" name="name" type="text" autocomplete="name" placeholder="Олена" required>
+    </div>
     <small class="err" data-err="name"></small>
   </div>
 
   <div class="field">
     <label for="<%= p %>-phone">Телефон <span>*</span></label>
-    <input id="<%= p %>-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"
-           placeholder="+38 (0__) ___-__-__" required>
+    <div class="control">
+      <svg class="control__ic icon icon--sm" aria-hidden="true"><use href="#i-phone"/></svg>
+      <input id="<%= p %>-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"
+             placeholder="+38 (0__) ___-__-__" required>
+    </div>
     <small class="err" data-err="phone"></small>
   </div>
 
@@ -83,7 +89,10 @@
 
   <div class="field field--full">
     <label for="<%= p %>-time">Бажаний час візиту</label>
-    <input id="<%= p %>-time" name="preferredTime" type="text" placeholder="Завтра після 15:00">
+    <div class="control">
+      <svg class="control__ic icon icon--sm" aria-hidden="true"><use href="#i-clock"/></svg>
+      <input id="<%= p %>-time" name="preferredTime" type="text" placeholder="Завтра після 15:00">
+    </div>
   </div>
 
   <div class="field field--full">

@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/style.css?v=<%= v('/css/style.css') %>">
 <script type="application/ld+json">
 <%- JSON.stringify({
   '@context': 'https://schema.org',
@@ -200,15 +200,23 @@
           <figure class="review reveal">
             <div class="review__top">
               <span class="avatar"><%= r.name.charAt(0) %></span>
-              <span>
+              <div class="review__who">
                 <b><%= r.name %></b>
-                <small><%= r.pet %></small>
-              </span>
-              <span class="stars" aria-label="5 з 5">★★★★★</span>
+                <span class="review__meta">
+                  <span class="stars" aria-label="5 з 5">★★★★★</span>
+                  <span class="review__pet"><%= r.pet %></span>
+                </span>
+              </div>
             </div>
             <blockquote>«<%= r.text %>»</blockquote>
           </figure>
         <% }) %>
+      </div>
+
+      <div class="reviews__more reveal">
+        <a class="btn btn--ghost" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
+          Усі відгуки в Google Maps
+        </a>
       </div>
     </div>
   </section>
@@ -340,6 +348,6 @@
 </main>
 
 <%- include('partials/footer', { clinic: clinic }) %>
-<script src="/js/app.js" defer></script>
+<script src="/js/app.js?v=<%= v('/js/app.js') %>" defer></script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 
@@ -18,6 +19,15 @@ const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
+
+// ?v=<час зміни файлу> — щоб браузер не тримав старий CSS/JS після правок
+app.locals.v = function (file) {
+  try {
+    return String(Math.floor(fs.statSync(path.join(__dirname, 'public', file)).mtimeMs));
+  } catch (err) {
+    return '1';
+  }
+};
 
 app.use(express.urlencoded({ extended: false, limit: '32kb' }));
 app.use(express.json({ limit: '32kb' }));
