@@ -963,3 +963,33 @@ body.is-locked { overflow: hidden; }
   width: 7px; height: 7px; background: var(--yellow); border-radius: 50%;
 }
 .legal__back { margin-top: 40px; }
+
+/* ─── Мобільна шліфовка ──────────────────────────────────── */
+@media (max-width: 520px) {
+  /* «10+ років практики» висіло голим текстом під пігулкою рейтингу */
+  .hero__trust { gap: 10px; }
+  .hero__stat {
+    display: inline-flex; align-items: baseline; gap: 8px;
+    padding: 13px 20px; background: #fff; border-radius: 999px;
+    box-shadow: var(--shadow); font-size: .84rem;
+  }
+  .hero__stat b { display: inline; font-size: 1.2rem; }
+
+  /* колаж був притиснутий ліворуч і виглядав зміщеним */
+  .grooming__photos { margin-inline: auto; }
+
+  /* логотипи кормів лишаються поруч — так блок удвічі компактніший */
+  .brands__row { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .brand-card { min-height: 106px; padding: 18px 16px; }
+  .brand-card__logo--josera { max-height: 30px; }
+  .brand-card__logo--choice { max-height: 56px; }
+}
+
+@media (max-width: 780px) {
+  /* телефон-посилання були 21px заввишки — замалі для пальця.
+     Паддинг збільшує зону дотику, не змінюючи вигляд тексту. */
+  .grooming__cta a[href^="tel:"],
+  .cinfo a[href^="tel:"],
+  .footer__col a[href^="tel:"] { display: inline-block; padding: 9px 0; }
+  .dp-nav { width: 36px; height: 36px; }
+}
