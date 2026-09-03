@@ -366,15 +366,28 @@
       });
     };
 
+    // на телефоні поповер — фіксована шторка, тож підкручувати
+    // до нього сторінку не треба (і шкідливо: вона б смикалась)
+    var isSheet = function () {
+      return window.matchMedia && window.matchMedia('(max-width: 560px)').matches;
+    };
+
     var open = function () {
       root.classList.add('is-open');
       btn.setAttribute('aria-expanded', 'true');
+      if (isSheet()) {
+        // z-index шторки живе всередині .booking__in, тож плаваюча
+        // кнопка малюється поверх неї й затуляє нижні слоти
+        document.body.classList.add('is-sheet-open');
+        return;
+      }
       setTimeout(function () { pop.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 60);
     };
 
     var close = function () {
       root.classList.remove('is-open');
       btn.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('is-sheet-open');
     };
 
     var commit = function (time) {

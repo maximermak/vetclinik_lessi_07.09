@@ -913,9 +913,23 @@ body.is-locked { overflow: hidden; }
 }
 
 @media (max-width: 560px) {
-  .datepick__pop { grid-template-columns: 1fr; width: 100%; gap: 14px; }
+  /* На телефоні поповер стає нижньою шторкою. Інакше він виростав
+     до ~520px і секція запису з overflow:hidden відрізала низ разом
+     із частиною слотів. position:fixed виводить його з-під обрізання
+     і тримає в межах екрана. */
+  .datepick__pop {
+    position: fixed; inset: auto 10px 10px 10px; z-index: 95;
+    grid-template-columns: 1fr; gap: 14px;
+    width: auto; max-height: 86dvh; overflow-y: auto; overscroll-behavior: contain;
+    border-radius: 22px; transform-origin: bottom center;
+    transform: translateY(24px);
+    box-shadow: 0 -12px 50px rgba(43, 22, 16, .32);
+  }
+  .datepick.is-open .datepick__pop { transform: none; }
+  body.is-sheet-open .fab { display: none; }
   .dp-times { padding-left: 0; padding-top: 14px; border-left: 0; border-top: 1px solid var(--line); }
-  .dp-slots { grid-template-columns: repeat(3, 1fr); max-height: 168px; }
+  /* прокручується вся шторка, а не окремо список слотів */
+  .dp-slots { grid-template-columns: repeat(3, 1fr); max-height: none; }
 }
 
 /* ─── Згода на обробку даних ─────────────────────────────── */
