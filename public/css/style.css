@@ -906,3 +906,49 @@ body.is-locked { overflow: hidden; }
   .dp-times { padding-left: 0; padding-top: 14px; border-left: 0; border-top: 1px solid var(--line); }
   .dp-slots { grid-template-columns: repeat(3, 1fr); max-height: 168px; }
 }
+
+/* ─── Згода на обробку даних ─────────────────────────────── */
+.consent {
+  grid-column: 1 / -1; display: flex; align-items: flex-start; gap: 11px;
+  margin-top: 2px; cursor: pointer; user-select: none;
+}
+.consent__box { position: absolute; opacity: 0; width: 0; height: 0; }
+.consent__mark {
+  display: grid; place-items: center; width: 22px; height: 22px; flex: none; margin-top: 1px;
+  background: var(--cream); border: 1.5px solid var(--line); border-radius: 7px;
+  color: transparent; transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.consent__mark .icon { width: 14px; height: 14px; stroke-width: 3.4; }
+.consent:hover .consent__mark { border-color: var(--red); }
+.consent__box:checked + .consent__mark {
+  background: var(--red); border-color: var(--red); color: #fff;
+}
+.consent__box:focus-visible + .consent__mark { outline: 2px solid var(--red); outline-offset: 2px; }
+.consent__text { font-size: .82rem; line-height: 1.5; color: var(--ink-2); }
+.consent__text a { font-weight: 700; text-decoration: underline; }
+.field.has-error .consent__mark,
+.form.has-consent-error .consent__mark { border-color: #d64b34; }
+.err--consent { grid-column: 1 / -1; margin-top: -6px; }
+.consent + .err:empty + button { margin-top: 2px; }
+
+/* ─── Сторінка з правовим текстом ────────────────────────── */
+.legal { padding: 60px 0 84px; }
+.legal__head { margin-bottom: 34px; }
+.legal__head h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); margin-bottom: 10px; }
+.legal__meta { margin: 0; font-size: .88rem; color: var(--ink-2); }
+.legal__body { font-size: .98rem; line-height: 1.72; color: var(--ink-2); }
+.legal__body h2 {
+  margin: 34px 0 12px; font-size: 1.16rem; color: var(--ink);
+  padding-top: 22px; border-top: 1px solid var(--line);
+}
+.legal__body h2:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.legal__body p { margin: 0 0 14px; }
+.legal__body b { color: var(--ink); }
+.legal__body a { font-weight: 600; text-decoration: underline; }
+.legal__list { display: grid; gap: 9px; margin: 0 0 16px; padding-left: 4px; }
+.legal__list li { position: relative; padding-left: 22px; }
+.legal__list li::before {
+  content: ""; position: absolute; left: 4px; top: .62em;
+  width: 7px; height: 7px; background: var(--yellow); border-radius: 50%;
+}
+.legal__back { margin-top: 40px; }

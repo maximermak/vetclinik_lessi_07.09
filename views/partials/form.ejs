@@ -130,12 +130,23 @@
 
   <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
 
+  <label class="consent" for="<%= p %>-consent">
+    <input id="<%= p %>-consent" class="consent__box" type="checkbox" name="consent" value="yes" required>
+    <span class="consent__mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" class="icon icon--sm"><use href="#i-check"/></svg>
+    </span>
+    <span class="consent__text">
+      Даю згоду на обробку персональних даних згідно з
+      <a href="/privacy" target="_blank" rel="noopener">політикою конфіденційності</a>
+    </span>
+  </label>
+  <small class="err err--consent" data-err="consent"></small>
+
   <button class="btn btn--primary btn--wide" type="submit">
     <svg viewBox="0 0 24 24" class="icon icon--fill" aria-hidden="true"><use href="#i-tg"/></svg>
     <span class="btn__label">Надіслати заявку</span>
   </button>
 
-  <p class="form__note">Натискаючи кнопку, ви погоджуєтесь на обробку персональних даних.</p>
   <p class="form__status" role="status" aria-live="polite"></p>
 </form>
 

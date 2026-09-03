@@ -88,6 +88,10 @@ app.post('/api/lead', leadLimiter, async (req, res) => {
   }
 });
 
+app.get('/privacy', (req, res) => {
+  res.render('privacy', { clinic });
+});
+
 app.get('/health', (req, res) => {
   res.json({
     ok: true,

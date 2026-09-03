@@ -491,6 +491,7 @@
 
     var clearErrors = function () {
       $$('.field', form).forEach(function (f) { f.classList.remove('has-error'); });
+      form.classList.remove('has-consent-error');
       $$('.err', form).forEach(function (e) { e.textContent = ''; });
       status.textContent = '';
     };
@@ -500,7 +501,10 @@
         var slot = $('[data-err="' + key + '"]', form);
         if (!slot) return;
         slot.textContent = errors[key];
-        slot.closest('.field').classList.add('has-error');
+        // згода лежить поза .field — без цієї перевірки був би виняток
+        var field = slot.closest('.field');
+        if (field) field.classList.add('has-error');
+        else form.classList.add('has-consent-error');
       });
       var first = $('.has-error input', form);
       if (first) first.focus();

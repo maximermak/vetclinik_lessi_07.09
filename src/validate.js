@@ -49,6 +49,11 @@ function validateLead(body) {
     errors.phone = 'Вкажіть коректний номер телефону';
   }
 
+  // згоду перевіряємо і на сервері: у браузері required можна обійти
+  if (body.consent !== 'yes' && body.consent !== 'on' && body.consent !== true) {
+    errors.consent = 'Потрібна згода на обробку персональних даних';
+  }
+
   return { errors, lead };
 }
 
