@@ -283,8 +283,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .grid--why { grid-template-columns: repeat(4, 1fr); }
 /* відгуки різної довжини — розкладаємо колонками, без порожнеч */
-.grid--reviews { display: block; columns: 3; column-gap: 22px; }
-.grid--reviews .review { break-inside: avoid; margin-bottom: 22px; }
+/* grid-auto-rows: 1fr — усі рядки однакової висоти за найвищим,
+   тож і всі картки виходять однакові */
+.grid--reviews { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; }
 
 /* ─── Грумінг ────────────────────────────────────────────── */
 .grooming { position: relative; overflow: hidden; padding: 84px 0; background: var(--brown); color: #f2e6da; }
@@ -382,9 +383,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 /* ─── Відгуки ────────────────────────────────────────────── */
-.review { margin: 0; padding: 26px 24px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); transition: transform .22s ease, box-shadow .22s ease; }
+.review {
+  display: flex; flex-direction: column; height: 100%; margin: 0;
+  padding: 26px 24px; background: #fff; border: 1px solid var(--line);
+  border-radius: var(--radius); transition: transform .22s ease, box-shadow .22s ease;
+}
 .review:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.review__top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.review__top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex: none; }
 .review__who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .review__who b { font-size: .96rem; line-height: 1.25; }
 .review__meta { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: var(--ink-2); }
@@ -555,7 +560,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .grid--why, .grid--groom { grid-template-columns: repeat(2, 1fr); }
   .grooming__head { grid-template-columns: 1fr; gap: 34px; }
   .grooming__photos { max-width: 460px; }
-  .grid--reviews { columns: 2; }
+  .grid--reviews { grid-template-columns: repeat(2, 1fr); }
   .strip__in { grid-template-columns: repeat(2, 1fr); }
   /* пігулка стискається до круглої кнопки: обнуляємо асиметричний
      паддинг і прибираємо вкладений білий кружечок — інакше іконка
@@ -635,7 +640,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .services { grid-template-columns: 1fr; column-gap: 0; }
   .srv:nth-last-child(-n + 2) { border-bottom: 1px solid var(--line); }
   .srv:last-child { border-bottom: 0; }
-  .grid--reviews { columns: 1; }
+  .grid--reviews { grid-template-columns: 1fr; grid-auto-rows: auto; }
   .footer__in { grid-template-columns: 1fr; }
   .hero__cta .btn { width: 100%; }
 }
@@ -807,7 +812,7 @@ body.is-locked { overflow: hidden; }
 .review--more { cursor: pointer; }
 .review--more:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 .review__more {
-  display: inline-flex; align-items: center; gap: 5px; margin-top: 14px;
+  display: inline-flex; align-items: center; gap: 5px; margin-top: auto; padding-top: 14px;
   font-size: .86rem; font-weight: 700; color: var(--red);
 }
 .review__more .icon { transition: transform .2s ease; }
