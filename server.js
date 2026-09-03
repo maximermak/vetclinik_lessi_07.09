@@ -7,20 +7,28 @@ const fs = require('fs');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 
-const { clinic, services, grooming, advantages, reviews, faq, serviceOptions } = require('./src/data');
-const { validateLead } = require('./src/validate');
+const {
+  clinic, services, grooming, advantages, reviews, faq, serviceOptions, scheduleByWeekday
+} = require('./src/data');
+const { validateLead, plural } = require('./src/validate');
 const { sendLead } = require('./src/telegram');
+const googleRating = require('./src/googleRating');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+const GOOGLE_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
 
 // ?v=<час зміни файлу> — щоб браузер не тримав старий CSS/JS після правок
+app.locals.plural = function (n, one, few, many) {
+  return plural(parseInt(n, 10) || 0, one, few, many);
+};
+
 app.locals.v = function (file) {
   try {
     return String(Math.floor(fs.statSync(path.join(__dirname, 'public', file)).mtimeMs));
@@ -42,7 +50,17 @@ const leadLimiter = rateLimit({
 });
 
 app.get('/', (req, res) => {
-  res.render('index', { clinic, services, grooming, advantages, reviews, faq, serviceOptions });
+  // рейтинг береться з кешу Google, якщо він є, інакше — з data.js
+  const live = googleRating.get(clinic);
+  const clinicNow = Object.assign({}, clinic, {
+    rating: live.rating,
+    reviewsCount: live.reviewsCount
+  });
+
+  res.render('index', {
+    clinic: clinicNow, services, grooming, advantages, reviews, faq,
+    serviceOptions, scheduleByWeekday
+  });
 });
 
 app.post('/api/lead', leadLimiter, async (req, res) => {
@@ -70,7 +88,11 @@ app.post('/api/lead', leadLimiter, async (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.json({ ok: true, telegram: Boolean(TOKEN && CHAT_ID) });
+  res.json({
+    ok: true,
+    telegram: Boolean(TOKEN && CHAT_ID),
+    googleRating: googleRating.get(clinic)
+  });
 });
 
 app.use((req, res) => {
@@ -79,6 +101,12 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
   console.log(`\n  🐾 Pussy Cat — http://localhost:${PORT}\n`);
+
+  const liveRating = googleRating.start({ placeId: clinic.placeId, apiKey: GOOGLE_KEY });
+  if (!liveRating) {
+    console.log(`  ℹ️  Рейтинг показуємо з data.js (${clinic.rating}, ${clinic.reviewsCount} відгуків).`);
+    console.log('     Для автооновлення додайте GOOGLE_MAPS_API_KEY у .env\n');
+  }
   if (!TOKEN || !CHAT_ID) {
     console.warn('  ⚠️  Заявки не підуть у Telegram: заповніть TELEGRAM_BOT_TOKEN і TELEGRAM_CHAT_ID у .env');
     console.warn('     Підказка: напишіть боту повідомлення та виконайте `npm run chat-id`\n');

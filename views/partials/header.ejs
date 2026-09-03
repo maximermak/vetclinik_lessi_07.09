@@ -1,18 +1,3 @@
-<div class="topbar">
-  <div class="container topbar__in">
-    <span class="topbar__item">
-      <svg class="icon icon--sm" aria-hidden="true"><use href="#i-clock"/></svg>
-      <%= clinic.scheduleShort %>
-    </span>
-    <span class="topbar__item topbar__item--phones">
-      <svg class="icon icon--sm" aria-hidden="true"><use href="#i-phone"/></svg>
-      <% clinic.phones.forEach(function (p, i) { %>
-        <a href="tel:<%= p.raw %>"><%= p.pretty %></a><%= i < clinic.phones.length - 1 ? ' ·' : '' %>
-      <% }) %>
-    </span>
-  </div>
-</div>
-
 <header class="header" id="top">
   <div class="container header__in">
     <a class="brand" href="/">
@@ -23,19 +8,26 @@
       </span>
     </a>
 
-    <nav class="nav" id="nav">
-      <a href="#services">Послуги</a>
-      <a href="#grooming">Грумінг</a>
-      <a href="#why">Про нас</a>
-      <a href="#reviews">Відгуки</a>
-      <a href="#faq">Питання</a>
-      <a href="#contacts">Контакти</a>
+    <nav class="nav" id="nav" aria-label="Основне меню">
+      <span class="nav__head">
+        <b>Меню</b>
+        <button class="nav__close" type="button" data-nav-close aria-label="Закрити меню">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+        </button>
+      </span>
+      <a style="--i: 0" href="#services">Послуги</a>
+      <a style="--i: 1" href="#grooming">Грумінг</a>
+      <a style="--i: 2" href="#why">Про нас</a>
+      <a style="--i: 3" href="#reviews">Відгуки</a>
+      <a style="--i: 4" href="#faq">Питання</a>
+      <a style="--i: 5" href="#contacts">Контакти</a>
+      <a class="btn btn--primary nav__cta" style="--i: 6" href="#booking" data-modal-open>Записатись на прийом</a>
     </nav>
 
     <div class="header__actions">
-      <a class="header__phone" href="tel:<%= clinic.phones[0].raw %>">
-        <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
-        <%= clinic.phones[0].pretty %>
+      <a class="header__phone" href="tel:<%= clinic.phones[0].raw %>" aria-label="Зателефонувати">
+        <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+        <span><%= clinic.phones[0].pretty %></span>
       </a>
       <a class="btn btn--primary btn--sm" href="#booking" data-modal-open>Записатись</a>
       <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav">
@@ -44,3 +36,5 @@
     </div>
   </div>
 </header>
+
+<div class="nav-overlay" data-nav-close hidden></div>

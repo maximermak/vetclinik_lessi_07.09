@@ -45,7 +45,7 @@
     <div class="hero__paws" aria-hidden="true"></div>
     <div class="container hero__in">
       <div class="hero__text reveal">
-        <span class="eyebrow"><svg class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка та грумінг у <%= clinic.cityIn %></span>
+        <span class="eyebrow"><svg viewBox="0 0 24 24" class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка та грумінг у <%= clinic.cityIn %></span>
         <h1>Турбота про тих,<br>хто вас <span class="hl">безумовно любить</span></h1>
         <p class="hero__lead">
           Повний спектр ветеринарних послуг і грумінг-салон під одним дахом.
@@ -55,7 +55,7 @@
         <div class="hero__cta">
           <a class="btn btn--primary" href="#booking" data-modal-open>Записатись на прийом</a>
           <a class="btn btn--ghost" href="tel:<%= clinic.phones[0].raw %>">
-            <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+            <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
             Зателефонувати
           </a>
         </div>
@@ -65,7 +65,7 @@
             <span class="rating__score"><%= clinic.rating %></span>
             <span class="rating__body">
               <span class="stars" aria-hidden="true">★★★★★</span>
-              <span class="rating__label"><%= clinic.reviewsCount %> відгуків у Google Maps</span>
+              <span class="rating__label"><%= clinic.reviewsCount %> <%= plural(clinic.reviewsCount, 'відгук', 'відгуки', 'відгуків') %> у Google Maps</span>
             </span>
           </a>
           <span class="hero__stat"><b>10+</b> років практики</span>
@@ -75,7 +75,7 @@
       <aside class="hero__card reveal">
         <div class="hcard">
           <div class="hcard__head">
-            <svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>
+            <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-clock"/></svg>
             <h2>Графік роботи</h2>
           </div>
           <ul class="hcard__hours">
@@ -86,7 +86,7 @@
           <div class="hcard__phones">
             <% clinic.phones.forEach(function (p) { %>
               <a href="tel:<%= p.raw %>">
-                <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+                <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
                 <%= p.pretty %>
               </a>
             <% }) %>
@@ -100,10 +100,10 @@
   <!-- ══ ПЕРЕВАГИ-СТРІЧКА ══ -->
   <section class="strip">
     <div class="container strip__in">
-      <div class="strip__item reveal"><svg class="icon" aria-hidden="true"><use href="#i-stethoscope"/></svg><span>Досвідчені лікарі<br><small>терапія, хірургія, дерматологія</small></span></div>
-      <div class="strip__item reveal"><svg class="icon" aria-hidden="true"><use href="#i-flask"/></svg><span>Своя лабораторія<br><small>аналізи в день звернення</small></span></div>
-      <div class="strip__item reveal"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-paw"/></svg><span>Грумінг-салон<br><small>стрижка котів і собак</small></span></div>
-      <div class="strip__item reveal"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Чесні ціни<br><small>вартість — до початку прийому</small></span></div>
+      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-stethoscope"/></svg><span>Досвідчені лікарі<br><small>терапія, хірургія, дерматологія</small></span></div>
+      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-flask"/></svg><span>Своя лабораторія<br><small>аналізи в день звернення</small></span></div>
+      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon icon--fill" aria-hidden="true"><use href="#i-paw"/></svg><span>Грумінг-салон<br><small>стрижка котів і собак</small></span></div>
+      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Чесні ціни<br><small>вартість — до початку прийому</small></span></div>
     </div>
   </section>
 
@@ -119,10 +119,10 @@
       <div class="grid grid--services">
         <% services.forEach(function (s) { %>
           <article class="card reveal">
-            <span class="card__icon"><svg class="icon" aria-hidden="true"><use href="#i-<%= s.icon %>"/></svg></span>
+            <span class="card__icon"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-<%= s.icon %>"/></svg></span>
             <h3><%= s.title %></h3>
             <p><%= s.text %></p>
-            <a class="card__link" href="#booking" data-modal-open data-service="<%= s.title %>">Записатись <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></a>
+            <a class="card__link" href="#booking" data-modal-open data-service="<%= s.title %>">Записатись <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></a>
           </article>
         <% }) %>
       </div>
@@ -131,29 +131,34 @@
 
   <!-- ══ ГРУМІНГ ══ -->
   <section class="grooming" id="grooming">
-    <div class="container grooming__in">
-      <div class="grooming__text reveal">
+    <div class="container">
+      <header class="section__head section__head--light reveal">
         <span class="eyebrow eyebrow--light">Грумінг-салон</span>
-        <h2>Красивий улюбленець —<br>щасливий власник</h2>
+        <h2>Грумінг без стресу —<br>для вас і для улюбленця</h2>
         <p>
-          Працюємо без агресії та зайвого стресу: підбираємо темп під характер тварини,
-          використовуємо професійну косметику й гострий інструмент. Для складних випадків
+          Підбираємо темп під характер тварини, працюємо професійною косметикою
+          та гострим інструментом. Якщо під час стрижки щось насторожує —
           поруч завжди лікар клініки.
         </p>
-        <ul class="checks">
-          <% grooming.forEach(function (g) { %>
-            <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg><%= g %></li>
-          <% }) %>
-        </ul>
-        <a class="btn btn--yellow" href="#booking" data-modal-open data-service="Грумінг / стрижка">Записатись на грумінг</a>
+      </header>
+
+      <div class="grid grid--groom">
+        <% grooming.forEach(function (g) { %>
+          <article class="gcard reveal">
+            <span class="gcard__icon">
+              <svg viewBox="0 0 24 24" class="icon<%= g.icon === 'paw' ? ' icon--fill' : '' %>" aria-hidden="true"><use href="#i-<%= g.icon %>"/></svg>
+            </span>
+            <h3><%= g.title %></h3>
+            <p><%= g.text %></p>
+          </article>
+        <% }) %>
       </div>
 
-      <div class="grooming__art reveal" aria-hidden="true">
-        <div class="art-badge">
-          <img src="/img/logo.svg" width="120" height="120" alt="">
-          <b>Pussy Cat</b>
-          <span>грумінг-салон</span>
-        </div>
+      <div class="grooming__cta reveal">
+        <a class="btn btn--yellow" href="#booking" data-modal-open data-service="Грумінг / стрижка">
+          Записатись на грумінг
+        </a>
+        <span>або зателефонуйте: <a href="tel:<%= clinic.phones[0].raw %>"><%= clinic.phones[0].pretty %></a></span>
       </div>
     </div>
   </section>
@@ -178,10 +183,20 @@
       </div>
 
       <div class="brands reveal">
-        <span class="brands__label">У клініці можна одразу купити корм:</span>
-        <span class="brands__logo brands__logo--josera">Josera</span>
-        <span class="brands__logo brands__logo--choice">1<sup>st</sup> CHOICE</span>
-        <span class="brands__note">повсякденні та лікувальні лінійки для котів і собак</span>
+        <span class="brands__label">У клініці можна одразу купити корм</span>
+        <div class="brands__row">
+          <a class="brand-card" href="#booking" data-modal-open data-service="Консультація або інше" aria-label="Josera">
+            <img class="brand-card__logo brand-card__logo--josera" src="/img/josera.png"
+                 width="800" height="178" loading="lazy" alt="Josera">
+          </a>
+          <a class="brand-card" href="#booking" data-modal-open data-service="Консультація або інше" aria-label="1st Choice">
+            <img class="brand-card__logo brand-card__logo--choice" src="/img/1st-choice.png"
+                 width="863" height="575" loading="lazy" alt="1st Choice Nutrition">
+          </a>
+        </div>
+        <span class="brands__note">
+          Повсякденні та лікувальні лінійки для котів і собак — лікар допоможе підібрати раціон під вік і діагноз
+        </span>
       </div>
     </div>
   </section>
@@ -197,7 +212,15 @@
 
       <div class="grid grid--reviews">
         <% reviews.forEach(function (r) { %>
-          <figure class="review reveal">
+          <figure class="review reveal<%= r.full ? ' review--more' : '' %>"
+            <% if (r.full) { %>
+              data-review
+              data-name="<%= r.name %>"
+              data-pet="<%= r.pet %>"
+              data-full="<%= r.full %>"
+              role="button" tabindex="0"
+              aria-label="Читати повний відгук: <%= r.name %>"
+            <% } %>>
             <div class="review__top">
               <span class="avatar"><%= r.name.charAt(0) %></span>
               <div class="review__who">
@@ -209,6 +232,12 @@
               </div>
             </div>
             <blockquote>«<%= r.text %>»</blockquote>
+            <% if (r.full) { %>
+              <span class="review__more">
+                Читати повністю
+                <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg>
+              </span>
+            <% } %>
           </figure>
         <% }) %>
       </div>
@@ -232,20 +261,20 @@
           Ми передзвонимо у робочі години й підберемо зручний час.
         </p>
         <ul class="checks checks--light">
-          <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Передзвонюємо протягом 15 хвилин</li>
-          <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Підкажемо, як підготувати тварину</li>
-          <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Озвучимо вартість заздалегідь</li>
+          <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Передзвонюємо протягом 15 хвилин</li>
+          <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Підкажемо, як підготувати тварину</li>
+          <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Озвучимо вартість заздалегідь</li>
         </ul>
         <div class="booking__phones">
           <% clinic.phones.forEach(function (p) { %>
-            <a href="tel:<%= p.raw %>"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><%= p.pretty %></a>
+            <a href="tel:<%= p.raw %>"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg><%= p.pretty %></a>
           <% }) %>
         </div>
       </div>
 
       <div class="formwrap reveal">
         <h3 class="form__title">Заявка на прийом</h3>
-        <%- include('partials/form', { prefix: 'sec', serviceOptions: serviceOptions }) %>
+        <%- include('partials/form', { prefix: 'sec', serviceOptions: serviceOptions, scheduleByWeekday: scheduleByWeekday }) %>
       </div>
     </div>
   </section>
@@ -261,7 +290,7 @@
       <div class="faq">
         <% faq.forEach(function (f) { %>
           <details class="faq__item reveal">
-            <summary><%= f.q %><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+            <summary><%= f.q %><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></summary>
             <div class="faq__body"><p><%= f.a %></p></div>
           </details>
         <% }) %>
@@ -280,7 +309,7 @@
       <div class="contacts__in">
         <div class="contacts__info reveal">
           <div class="cinfo">
-            <span class="cinfo__ic"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
+            <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
             <div>
               <b>Адреса</b>
               <p>
@@ -290,7 +319,7 @@
             </div>
           </div>
           <div class="cinfo">
-            <span class="cinfo__ic"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span>
+            <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span>
             <div>
               <b>Телефони</b>
               <p>
@@ -301,7 +330,7 @@
             </div>
           </div>
           <div class="cinfo">
-            <span class="cinfo__ic"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
+            <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
             <div>
               <b>Графік роботи</b>
               <p>
@@ -325,11 +354,38 @@
     </div>
   </section>
 
+  <!-- ══ МОДАЛЬНЕ ВІКНО ВІДГУКУ ══ -->
+  <dialog class="modal modal--review" id="reviewModal" aria-labelledby="rvName">
+    <div class="modal__box">
+      <button class="modal__close" type="button" data-modal-close aria-label="Закрити">
+        <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+
+      <div class="modal__head">
+        <span class="avatar avatar--lg" data-rv="avatar"></span>
+        <div>
+          <h2 id="rvName" data-rv="name"></h2>
+          <p class="modal__sub">
+            <span class="stars" aria-label="5 з 5">★★★★★</span>
+            <span data-rv="pet"></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="modal__body">
+        <blockquote class="rv-text" data-rv="text"></blockquote>
+      </div>
+
+      <a class="btn btn--ghost btn--sm rv-link" href="<%= clinic.googleReviewsUrl %>"
+         target="_blank" rel="noopener">Усі відгуки в Google Maps</a>
+    </div>
+  </dialog>
+
   <!-- ══ МОДАЛЬНЕ ВІКНО ЗАПИСУ ══ -->
   <dialog class="modal" id="bookingModal" aria-labelledby="modalTitle">
     <div class="modal__box">
       <button class="modal__close" type="button" data-modal-close aria-label="Закрити">
-        <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+        <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-close"/></svg>
       </button>
 
       <div class="modal__head">
@@ -341,7 +397,7 @@
       </div>
 
       <div class="modal__body">
-        <%- include('partials/form', { prefix: 'mod', serviceOptions: serviceOptions }) %>
+        <%- include('partials/form', { prefix: 'mod', serviceOptions: serviceOptions, scheduleByWeekday: scheduleByWeekday }) %>
       </div>
     </div>
   </dialog>

@@ -9,17 +9,44 @@
   /* ── Мобільне меню ─────────────────────────────────────── */
   var burger = $('.burger');
   var nav = $('#nav');
+  var navOverlay = $('.nav-overlay');
 
   if (burger && nav) {
-    burger.addEventListener('click', function () {
-      var open = nav.classList.toggle('is-open');
-      burger.setAttribute('aria-expanded', String(open));
-    });
-    nav.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') {
-        nav.classList.remove('is-open');
-        burger.setAttribute('aria-expanded', 'false');
+    var openNav = function () {
+      if (navOverlay) {
+        navOverlay.hidden = false;
+        requestAnimationFrame(function () { navOverlay.classList.add('is-on'); });
       }
+      nav.classList.add('is-open');
+      document.body.classList.add('is-locked');
+      burger.setAttribute('aria-expanded', 'true');
+    };
+
+    var closeNav = function () {
+      nav.classList.remove('is-open');
+      document.body.classList.remove('is-locked');
+      burger.setAttribute('aria-expanded', 'false');
+      if (!navOverlay) return;
+      navOverlay.classList.remove('is-on');
+      var hide = function () { navOverlay.hidden = true; };
+      navOverlay.addEventListener('transitionend', hide, { once: true });
+      setTimeout(hide, 400);
+    };
+
+    burger.addEventListener('click', function () {
+      nav.classList.contains('is-open') ? closeNav() : openNav();
+    });
+
+    $$('[data-nav-close]').forEach(function (el) {
+      el.addEventListener('click', closeNav);
+    });
+
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) closeNav();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) closeNav();
     });
   }
 
@@ -211,6 +238,220 @@
     };
   }
 
+  /* ── Вибір дати та часу візиту ─────────────────────────── */
+  var MONTHS_NOM = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень',
+                    'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+  var MONTHS_GEN = ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
+                    'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'];
+  var WEEK_SHORT = ['нд', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+
+  var DAYS_AHEAD = 60;   // наскільки далеко можна записатись
+  var LEAD_MIN = 60;     // на сьогодні — не раніше ніж за годину
+  var STEP_MIN = 30;     // крок сітки часу
+
+  function initDatepick(root) {
+    var hours = {};
+    try { hours = JSON.parse(root.dataset.hours || '{}'); } catch (e) { hours = {}; }
+
+    var btn = $('.datepick__btn', root);
+    var pop = $('.datepick__pop', root);
+    var valueEl = $('.datepick__value', root);
+    var hidden = $('input[type="hidden"]', root);
+    var monthEl = $('[data-dp-month]', root);
+    var daysEl = $('[data-dp-days]', root);
+    var labelEl = $('[data-dp-label]', root);
+    var slotsEl = $('[data-dp-slots]', root);
+
+    var startOfDay = function (d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); };
+    var today = startOfDay(new Date());
+    var maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + DAYS_AHEAD);
+
+    var view = new Date(today.getFullYear(), today.getMonth(), 1);
+    var selected = null;
+
+    var minutesOf = function (hhmm) {
+      var parts = hhmm.split(':');
+      return Number(parts[0]) * 60 + Number(parts[1]);
+    };
+
+    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+
+    var isClosed = function (date) { return !hours[date.getDay()]; };
+
+    /** Вільні слоти на день або порожній масив. */
+    var slotsFor = function (date) {
+      var work = hours[date.getDay()];
+      if (!work) return [];
+
+      var from = minutesOf(work.opens);
+      var to = minutesOf(work.closes) - STEP_MIN;
+
+      if (date.getTime() === today.getTime()) {
+        var now = new Date();
+        var earliest = now.getHours() * 60 + now.getMinutes() + LEAD_MIN;
+        from = Math.max(from, Math.ceil(earliest / STEP_MIN) * STEP_MIN);
+      }
+
+      var out = [];
+      for (var m = from; m <= to; m += STEP_MIN) {
+        out.push(pad(Math.floor(m / 60)) + ':' + pad(m % 60));
+      }
+      return out;
+    };
+
+    var renderMonth = function () {
+      monthEl.textContent = MONTHS_NOM[view.getMonth()] + ' ' + view.getFullYear();
+
+      var first = new Date(view.getFullYear(), view.getMonth(), 1);
+      var lead = (first.getDay() + 6) % 7; // тиждень починається з понеділка
+      var total = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+
+      daysEl.innerHTML = '';
+
+      for (var i = 0; i < lead; i++) {
+        var gap = document.createElement('span');
+        gap.className = 'dp-day dp-day--empty';
+        daysEl.appendChild(gap);
+      }
+
+      for (var d = 1; d <= total; d++) {
+        var date = new Date(view.getFullYear(), view.getMonth(), d);
+        var cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = 'dp-day';
+        cell.textContent = String(d);
+        cell.style.setProperty('--i', String((lead + d - 1) % 7));
+
+        var tooEarly = date < today;
+        var tooLate = date > maxDate;
+        var closed = isClosed(date);
+        var noSlots = !closed && slotsFor(date).length === 0;
+
+        if (tooEarly || tooLate || closed || noSlots) {
+          cell.disabled = true;
+        } else {
+          cell.dataset.date = date.toISOString().slice(0, 10);
+        }
+        if (date.getTime() === today.getTime()) cell.classList.add('is-today');
+        if (selected && date.getTime() === selected.getTime()) cell.classList.add('is-picked');
+
+        daysEl.appendChild(cell);
+      }
+
+      var prevBtn = $('[data-dp-prev]', root);
+      prevBtn.disabled = view <= new Date(today.getFullYear(), today.getMonth(), 1);
+      $('[data-dp-next]', root).disabled =
+        new Date(view.getFullYear(), view.getMonth() + 1, 1) > maxDate;
+    };
+
+    var renderSlots = function () {
+      slotsEl.innerHTML = '';
+
+      if (!selected) {
+        labelEl.textContent = 'Спершу оберіть день';
+        return;
+      }
+
+      var list = slotsFor(selected);
+      labelEl.textContent = selected.getDate() + ' ' + MONTHS_GEN[selected.getMonth()] +
+                            ', ' + WEEK_SHORT[selected.getDay()];
+
+      if (!list.length) {
+        var empty = document.createElement('p');
+        empty.className = 'dp-empty';
+        empty.textContent = 'На цей день вільного часу вже немає';
+        slotsEl.appendChild(empty);
+        return;
+      }
+
+      list.forEach(function (time, i) {
+        var slot = document.createElement('button');
+        slot.type = 'button';
+        slot.className = 'dp-slot';
+        slot.textContent = time;
+        slot.dataset.time = time;
+        slot.style.setProperty('--i', String(i));
+        slotsEl.appendChild(slot);
+      });
+    };
+
+    var open = function () {
+      root.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+      setTimeout(function () { pop.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 60);
+    };
+
+    var close = function () {
+      root.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+    };
+
+    var commit = function (time) {
+      var text = selected.getDate() + ' ' + MONTHS_GEN[selected.getMonth()] +
+                 ' (' + WEEK_SHORT[selected.getDay()] + '), ' + time;
+      hidden.value = text;
+      valueEl.textContent = text;
+      valueEl.classList.remove('is-placeholder');
+      close();
+      btn.focus();
+    };
+
+    btn.addEventListener('click', function () {
+      root.classList.contains('is-open') ? close() : open();
+    });
+
+    $('[data-dp-prev]', root).addEventListener('click', function () {
+      view = new Date(view.getFullYear(), view.getMonth() - 1, 1);
+      renderMonth();
+    });
+
+    $('[data-dp-next]', root).addEventListener('click', function () {
+      view = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+      renderMonth();
+    });
+
+    daysEl.addEventListener('click', function (e) {
+      var cell = e.target.closest('.dp-day');
+      if (!cell || !cell.dataset.date) return;
+      var parts = cell.dataset.date.split('-');
+      selected = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+      renderMonth();
+      renderSlots();
+    });
+
+    slotsEl.addEventListener('click', function (e) {
+      var slot = e.target.closest('.dp-slot');
+      if (slot) commit(slot.dataset.time);
+    });
+
+    root.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && root.classList.contains('is-open')) {
+        e.stopPropagation();
+        close();
+        btn.focus();
+      }
+    });
+
+    // саме pointerdown: на click сітка вже перемальована, клікнутий день
+    // від'єднаний від DOM — і contains() помилково каже «клік поза календарем»
+    document.addEventListener('pointerdown', function (e) {
+      if (!root.contains(e.target)) close();
+    });
+
+    root.reset = function () {
+      selected = null;
+      hidden.value = '';
+      valueEl.textContent = 'Оберіть дату та час';
+      valueEl.classList.add('is-placeholder');
+      view = new Date(today.getFullYear(), today.getMonth(), 1);
+      renderMonth();
+      renderSlots();
+    };
+
+    renderMonth();
+    renderSlots();
+  }
+
   /* ── Маска телефону ────────────────────────────────────── */
   function initPhone(input) {
     var format = function (raw) {
@@ -251,6 +492,7 @@
     $$('[data-segmented]', form).forEach(initSegmented);
     $$('[data-stepper]', form).forEach(initStepper);
     $$('[data-dropdown]', form).forEach(initDropdown);
+    $$('[data-datepick]', form).forEach(initDatepick);
     $$('input[name="phone"]', form).forEach(initPhone);
 
     var clearErrors = function () {
@@ -297,6 +539,7 @@
         if (res.ok && data.ok) {
           form.reset();
           $$('[data-dropdown]', form).forEach(function (d) { d.reset(); });
+          $$('[data-datepick]', form).forEach(function (d) { d.reset(); });
           $$('[data-segmented]', form).forEach(initSegmented);
           form.hidden = true;
           done.hidden = false;
@@ -327,30 +570,84 @@
 
   $$('[data-lead-form]').forEach(initForm);
 
-  /* ── Модальне вікно ────────────────────────────────────── */
-  var modal = $('#bookingModal');
+  /* ── Акордеон «Часті питання» ──────────────────────────── */
+  var noMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var faqItems = $$('.faq__item');
 
-  if (modal && typeof modal.showModal === 'function') {
-    var lastTrigger = null;
+  faqItems.forEach(function (item) {
+    var summary = $('summary', item);
+    var body = $('.faq__body', item);
+    var anim = null;
+    var timer = null;
 
-    var openModal = function (service) {
-      modal.showModal();
-      requestAnimationFrame(function () { modal.classList.add('is-open'); });
+    // onfinish інколи не приходить (перерване відтворення, фонова вкладка),
+    // тому стан завжди довершує ще й таймер
+    var run = function (frames, duration, done) {
+      if (anim) anim.cancel();
+      clearTimeout(timer);
 
-      if (service) {
-        var dd = $('[data-dropdown]', modal);
-        if (dd && dd.selectByValue) dd.selectByValue(service);
-      }
-      setTimeout(function () {
-        var field = $('input[name="name"]', modal);
-        if (field) field.focus({ preventScroll: true });
-      }, 260);
+      var settled = false;
+      var finish = function () {
+        if (settled) return;
+        settled = true;
+        anim = null;
+        done();
+      };
+
+      if (noMotion) { finish(); return; }
+
+      anim = body.animate(frames, { duration: duration, easing: 'cubic-bezier(.32, .72, 0, 1)' });
+      anim.onfinish = finish;
+      timer = setTimeout(finish, duration + 80);
     };
 
-    var closeModal = function () {
+    var expand = function () {
+      item.open = true;
+      var h = body.scrollHeight;
+      run([{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }], 340, function () {});
+    };
+
+    var collapse = function () {
+      var h = body.scrollHeight;
+      run([{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], 260, function () {
+        item.open = false;
+      });
+    };
+
+    item.collapse = collapse;
+
+    summary.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      if (item.open) {
+        collapse();
+        return;
+      }
+
+      // відкрите питання лишається одне
+      faqItems.forEach(function (other) {
+        if (other !== item && other.open) other.collapse();
+      });
+      expand();
+    });
+  });
+
+  /* ── Модальні вікна ───────────────────────────────────── */
+  function setupModal(modal) {
+    if (!modal || typeof modal.showModal !== 'function') return null;
+
+    var box = $('.modal__box', modal);
+    var lastTrigger = null;
+
+    var open = function (trigger) {
+      lastTrigger = trigger || null;
+      modal.showModal();
+      requestAnimationFrame(function () { modal.classList.add('is-open'); });
+    };
+
+    var close = function () {
       modal.classList.remove('is-open');
-      var box = $('.modal__box', modal);
-      var finish = function () { modal.close(); };
+      var finish = function () { if (modal.open) modal.close(); };
       if (box) {
         box.addEventListener('transitionend', finish, { once: true });
         setTimeout(finish, 420); // підстраховка, якщо transitionend не прийде
@@ -359,31 +656,74 @@
       }
     };
 
-    $$('[data-modal-open]').forEach(function (trigger) {
-      trigger.addEventListener('click', function (e) {
-        e.preventDefault();
-        lastTrigger = trigger;
-        openModal(trigger.dataset.service);
-      });
-    });
-
     $$('[data-modal-close]', modal).forEach(function (btn) {
-      btn.addEventListener('click', closeModal);
+      btn.addEventListener('click', close);
     });
 
-    // клік по підкладці поза карткою
     modal.addEventListener('click', function (e) {
-      if (e.target === modal) closeModal();
+      if (e.target === modal) close();
     });
 
     // Esc: гасимо штатне закриття, щоб програти анімацію
     modal.addEventListener('cancel', function (e) {
       e.preventDefault();
-      closeModal();
+      close();
     });
 
     modal.addEventListener('close', function () {
       if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+    });
+
+    return { el: modal, open: open, close: close };
+  }
+
+  /* запис на прийом */
+  var booking = setupModal($('#bookingModal'));
+
+  if (booking) {
+    $$('[data-modal-open]').forEach(function (trigger) {
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        booking.open(trigger);
+
+        var service = trigger.dataset.service;
+        if (service) {
+          var dd = $('[data-dropdown]', booking.el);
+          if (dd && dd.selectByValue) dd.selectByValue(service);
+        }
+
+        setTimeout(function () {
+          var field = $('input[name="name"]', booking.el);
+          if (field) field.focus({ preventScroll: true });
+        }, 280);
+      });
+    });
+  }
+
+  /* повний текст відгуку */
+  var reviewModal = setupModal($('#reviewModal'));
+
+  if (reviewModal) {
+    var fill = function (card) {
+      var set = function (key, value) {
+        var el = $('[data-rv="' + key + '"]', reviewModal.el);
+        if (el) el.textContent = value;
+      };
+      set('avatar', card.dataset.name.charAt(0));
+      set('name', card.dataset.name);
+      set('pet', card.dataset.pet);
+      set('text', '«' + card.dataset.full + '»');
+    };
+
+    $$('[data-review]').forEach(function (card) {
+      var show = function () {
+        fill(card);
+        reviewModal.open(card);
+      };
+      card.addEventListener('click', show);
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); }
+      });
     });
   }
 })();
