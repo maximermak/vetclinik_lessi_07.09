@@ -8,7 +8,7 @@
 <meta property="og:title" content="<%= clinic.name %> — ветеринарна клініка та грумінг-салон">
 <meta property="og:description" content="Лікуємо, доглядаємо і любимо ваших улюбленців. Запис онлайн за хвилину.">
 <meta property="og:type" content="website">
-<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon.svg?v=<%= v('/img/favicon.svg') %>" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -186,11 +186,11 @@
         <span class="brands__label">У клініці можна одразу купити корм</span>
         <div class="brands__row">
           <a class="brand-card" href="#booking" data-modal-open data-service="Консультація або інше" aria-label="Josera">
-            <img class="brand-card__logo brand-card__logo--josera" src="/img/josera.png"
+            <img class="brand-card__logo brand-card__logo--josera" src="/img/josera.png?v=<%= v('/img/josera.png') %>"
                  width="800" height="178" loading="lazy" alt="Josera">
           </a>
           <a class="brand-card" href="#booking" data-modal-open data-service="Консультація або інше" aria-label="1st Choice">
-            <img class="brand-card__logo brand-card__logo--choice" src="/img/1st-choice.png"
+            <img class="brand-card__logo brand-card__logo--choice" src="/img/1st-choice.png?v=<%= v('/img/1st-choice.png') %>"
                  width="863" height="575" loading="lazy" alt="1st Choice Nutrition">
           </a>
         </div>
@@ -389,7 +389,7 @@
       </button>
 
       <div class="modal__head">
-        <img src="/img/logo.svg" width="52" height="52" alt="">
+        <img src="/img/logo.svg?v=<%= v('/img/logo.svg') %>" width="52" height="52" alt="">
         <div>
           <h2 id="modalTitle">Запис на прийом</h2>
           <p>Передзвонимо й підберемо зручний час</p>

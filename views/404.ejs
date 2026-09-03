@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Сторінку не знайдено — <%= clinic.name %></title>
-<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/img/favicon.svg?v=<%= v('/img/favicon.svg') %>" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css?v=<%= v('/css/style.css') %>">
 </head>
 <body class="page-404">
   <div class="e404">
-    <img src="/img/logo.svg" width="110" height="110" alt="">
+    <img src="/img/logo.svg?v=<%= v('/img/logo.svg') %>" width="110" height="110" alt="">
     <h1>404</h1>
     <p>Схоже, ця сторінка втекла гуляти. Повертайтесь на головну — там усе на місці.</p>
     <a class="btn btn--primary" href="/">На головну</a>
