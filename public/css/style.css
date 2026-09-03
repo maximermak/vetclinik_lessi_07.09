@@ -95,7 +95,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-bottom: 1px solid var(--line);
 }
 .header--stuck { box-shadow: 0 6px 24px rgba(59, 29, 20, .09); }
-.header__in { display: flex; align-items: center; gap: 20px; min-height: var(--head); }
+.header__in { display: flex; align-items: center; gap: 14px; min-height: var(--head); }
 
 .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); }
 .brand__logo {
@@ -109,28 +109,42 @@ ul { margin: 0; padding: 0; list-style: none; }
   box-shadow: 0 0 0 3px var(--brown-2), 0 5px 14px rgba(176, 51, 31, .42);
 }
 .brand__text { display: flex; flex-direction: column; line-height: 1.1; }
-.brand__name { font-size: 1.32rem; font-weight: 800; letter-spacing: -.02em; }
-.brand__sub { font-size: .72rem; color: var(--ink-2); text-transform: uppercase; letter-spacing: .13em; font-weight: 600; }
+.brand__name { font-size: 1.32rem; font-weight: 800; letter-spacing: -.02em; white-space: nowrap; }
+.brand__sub { font-size: .72rem; color: var(--ink-2); text-transform: uppercase; letter-spacing: .13em; font-weight: 600; white-space: nowrap; }
 
 .nav { display: flex; gap: 4px; margin-left: auto; }
 /* службові елементи шухляди — лише на вузьких екранах */
 .nav__head, .nav__cta { display: none; }
 .nav a {
-  position: relative; padding: 9px 13px; border-radius: 10px;
-  color: var(--ink); font-weight: 600; font-size: .95rem;
+  position: relative; padding: 9px 11px; border-radius: 10px;
+  color: var(--ink); font-weight: 600; font-size: .95rem; white-space: nowrap;
 }
 .nav a::after {
-  content: ""; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 2px;
+  content: ""; position: absolute; left: 11px; right: 11px; bottom: 4px; height: 2px;
   background: var(--red); border-radius: 2px; transform: scaleX(0); transition: transform .22s ease;
 }
 .nav a:hover { color: var(--red); }
 .nav a:hover::after, .nav a.is-active::after { transform: scaleX(1); }
 .nav a.is-active { color: var(--red); }
 
-.header__actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
-.header__phone { display: inline-flex; align-items: center; gap: 7px; font-weight: 700; color: var(--ink); font-size: .95rem; }
-.header__phone:hover { color: var(--red); }
-.header__phone .icon { color: var(--red); }
+.header__actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+/* м'яка пігулка: вторинна дія поруч із червоною кнопкою запису */
+.header__phone {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 9px 16px 9px 10px; border-radius: 999px;
+  background: var(--yellow-soft); color: var(--ink);
+  font-weight: 700; font-size: .95rem; letter-spacing: .01em; white-space: nowrap;
+  transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.header__phone .icon {
+  width: 30px; height: 30px; padding: 6px; flex: none;
+  background: #fff; color: var(--red); border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(176, 51, 31, .18);
+}
+.header__phone:hover {
+  background: var(--yellow); transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(176, 51, 31, .18);
+}
 
 .burger { display: none; order: 3; width: 44px; height: 44px; padding: 11px; background: var(--yellow-soft); border: 0; border-radius: 12px; cursor: pointer; }
 .burger span { display: block; height: 2px; border-radius: 2px; background: var(--brown); transition: transform .25s ease, opacity .2s ease; }
@@ -448,16 +462,36 @@ ul { margin: 0; padding: 0; list-style: none; }
 .e404 p { max-width: 26rem; margin: 8px auto 24px; color: var(--ink-2); }
 
 /* ─── Адаптив ────────────────────────────────────────────── */
+@media (max-width: 1240px) {
+  /* підпис ширший за назву — на вузьких екранах він налазив на меню */
+  .brand__sub { display: none; }
+  .brand__text { justify-content: center; }
+}
+
+@media (max-width: 1160px) {
+  /* останній запас перед тим, як меню поїде в шухляду */
+  .nav a { padding-left: 8px; padding-right: 8px; }
+  .nav a::after { left: 8px; right: 8px; }
+  .header__phone { padding-left: 8px; padding-right: 13px; font-size: .9rem; }
+}
+
 @media (max-width: 1080px) {
   .grid--services, .grid--why, .grid--groom { grid-template-columns: repeat(2, 1fr); }
   .grid--reviews { columns: 2; }
   .strip__in { grid-template-columns: repeat(2, 1fr); }
+  /* пігулка стискається до круглої кнопки: обнуляємо асиметричний
+     паддинг і прибираємо вкладений білий кружечок — інакше іконка
+     сидить не по центру */
   .header__phone span { display: none; }
   .header__phone {
-    display: grid; place-items: center; width: 42px; height: 42px;
-    background: var(--yellow-soft); border-radius: 50%; color: var(--red);
+    display: grid; place-items: center; width: 44px; height: 44px;
+    padding: 0; gap: 0; background: var(--yellow-soft); border-radius: 50%;
   }
-  .header__phone:hover { background: var(--yellow); }
+  .header__phone .icon {
+    width: 22px; height: 22px; padding: 0;
+    background: none; box-shadow: none; color: var(--red);
+  }
+  .header__phone:hover { background: var(--yellow); transform: none; box-shadow: none; }
 }
 
 @media (max-width: 900px) {
@@ -466,7 +500,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .footer__in { grid-template-columns: 1fr 1fr; }
 }
 
-@media (max-width: 780px) {
+@media (max-width: 980px) {
   .burger { display: block; }
   /* без backdrop-filter: інакше шапка стає контейнером
      для position:fixed і шухляда не може вийти за її межі */
@@ -507,6 +541,9 @@ ul { margin: 0; padding: 0; list-style: none; }
     color: #fff; font-size: .98rem;
   }
   .nav__cta:hover { background: var(--red-dark); color: #fff; }
+}
+
+@media (max-width: 780px) {
   .header__actions .btn { display: none; }
   .fab { display: inline-flex; }
   .section, .grooming, .booking { padding: 60px 0; }

@@ -12,12 +12,21 @@
   // закрились усі, хто його просив.
   var lockCount = 0;
   var lockScroll = function () {
+    if (lockCount === 0) {
+      // ховаємо смугу прокрутки — сторінка стає ширшою на її ширину
+      // і весь контент стрибає вправо; компенсуємо тим самим паддингом
+      var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      if (scrollbarWidth > 0) document.body.style.paddingRight = scrollbarWidth + 'px';
+      document.body.classList.add('is-locked');
+    }
     lockCount += 1;
-    document.body.classList.add('is-locked');
   };
   var unlockScroll = function () {
     lockCount = Math.max(0, lockCount - 1);
-    if (lockCount === 0) document.body.classList.remove('is-locked');
+    if (lockCount === 0) {
+      document.body.classList.remove('is-locked');
+      document.body.style.paddingRight = '';
+    }
   };
 
   /* ── Мобільне меню ─────────────────────────────────────── */
