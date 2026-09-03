@@ -116,14 +116,18 @@
         <p>Не потрібно возити тварину містом: діагностика, лікування та догляд — на одній адресі.</p>
       </header>
 
-      <div class="grid grid--services">
+      <div class="services">
         <% services.forEach(function (s) { %>
-          <article class="card reveal">
-            <span class="card__icon"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-<%= s.icon %>"/></svg></span>
-            <h3><%= s.title %></h3>
-            <p><%= s.text %></p>
-            <a class="card__link" href="#booking" data-modal-open data-service="<%= s.title %>">Записатись <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></a>
-          </article>
+          <a class="srv reveal" href="#booking" data-modal-open data-service="<%= s.title %>">
+            <span class="srv__icon">
+              <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-<%= s.icon %>"/></svg>
+            </span>
+            <span class="srv__body">
+              <span class="srv__title"><%= s.title %></span>
+              <span class="srv__text"><%= s.text %></span>
+            </span>
+            <svg viewBox="0 0 24 24" class="icon icon--sm srv__go" aria-hidden="true"><use href="#i-chev"/></svg>
+          </a>
         <% }) %>
       </div>
     </div>

@@ -700,7 +700,10 @@
 
         var service = trigger.dataset.service;
         if (service) {
-          var dd = $('[data-dropdown]', booking.el);
+          // саме через приховане поле: у модалці кілька списків,
+          // і перший із них — вік, а не послуга
+          var field = $('input[name="service"]', booking.el);
+          var dd = field && field.closest('[data-dropdown]');
           if (dd && dd.selectByValue) dd.selectByValue(service);
         }
 
