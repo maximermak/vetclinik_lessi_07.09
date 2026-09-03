@@ -6,6 +6,20 @@
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   };
 
+  /* ── Блокування скролу сторінки ────────────────────────── */
+  // Лічильник, а не прапорець: бічне меню й модалка можуть
+  // теоретично перекритись у часі — знімаємо блок лише коли
+  // закрились усі, хто його просив.
+  var lockCount = 0;
+  var lockScroll = function () {
+    lockCount += 1;
+    document.body.classList.add('is-locked');
+  };
+  var unlockScroll = function () {
+    lockCount = Math.max(0, lockCount - 1);
+    if (lockCount === 0) document.body.classList.remove('is-locked');
+  };
+
   /* ── Мобільне меню ─────────────────────────────────────── */
   var burger = $('.burger');
   var nav = $('#nav');
@@ -18,13 +32,18 @@
         requestAnimationFrame(function () { navOverlay.classList.add('is-on'); });
       }
       nav.classList.add('is-open');
-      document.body.classList.add('is-locked');
+      lockScroll();
       burger.setAttribute('aria-expanded', 'true');
     };
 
     var closeNav = function () {
+      // idempotent: без цього застереження клік по .nav__cta (вона теж
+      // data-modal-open, тобто відкриває модалку і лежить всередині
+      // <nav>) знімав би блокування скролу, накинуте модалкою, навіть
+      // коли сама шухляда вже була закрита
+      if (!nav.classList.contains('is-open')) return;
       nav.classList.remove('is-open');
-      document.body.classList.remove('is-locked');
+      unlockScroll();
       burger.setAttribute('aria-expanded', 'false');
       if (!navOverlay) return;
       navOverlay.classList.remove('is-on');
@@ -330,7 +349,9 @@
         if (tooEarly || tooLate || closed || noSlots) {
           cell.disabled = true;
         } else {
-          cell.dataset.date = date.toISOString().slice(0, 10);
+          // не toISOString(): він переводить у UTC і для Києва (+2/+3)
+          // північ місцевого часу зсувається на попередню добу
+          cell.dataset.date = date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
         }
         if (date.getTime() === today.getTime()) cell.classList.add('is-today');
         if (selected && date.getTime() === selected.getTime()) cell.classList.add('is-picked');
@@ -638,14 +659,24 @@
 
     var box = $('.modal__box', modal);
     var lastTrigger = null;
+    var isOpen = false;
+    // чи мишу/палець опустили саме на підкладку (не на .modal__box) —
+    // інакше виділення тексту, що завершується поза карткою, зачитувалось
+    // би як клік по підкладці і закривало вікно
+    var downOnBackdrop = false;
 
     var open = function (trigger) {
       lastTrigger = trigger || null;
       modal.showModal();
+      isOpen = true;
+      lockScroll();
       requestAnimationFrame(function () { modal.classList.add('is-open'); });
     };
 
     var close = function () {
+      if (!isOpen) return;
+      isOpen = false;
+      unlockScroll();
       modal.classList.remove('is-open');
       var finish = function () { if (modal.open) modal.close(); };
       if (box) {
@@ -660,8 +691,12 @@
       btn.addEventListener('click', close);
     });
 
+    modal.addEventListener('pointerdown', function (e) {
+      downOnBackdrop = e.target === modal;
+    });
+
     modal.addEventListener('click', function (e) {
-      if (e.target === modal) close();
+      if (e.target === modal && downOnBackdrop) close();
     });
 
     // Esc: гасимо штатне закриття, щоб програти анімацію
