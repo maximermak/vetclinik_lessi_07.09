@@ -62,7 +62,8 @@
 
         <div class="hero__trust">
           <a class="rating" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
-            <span class="rating__score"><%= clinic.rating %></span>
+            <% var ratingParts = String(clinic.rating).split(','); %>
+            <span class="rating__score"><%= ratingParts[0] %><% if (ratingParts.length > 1) { %><span class="rating__sep">,</span><%= ratingParts[1] %><% } %></span>
             <span class="rating__body">
               <span class="stars" aria-hidden="true">★★★★★</span>
               <span class="rating__label"><%= clinic.reviewsCount %> <%= plural(clinic.reviewsCount, 'відгук', 'відгуки', 'відгуків') %> у Google Maps</span>

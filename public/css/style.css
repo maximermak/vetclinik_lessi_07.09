@@ -221,6 +221,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .rating:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .rating__score { font-size: 1.65rem; font-weight: 800; color: var(--red); }
+/* у Manrope в коми широкий правий відступ — «4,9» читалось як «4, 9» */
+.rating__sep { margin: 0 -.13em 0 -.03em; }
 .rating__body { display: flex; flex-direction: column; line-height: 1.25; }
 .rating__label { font-size: .8rem; color: var(--ink-2); font-weight: 600; }
 .stars { color: var(--yellow-dark); letter-spacing: 2px; font-size: .92rem; }
