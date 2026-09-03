@@ -5,9 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= clinic.name %> — ветеринарна клініка та грумінг-салон у <%= clinic.cityIn %></title>
 <meta name="description" content="Ветклініка Pussy Cat у Харкові, вул. Олександра Олеся, 21: вакцинація, хірургія, стоматологія, дерматологія, лабораторна діагностика та грумінг-салон. Запис онлайн.">
-<meta property="og:title" content="<%= clinic.name %> — ветеринарна клініка та грумінг-салон">
-<meta property="og:description" content="Лікуємо, доглядаємо і любимо ваших улюбленців. Запис онлайн за хвилину.">
+<link rel="canonical" href="<%= siteUrl %>/">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="<%= clinic.name %>">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:url" content="<%= siteUrl %>/">
+<meta property="og:title" content="<%= clinic.name %> — ветклініка та грумінг у <%= clinic.cityIn %>">
+<meta property="og:description" content="Вакцинація, хірургія, стоматологія, дерматологія та грумінг-салон у <%= clinic.cityIn %>, <%= clinic.address %>. Запис онлайн за хвилину.">
+<meta property="og:image" content="<%= siteUrl %>/img/og.jpg?v=<%= v('/img/og.jpg') %>">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ветеринарна клініка Pussy Cat — турбота про тих, хто вас безумовно любить">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= clinic.name %> — ветклініка та грумінг у <%= clinic.cityIn %>">
+<meta name="twitter:description" content="Вакцинація, хірургія, стоматологія та грумінг-салон. Запис онлайн за хвилину.">
+<meta name="twitter:image" content="<%= siteUrl %>/img/og.jpg?v=<%= v('/img/og.jpg') %>">
+<meta name="theme-color" content="#b0331f">
 <link rel="icon" href="/img/favicon.svg?v=<%= v('/img/favicon.svg') %>" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -20,12 +20,16 @@ const PORT = process.env.PORT || 3000;
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 const GOOGLE_KEY = process.env.GOOGLE_MAPS_API_KEY;
+// абсолютний адрес потрібен для og:image — соцмережі не розуміють відносні
+const SITE_URL = (process.env.SITE_URL || `http://localhost:${PORT}`).replace(/\/$/, '');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
 
 // ?v=<час зміни файлу> — щоб браузер не тримав старий CSS/JS після правок
+app.locals.siteUrl = SITE_URL;
+
 app.locals.plural = function (n, one, few, many) {
   return plural(parseInt(n, 10) || 0, one, few, many);
 };
