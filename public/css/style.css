@@ -98,8 +98,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .header__in { display: flex; align-items: center; gap: 20px; min-height: var(--head); }
 
 .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); }
-.brand__logo { transition: transform .4s ease; }
-.brand:hover .brand__logo { transform: rotate(-8deg) scale(1.06); }
+.brand__logo {
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px var(--yellow), 0 3px 10px rgba(176, 51, 31, .28);
+  transition: transform .4s ease, box-shadow .25s ease;
+}
+.brand:hover .brand__logo {
+  transform: rotate(-8deg) scale(1.06);
+  box-shadow: 0 0 0 3px var(--yellow-dark), 0 5px 14px rgba(176, 51, 31, .4);
+}
 .brand__text { display: flex; flex-direction: column; line-height: 1.1; }
 .brand__name { font-size: 1.32rem; font-weight: 800; letter-spacing: -.02em; }
 .brand__sub { font-size: .72rem; color: var(--ink-2); text-transform: uppercase; letter-spacing: .13em; font-weight: 600; }
