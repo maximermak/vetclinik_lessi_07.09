@@ -527,7 +527,7 @@
       if (label) label.textContent = 'Надсилаємо…';
 
       try {
-        var res = await fetch('/api/lead', {
+        var res = await fetch('/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)

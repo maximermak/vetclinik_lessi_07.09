@@ -56,18 +56,38 @@ async function refresh({ placeId, apiKey }) {
   }
 }
 
-/** Запускає фонове оновлення. Без ключа нічого не робить. */
-function start({ placeId, apiKey }) {
-  if (!apiKey || !placeId) return false;
+let config = null;      // { placeId, apiKey }
+let inFlight = false;
 
-  refresh({ placeId, apiKey });
-  timer = setInterval(() => refresh({ placeId, apiKey }), REFRESH_MS);
-  timer.unref?.();
+/**
+ * Вмикає оновлення. За наявності постійного процесу (background: true)
+ * тримає таймер; у serverless таймер між викликами не виживає, тому там
+ * дані освіжаються ліниво — при першому запиті після протухання кешу.
+ */
+function start({ placeId, apiKey, background = true }) {
+  if (!apiKey || !placeId) return false;
+  config = { placeId, apiKey };
+
+  refresh(config);
+  if (background) {
+    timer = setInterval(() => refresh(config), REFRESH_MS);
+    timer.unref?.();
+  }
   return true;
+}
+
+/** Оновлює у фоні, якщо кеш протух. Запит користувача не чекає. */
+function refreshIfStale() {
+  if (!config || inFlight) return;
+  if (cache && Date.now() - cache.fetchedAt.getTime() < REFRESH_MS) return;
+
+  inFlight = true;
+  refresh(config).finally(() => { inFlight = false; });
 }
 
 /** Свіжі цифри або запасні з data.js. */
 function get(fallback) {
+  refreshIfStale();
   if (!cache) return { rating: fallback.rating, reviewsCount: fallback.reviewsCount, live: false };
   return { rating: cache.rating, reviewsCount: cache.reviewsCount, live: true };
 }

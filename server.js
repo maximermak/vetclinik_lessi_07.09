@@ -20,21 +20,34 @@ const PORT = process.env.PORT || 3000;
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 const GOOGLE_KEY = process.env.GOOGLE_MAPS_API_KEY;
-// абсолютний адрес потрібен для og:image — соцмережі не розуміють відносні
-const SITE_URL = (process.env.SITE_URL || `http://localhost:${PORT}`).replace(/\/$/, '');
+// абсолютний адрес потрібен для og:image — соцмережі не розуміють відносні.
+// На Vercel, якщо SITE_URL не заданий, беремо домен самого деплою.
+const SITE_URL = (
+  process.env.SITE_URL ||
+  (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+  `http://localhost:${PORT}`
+).replace(/\/$/, '');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
 
-// ?v=<час зміни файлу> — щоб браузер не тримав старий CSS/JS після правок
 app.locals.siteUrl = SITE_URL;
 
 app.locals.plural = function (n, one, few, many) {
   return plural(parseInt(n, 10) || 0, one, few, many);
 };
 
+// ?v=... — щоб браузер не тримав старий CSS/JS після правок.
+// Локально мітка = час зміни файлу. На Vercel файли з public/ віддає CDN
+// і їх немає в бандлі функції, тому там міткою слугує ідентифікатор
+// деплою: він новий на кожен реліз, тобто кеш скидається так само.
+const BUILD_ID = (process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_URL || '')
+  .replace(/[^a-z0-9]/gi, '')
+  .slice(0, 12);
+
 app.locals.v = function (file) {
+  if (BUILD_ID) return BUILD_ID;
   try {
     return String(Math.floor(fs.statSync(path.join(__dirname, 'public', file)).mtimeMs));
   } catch (err) {
@@ -68,7 +81,10 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/api/lead', leadLimiter, async (req, res) => {
+// Два шляхи навмисно: на Vercel тека api/ зарезервована під функції,
+// тому основним для клієнта служить /lead, а /api/lead лишається
+// сумісності заради (і працює на будь-якому іншому хостингу).
+app.post(['/lead', '/api/lead'], leadLimiter, async (req, res) => {
   // Приманка для ботів: люди це поле не бачать і не заповнюють.
   if (req.body.website) {
     return res.json({ ok: true });
@@ -108,16 +124,30 @@ app.use((req, res) => {
   res.status(404).render('404', { clinic });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n  🐾 Pussy Cat — http://localhost:${PORT}\n`);
+function startServer() {
+  return app.listen(PORT, () => {
+    console.log(`\n  🐾 Pussy Cat — http://localhost:${PORT}\n`);
 
-  const liveRating = googleRating.start({ placeId: clinic.placeId, apiKey: GOOGLE_KEY });
-  if (!liveRating) {
-    console.log(`  ℹ️  Рейтинг показуємо з data.js (${clinic.rating}, ${clinic.reviewsCount} відгуків).`);
-    console.log('     Для автооновлення додайте GOOGLE_MAPS_API_KEY у .env\n');
-  }
-  if (!TOKEN || !CHAT_ID) {
-    console.warn('  ⚠️  Заявки не підуть у Telegram: заповніть TELEGRAM_BOT_TOKEN і TELEGRAM_CHAT_ID у .env');
-    console.warn('     Підказка: напишіть боту повідомлення та виконайте `npm run chat-id`\n');
-  }
-});
+    const liveRating = googleRating.start({ placeId: clinic.placeId, apiKey: GOOGLE_KEY });
+    if (!liveRating) {
+      console.log(`  ℹ️  Рейтинг показуємо з data.js (${clinic.rating}, ${clinic.reviewsCount} відгуків).`);
+      console.log('     Для автооновлення додайте GOOGLE_MAPS_API_KEY у .env\n');
+    }
+    if (!TOKEN || !CHAT_ID) {
+      console.warn('  ⚠️  Заявки не підуть у Telegram: заповніть TELEGRAM_BOT_TOKEN і TELEGRAM_CHAT_ID у .env');
+      console.warn('     Підказка: напишіть боту повідомлення та виконайте `npm run chat-id`\n');
+    }
+  });
+}
+
+// Постійний процес (npm start, Railway, VPS) — слухаємо порт і тримаємо
+// таймер оновлення рейтингу. На Vercel файл підключається як модуль:
+// там порту немає, а рейтинг освіжається ліниво, у googleRating.get().
+if (require.main === module) {
+  startServer();
+} else {
+  googleRating.start({ placeId: clinic.placeId, apiKey: GOOGLE_KEY, background: false });
+}
+
+module.exports = app;
+module.exports.startServer = startServer;
