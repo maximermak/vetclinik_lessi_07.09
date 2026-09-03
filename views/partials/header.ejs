@@ -1,0 +1,46 @@
+<div class="topbar">
+  <div class="container topbar__in">
+    <span class="topbar__item">
+      <svg class="icon icon--sm" aria-hidden="true"><use href="#i-clock"/></svg>
+      Пн–Пт 09:00–19:00 · Сб 09:00–18:00 · Нд 09:00–14:00
+    </span>
+    <span class="topbar__item topbar__item--phones">
+      <svg class="icon icon--sm" aria-hidden="true"><use href="#i-phone"/></svg>
+      <% clinic.phones.forEach(function (p, i) { %>
+        <a href="tel:<%= p.raw %>"><%= p.pretty %></a><%= i < clinic.phones.length - 1 ? ' ·' : '' %>
+      <% }) %>
+    </span>
+  </div>
+</div>
+
+<header class="header" id="top">
+  <div class="container header__in">
+    <a class="brand" href="/">
+      <img class="brand__logo" src="/img/logo.svg" width="52" height="52" alt="">
+      <span class="brand__text">
+        <span class="brand__name"><%= clinic.name %></span>
+        <span class="brand__sub">ветклініка &amp; грумінг</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#services">Послуги</a>
+      <a href="#grooming">Грумінг</a>
+      <a href="#why">Про нас</a>
+      <a href="#reviews">Відгуки</a>
+      <a href="#faq">Питання</a>
+      <a href="#contacts">Контакти</a>
+    </nav>
+
+    <div class="header__actions">
+      <a class="header__phone" href="tel:<%= clinic.phones[0].raw %>">
+        <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+        <%= clinic.phones[0].pretty %>
+      </a>
+      <a class="btn btn--primary btn--sm" href="#booking">Записатись</a>
+      <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>

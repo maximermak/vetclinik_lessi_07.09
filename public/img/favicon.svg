@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pussy Cat — ветеринарна клініка">
+  <defs>
+    <path id="pc-cat" d="M196 344c0-30 9-58 26-80l-8-64c-1-9 9-15 16-9l48 39a132 132 0 0 1 44 0l48-39c7-6 17 0 16 9l-8 64c17 22 26 50 26 80 0 62-46 104-104 104S196 406 196 344Z"/>
+  </defs>
+
+  <circle cx="256" cy="256" r="248" fill="#B0331F"/>
+
+  <!-- собака -->
+  <g fill="#fff">
+    <ellipse cx="200" cy="178" rx="120" ry="97" transform="rotate(-14 200 178)"/>
+    <ellipse cx="92" cy="224" rx="58" ry="45" transform="rotate(-22 92 224)"/>
+  </g>
+  <path d="M198 78c62 30 80 104 58 168" fill="none" stroke="#B0331F" stroke-width="21" stroke-linecap="round"/>
+  <circle cx="140" cy="168" r="13" fill="#B0331F"/>
+
+  <!-- кіт -->
+  <use href="#pc-cat" fill="#fff" stroke="#fff" stroke-width="50" stroke-linejoin="round"/>
+  <use href="#pc-cat" fill="#B0331F"/>
+  <ellipse cx="330" cy="330" rx="15" ry="20" fill="#fff" transform="rotate(16 330 330)"/>
+</svg>

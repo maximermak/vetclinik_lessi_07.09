@@ -1,0 +1,44 @@
+<footer class="footer">
+  <div class="container footer__in">
+    <div class="footer__brand">
+      <img src="/img/logo.svg" width="56" height="56" alt="">
+      <div>
+        <strong><%= clinic.name %></strong>
+        <p><%= clinic.tagline %> у <%= clinic.city %>і. Лікуємо, доглядаємо і любимо ваших улюбленців.</p>
+      </div>
+    </div>
+
+    <div class="footer__col">
+      <h3>Клініка</h3>
+      <a href="#services">Послуги</a>
+      <a href="#grooming">Грумінг-салон</a>
+      <a href="#why">Про нас</a>
+      <a href="#faq">Часті питання</a>
+    </div>
+
+    <div class="footer__col">
+      <h3>Контакти</h3>
+      <% clinic.phones.forEach(function (p) { %>
+        <a href="tel:<%= p.raw %>"><%= p.pretty %></a>
+      <% }) %>
+      <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">Ми на Google Maps</a>
+    </div>
+
+    <div class="footer__col">
+      <h3>Графік</h3>
+      <% clinic.schedule.forEach(function (s) { %>
+        <span><%= s.days %><br><b><%= s.hours %></b></span>
+      <% }) %>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <span>© <%= new Date().getFullYear() %> <%= clinic.name %>. Усі права захищені.</span>
+    <a href="#top">Наверх ↑</a>
+  </div>
+</footer>
+
+<a class="fab" href="#booking" aria-label="Записатись на прийом">
+  <svg class="icon icon--fill" aria-hidden="true"><use href="#i-paw"/></svg>
+  <span>Записатись</span>
+</a>

@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= clinic.name %> — ветеринарна клініка та грумінг-салон у <%= clinic.city %>і</title>
+<meta name="description" content="Ветклініка Pussy Cat: вакцинація, хірургія, стоматологія, дерматологія, УЗД та грумінг-салон. Досвідчені лікарі, сотні відгуків у Google. Запис онлайн.">
+<meta property="og:title" content="<%= clinic.name %> — ветеринарна клініка та грумінг-салон">
+<meta property="og:description" content="Лікуємо, доглядаємо і любимо ваших улюбленців. Запис онлайн за хвилину.">
+<meta property="og:type" content="website">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<%- include('partials/icons') %>
+<%- include('partials/header', { clinic: clinic }) %>
+
+<main>
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="hero__paws" aria-hidden="true"></div>
+    <div class="container hero__in">
+      <div class="hero__text reveal">
+        <span class="eyebrow"><svg class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка та грумінг у <%= clinic.city %>і</span>
+        <h1>Турбота про тих,<br>хто вас <span class="hl">безумовно любить</span></h1>
+        <p class="hero__lead">
+          Повний спектр ветеринарних послуг і грумінг-салон під одним дахом.
+          Приймаємо котів, собак і дрібних улюбленців — від планового щеплення до складної операції.
+        </p>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#booking">Записатись на прийом</a>
+          <a class="btn btn--ghost" href="tel:<%= clinic.phones[0].raw %>">
+            <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+            Зателефонувати
+          </a>
+        </div>
+
+        <div class="hero__trust">
+          <a class="rating" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
+            <span class="rating__score"><%= clinic.rating %></span>
+            <span class="rating__body">
+              <span class="stars" aria-hidden="true">★★★★★</span>
+              <span class="rating__label"><%= clinic.reviewsCount %> відгуків у Google Maps</span>
+            </span>
+          </a>
+          <span class="hero__stat"><b>10+</b> років практики</span>
+        </div>
+      </div>
+
+      <aside class="hero__card reveal">
+        <div class="hcard">
+          <div class="hcard__head">
+            <svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>
+            <h2>Графік роботи</h2>
+          </div>
+          <ul class="hcard__hours">
+            <% clinic.schedule.forEach(function (s) { %>
+              <li><span><%= s.days %></span><b><%= s.hours %></b></li>
+            <% }) %>
+          </ul>
+          <div class="hcard__phones">
+            <% clinic.phones.forEach(function (p) { %>
+              <a href="tel:<%= p.raw %>">
+                <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+                <%= p.pretty %>
+              </a>
+            <% }) %>
+          </div>
+          <p class="hcard__note">Гострі стани приймаємо без запису — попередьте нас дзвінком, і лікар буде готовий.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ══ ПЕРЕВАГИ-СТРІЧКА ══ -->
+  <section class="strip">
+    <div class="container strip__in">
+      <div class="strip__item reveal"><svg class="icon" aria-hidden="true"><use href="#i-stethoscope"/></svg><span>Досвідчені лікарі<br><small>терапія, хірургія, дерматологія</small></span></div>
+      <div class="strip__item reveal"><svg class="icon" aria-hidden="true"><use href="#i-flask"/></svg><span>Своя лабораторія<br><small>аналізи в день звернення</small></span></div>
+      <div class="strip__item reveal"><svg class="icon icon--fill" aria-hidden="true"><use href="#i-paw"/></svg><span>Грумінг-салон<br><small>стрижка котів і собак</small></span></div>
+      <div class="strip__item reveal"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Чесні ціни<br><small>вартість — до початку прийому</small></span></div>
+    </div>
+  </section>
+
+  <!-- ══ ПОСЛУГИ ══ -->
+  <section class="section" id="services">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="eyebrow">Наші послуги</span>
+        <h2>Усе для здоров’я улюбленця<br>в одній клініці</h2>
+        <p>Не потрібно возити тварину містом: діагностика, лікування та догляд — на одній адресі.</p>
+      </header>
+
+      <div class="grid grid--services">
+        <% services.forEach(function (s) { %>
+          <article class="card reveal">
+            <span class="card__icon"><svg class="icon" aria-hidden="true"><use href="#i-<%= s.icon %>"/></svg></span>
+            <h3><%= s.title %></h3>
+            <p><%= s.text %></p>
+            <a class="card__link" href="#booking">Записатись <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></a>
+          </article>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ГРУМІНГ ══ -->
+  <section class="grooming" id="grooming">
+    <div class="container grooming__in">
+      <div class="grooming__text reveal">
+        <span class="eyebrow eyebrow--light">Грумінг-салон</span>
+        <h2>Красивий улюбленець —<br>щасливий власник</h2>
+        <p>
+          Працюємо без агресії та зайвого стресу: підбираємо темп під характер тварини,
+          використовуємо професійну косметику й гострий інструмент. Для складних випадків
+          поруч завжди лікар клініки.
+        </p>
+        <ul class="checks">
+          <% grooming.forEach(function (g) { %>
+            <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg><%= g %></li>
+          <% }) %>
+        </ul>
+        <a class="btn btn--yellow" href="#booking">Записатись на грумінг</a>
+      </div>
+
+      <div class="grooming__art reveal" aria-hidden="true">
+        <div class="art-badge">
+          <img src="/img/logo.svg" width="120" height="120" alt="">
+          <b>Pussy Cat</b>
+          <span>грумінг-салон</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ЧОМУ МИ ══ -->
+  <section class="section section--cream" id="why">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="eyebrow">Чому нас обирають</span>
+        <h2>Клініка, куди повертаються</h2>
+        <p>Нас знаходять за відгуками друзів — і залишаються надовго.</p>
+      </header>
+
+      <div class="grid grid--why">
+        <% advantages.forEach(function (a, i) { %>
+          <article class="why reveal">
+            <span class="why__num"><%= String(i + 1).padStart(2, '0') %></span>
+            <h3><%= a.title %></h3>
+            <p><%= a.text %></p>
+          </article>
+        <% }) %>
+      </div>
+
+      <div class="brands reveal">
+        <span class="brands__label">У клініці можна одразу купити корм:</span>
+        <span class="brands__logo brands__logo--josera">Josera</span>
+        <span class="brands__logo brands__logo--choice">1<sup>st</sup> CHOICE</span>
+        <span class="brands__note">повсякденні та лікувальні лінійки для котів і собак</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ВІДГУКИ ══ -->
+  <section class="section" id="reviews">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="eyebrow">Відгуки</span>
+        <h2>Що кажуть власники</h2>
+        <p>Кілька відгуків із <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">нашої сторінки в Google Maps</a>.</p>
+      </header>
+
+      <div class="grid grid--reviews">
+        <% reviews.forEach(function (r) { %>
+          <figure class="review reveal">
+            <div class="review__top">
+              <span class="avatar"><%= r.name.charAt(0) %></span>
+              <span>
+                <b><%= r.name %></b>
+                <small><%= r.pet %></small>
+              </span>
+              <span class="stars" aria-label="5 з 5">★★★★★</span>
+            </div>
+            <blockquote>«<%= r.text %>»</blockquote>
+          </figure>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ЗАЯВКА ══ -->
+  <section class="booking" id="booking">
+    <div class="container booking__in">
+      <div class="booking__text reveal">
+        <span class="eyebrow eyebrow--light">Онлайн-запис</span>
+        <h2>Запишіться<br>за одну хвилину</h2>
+        <p>
+          Заповніть форму — заявка миттєво прилетить адміністратору в Telegram.
+          Ми передзвонимо у робочі години й підберемо зручний час.
+        </p>
+        <ul class="checks checks--light">
+          <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Передзвонюємо протягом 15 хвилин</li>
+          <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Підкажемо, як підготувати тварину</li>
+          <li><svg class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Озвучимо вартість заздалегідь</li>
+        </ul>
+        <div class="booking__phones">
+          <% clinic.phones.forEach(function (p) { %>
+            <a href="tel:<%= p.raw %>"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><%= p.pretty %></a>
+          <% }) %>
+        </div>
+      </div>
+
+      <div class="formwrap reveal">
+        <form class="form" id="leadForm" novalidate>
+          <h3 class="form__title">Заявка на прийом</h3>
+
+          <div class="field">
+            <label for="f-name">Ваше ім’я <span>*</span></label>
+            <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Олена" required>
+            <small class="err" data-err="name"></small>
+          </div>
+
+          <div class="field">
+            <label for="f-phone">Телефон <span>*</span></label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+38 (0__) ___-__-__" required>
+            <small class="err" data-err="phone"></small>
+          </div>
+
+          <div class="field">
+            <label for="f-pet">Улюбленець</label>
+            <input id="f-pet" name="pet" type="text" placeholder="Кіт, 3 роки, Мурзик">
+          </div>
+
+          <div class="field">
+            <label for="f-service">Послуга</label>
+            <div class="select">
+              <select id="f-service" name="service">
+                <option value="">Оберіть послугу</option>
+                <% serviceOptions.forEach(function (o) { %>
+                  <option value="<%= o %>"><%= o %></option>
+                <% }) %>
+              </select>
+              <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-time">Бажаний час візиту</label>
+            <input id="f-time" name="preferredTime" type="text" placeholder="Завтра після 17:00">
+          </div>
+
+          <div class="field field--full">
+            <label for="f-msg">Що турбує?</label>
+            <textarea id="f-msg" name="message" rows="3" placeholder="Коротко опишіть симптоми або питання"></textarea>
+          </div>
+
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <button class="btn btn--primary btn--wide" type="submit">
+            <svg class="icon icon--fill" aria-hidden="true"><use href="#i-tg"/></svg>
+            <span class="btn__label">Надіслати заявку</span>
+          </button>
+
+          <p class="form__note">Натискаючи кнопку, ви погоджуєтесь на обробку персональних даних.</p>
+          <p class="form__status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="form__done" hidden>
+          <span class="form__done-ic"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+          <h3>Дякуємо, заявку прийнято!</h3>
+          <p>Адміністратор передзвонить вам найближчим часом у робочі години.</p>
+          <button class="btn btn--ghost btn--sm" type="button" data-reset>Надіслати ще одну</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FAQ ══ -->
+  <section class="section section--cream" id="faq">
+    <div class="container container--narrow">
+      <header class="section__head reveal">
+        <span class="eyebrow">Часті питання</span>
+        <h2>Коротко про головне</h2>
+      </header>
+
+      <div class="faq">
+        <% faq.forEach(function (f) { %>
+          <details class="faq__item reveal">
+            <summary><%= f.q %><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+            <div class="faq__body"><p><%= f.a %></p></div>
+          </details>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ КОНТАКТИ ══ -->
+  <section class="section contacts" id="contacts">
+    <div class="container">
+      <header class="section__head reveal">
+        <span class="eyebrow">Контакти</span>
+        <h2>Як нас знайти</h2>
+      </header>
+
+      <div class="contacts__in">
+        <div class="contacts__info reveal">
+          <div class="cinfo">
+            <span class="cinfo__ic"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
+            <div><b>Адреса</b><p><%= clinic.address %></p></div>
+          </div>
+          <div class="cinfo">
+            <span class="cinfo__ic"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span>
+            <div>
+              <b>Телефони</b>
+              <p>
+                <% clinic.phones.forEach(function (p) { %>
+                  <a href="tel:<%= p.raw %>"><%= p.pretty %></a><br>
+                <% }) %>
+              </p>
+            </div>
+          </div>
+          <div class="cinfo">
+            <span class="cinfo__ic"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
+            <div>
+              <b>Графік роботи</b>
+              <p>
+                <% clinic.schedule.forEach(function (s) { %>
+                  <%= s.days %>: <%= s.hours %><br>
+                <% }) %>
+              </p>
+            </div>
+          </div>
+          <a class="btn btn--primary" href="#booking">Записатись на прийом</a>
+        </div>
+
+        <div class="contacts__map reveal">
+          <iframe
+            title="Карта — <%= clinic.name %>"
+            src="https://maps.google.com/maps?q=<%= encodeURIComponent(clinic.mapQuery) %>&z=16&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer', { clinic: clinic }) %>
+<script src="/js/app.js" defer></script>
+</body>
+</html>
