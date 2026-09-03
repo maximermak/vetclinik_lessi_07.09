@@ -8,7 +8,8 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 
 const {
-  clinic, services, grooming, advantages, reviews, faq, serviceOptions, scheduleByWeekday
+  clinic, services, grooming, advantages, reviews, faq,
+  serviceOptions, petAgeOptions, scheduleByWeekday
 } = require('./src/data');
 const { validateLead, plural } = require('./src/validate');
 const { sendLead } = require('./src/telegram');
@@ -59,7 +60,7 @@ app.get('/', (req, res) => {
 
   res.render('index', {
     clinic: clinicNow, services, grooming, advantages, reviews, faq,
-    serviceOptions, scheduleByWeekday
+    serviceOptions, petAgeOptions, scheduleByWeekday
   });
 });
 

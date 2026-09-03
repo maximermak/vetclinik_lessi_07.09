@@ -19,6 +19,7 @@ function formatLead(lead) {
     ['👤 Ім’я', lead.name],
     ['📞 Телефон', lead.phone],
     [`${petIcon} Тварина`, lead.petType],
+    ['🏷 Кличка', lead.petName],
     ['🎂 Вік', lead.petAge],
     ['🩺 Послуга', lead.service],
     ['🗓 Бажаний час', lead.preferredTime],

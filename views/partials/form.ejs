@@ -45,34 +45,34 @@
   </div>
 
   <div class="field">
-    <span class="field__label">Вік тварини</span>
-    <div class="agebox">
-      <div class="stepper" data-stepper>
-        <button class="stepper__btn" type="button" data-step="-1" aria-label="Зменшити вік">
-          <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-minus"/></svg>
-        </button>
-        <input class="stepper__val" id="<%= p %>-age" name="petAge" type="text"
-               inputmode="numeric" maxlength="2" placeholder="—" aria-label="Вік тварини">
-        <button class="stepper__btn" type="button" data-step="1" aria-label="Збільшити вік">
-          <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-plus"/></svg>
-        </button>
-      </div>
-      <div class="units" data-units role="radiogroup" aria-label="Одиниці віку">
-        <label class="units__opt">
-          <input type="radio" name="petAgeUnit" value="місяців">
-          <span>міс.</span>
-        </label>
-        <label class="units__opt">
-          <input type="radio" name="petAgeUnit" value="років" checked>
-          <span>років</span>
-        </label>
-      </div>
+    <label for="<%= p %>-pet">Кличка тварини</label>
+    <div class="control">
+      <svg viewBox="0 0 24 24" class="control__ic icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg>
+      <input id="<%= p %>-pet" name="petName" type="text" maxlength="40"
+             autocomplete="off" placeholder="Мурзик">
     </div>
   </div>
 
   <div class="field">
+    <span class="field__label">Вік тварини</span>
+    <div class="dropdown" data-dropdown data-placeholder="Оберіть вік">
+      <input type="hidden" name="petAge" value="">
+      <button class="dropdown__btn" type="button" aria-haspopup="listbox" aria-expanded="false">
+        <span class="dropdown__value is-placeholder">Оберіть вік</span>
+        <svg viewBox="0 0 24 24" class="icon icon--sm dropdown__chev" aria-hidden="true"><use href="#i-chev"/></svg>
+      </button>
+      <ul class="dropdown__list" role="listbox" tabindex="-1" aria-label="Вік тварини">
+        <% petAgeOptions.forEach(function (o, i) { %>
+          <li class="dropdown__opt" role="option" aria-selected="false"
+              data-value="<%= o %>" style="--i: <%= i %>"><%= o %></li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+
+  <div class="field field--full">
     <span class="field__label">Послуга</span>
-    <div class="dropdown" data-dropdown>
+    <div class="dropdown" data-dropdown data-placeholder="Оберіть послугу">
       <input type="hidden" name="service" value="">
       <button class="dropdown__btn" type="button" aria-haspopup="listbox" aria-expanded="false">
         <span class="dropdown__value is-placeholder">Оберіть послугу</span>

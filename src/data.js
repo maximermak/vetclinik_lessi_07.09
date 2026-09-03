@@ -191,6 +191,25 @@ const faq = [
   }
 ];
 
+// Вік: готові варіанти замість лічильника — швидше й без зайвих кліків.
+// Дрібний крок до року, бо для щеплень саме цей період критичний.
+const petAgeOptions = [
+  'До 1 місяця',
+  '1–3 місяці',
+  '4–6 місяців',
+  '7–11 місяців',
+  '1 рік',
+  '2 роки',
+  '3 роки',
+  '4 роки',
+  '5 років',
+  '6–7 років',
+  '8–10 років',
+  '11–14 років',
+  '15+ років',
+  'Не знаю точно'
+];
+
 const serviceOptions = [
   ...services.map((s) => s.title),
   'Грумінг / стрижка',
@@ -211,5 +230,6 @@ clinic.schedule.forEach((slot) => {
 });
 
 module.exports = {
-  clinic, services, grooming, advantages, reviews, faq, serviceOptions, scheduleByWeekday
+  clinic, services, grooming, advantages, reviews, faq,
+  serviceOptions, petAgeOptions, scheduleByWeekday
 };

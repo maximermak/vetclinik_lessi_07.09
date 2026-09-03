@@ -134,45 +134,6 @@
     sync();
   }
 
-  /* ── Лічильник віку ────────────────────────────────────── */
-  function initStepper(root) {
-    var input = $('.stepper__val', root);
-    var MAX = 30;
-
-    var read = function () {
-      var n = parseInt(input.value, 10);
-      return isNaN(n) ? null : n;
-    };
-
-    var write = function (n, animate) {
-      input.value = n === null ? '' : String(n);
-      $$('.stepper__btn', root).forEach(function (b) {
-        var dir = Number(b.dataset.step);
-        b.disabled = n !== null && ((dir < 0 && n <= 0) || (dir > 0 && n >= MAX));
-      });
-      if (!animate) return;
-      input.classList.remove('is-bumped');
-      void input.offsetWidth; // перезапуск анімації
-      input.classList.add('is-bumped');
-    };
-
-    $$('.stepper__btn', root).forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var current = read();
-        var next = current === null ? (Number(btn.dataset.step) > 0 ? 1 : 0)
-                                    : current + Number(btn.dataset.step);
-        write(Math.min(MAX, Math.max(0, next)), true);
-      });
-    });
-
-    input.addEventListener('input', function () {
-      input.value = input.value.replace(/\D/g, '').slice(0, 2);
-      write(read(), false);
-    });
-
-    write(read(), false);
-  }
-
   /* ── Власний випадний список ───────────────────────────── */
   function initDropdown(root) {
     var btn = $('.dropdown__btn', root);
@@ -261,7 +222,7 @@
     root.reset = function () {
       opts.forEach(function (o) { o.setAttribute('aria-selected', 'false'); });
       hidden.value = '';
-      valueEl.textContent = 'Оберіть послугу';
+      valueEl.textContent = root.dataset.placeholder || 'Оберіть зі списку';
       valueEl.classList.add('is-placeholder');
     };
   }
@@ -486,9 +447,13 @@
   function initPhone(input) {
     var format = function (raw) {
       var d = raw.replace(/\D/g, '');
+      // «38» — це цифри нашого ж префікса «+38 (», а не введені користувачем.
+      // Без цієї гілки вони діставали ведучий нуль, ставали «038» і
+      // відновлювались на кожне натискання Backspace — поле не очищалось.
       if (d.startsWith('380')) d = d.slice(2);
+      else if (d.startsWith('38')) d = d.slice(2);
       else if (d.startsWith('80')) d = d.slice(1);
-      else if (!d.startsWith('0') && d.length) d = '0' + d;
+      else if (d && d[0] !== '0') d = '0' + d;
       d = d.slice(0, 10);
       if (!d) return '';
       var out = '+38 (' + d.slice(0, 3);
@@ -520,7 +485,6 @@
     var labelText = label ? label.textContent : '';
 
     $$('[data-segmented]', form).forEach(initSegmented);
-    $$('[data-stepper]', form).forEach(initStepper);
     $$('[data-dropdown]', form).forEach(initDropdown);
     $$('[data-datepick]', form).forEach(initDatepick);
     $$('input[name="phone"]', form).forEach(initPhone);

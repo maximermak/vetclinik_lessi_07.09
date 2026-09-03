@@ -132,15 +132,27 @@
   <!-- ══ ГРУМІНГ ══ -->
   <section class="grooming" id="grooming">
     <div class="container">
-      <header class="section__head section__head--light reveal">
-        <span class="eyebrow eyebrow--light">Грумінг-салон</span>
-        <h2>Грумінг без стресу —<br>для вас і для улюбленця</h2>
-        <p>
-          Підбираємо темп під характер тварини, працюємо професійною косметикою
-          та гострим інструментом. Якщо під час стрижки щось насторожує —
-          поруч завжди лікар клініки.
-        </p>
-      </header>
+      <div class="grooming__head reveal">
+        <div class="grooming__intro">
+          <span class="eyebrow eyebrow--light">Грумінг-салон</span>
+          <h2>Грумінг без стресу —<br>для вас і для улюбленця</h2>
+          <p>
+            Підбираємо темп під характер тварини. Якщо під час стрижки
+            щось насторожує — поруч завжди лікар клініки.
+          </p>
+        </div>
+
+        <div class="grooming__photos">
+          <img class="gphoto gphoto--main"
+               src="/img/photos/cat-blanket.jpg?v=<%= v('/img/photos/cat-blanket.jpg') %>"
+               width="540" height="720" loading="lazy" decoding="async"
+               alt="Кіт спокійно лежить, загорнутий у плед, на столі в клініці Pussy Cat">
+          <img class="gphoto gphoto--accent"
+               src="/img/photos/cat-calm.jpg?v=<%= v('/img/photos/cat-calm.jpg') %>"
+               width="312" height="228" loading="lazy" decoding="async"
+               alt="Чорно-білий кіт на прийомі в ветклініці Pussy Cat">
+        </div>
+      </div>
 
       <div class="grid grid--groom">
         <% grooming.forEach(function (g) { %>
@@ -274,7 +286,7 @@
 
       <div class="formwrap reveal">
         <h3 class="form__title">Заявка на прийом</h3>
-        <%- include('partials/form', { prefix: 'sec', serviceOptions: serviceOptions, scheduleByWeekday: scheduleByWeekday }) %>
+        <%- include('partials/form', { prefix: 'sec', serviceOptions: serviceOptions, petAgeOptions: petAgeOptions, scheduleByWeekday: scheduleByWeekday }) %>
       </div>
     </div>
   </section>
@@ -344,6 +356,12 @@
         </div>
 
         <div class="contacts__map reveal">
+          <figure class="contacts__photo">
+            <img src="/img/photos/storefront.jpg?v=<%= v('/img/photos/storefront.jpg') %>"
+                 width="408" height="306" loading="lazy" decoding="async"
+                 alt="Фасад ветеринарної клініки Pussy Cat на вул. Олександра Олеся, 21 у Харкові">
+            <figcaption>Шукайте жовту вивіску «Ветеринарна клініка» — вхід із вулиці</figcaption>
+          </figure>
           <iframe
             title="Карта — <%= clinic.name %>"
             src="https://maps.google.com/maps?q=<%= encodeURIComponent(clinic.mapQuery) %>&z=16&output=embed"
@@ -397,7 +415,7 @@
       </div>
 
       <div class="modal__body">
-        <%- include('partials/form', { prefix: 'mod', serviceOptions: serviceOptions, scheduleByWeekday: scheduleByWeekday }) %>
+        <%- include('partials/form', { prefix: 'mod', serviceOptions: serviceOptions, petAgeOptions: petAgeOptions, scheduleByWeekday: scheduleByWeekday }) %>
       </div>
     </div>
   </dialog>

@@ -99,14 +99,47 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); }
 .brand__logo {
-  border-radius: 50%;
+  display: block; flex: none; border-radius: 50%;
   /* бордове кільце в тон собаки на лого — жовте губилось об білу кішку знизу */
   box-shadow: 0 0 0 3px var(--red-dark), 0 3px 10px rgba(176, 51, 31, .3);
-  transition: transform .4s ease, box-shadow .25s ease;
+  transition: box-shadow .25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.brand:hover .brand__logo {
-  transform: rotate(-8deg) scale(1.06);
-  box-shadow: 0 0 0 3px var(--brown-2), 0 5px 14px rgba(176, 51, 31, .42);
+.brand__logo svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.brand:hover .brand__logo { box-shadow: 0 0 0 3px var(--brown-2), 0 5px 14px rgba(176, 51, 31, .42); }
+
+/* при наведенні пес нашорошує вухо й нахиляє голову.
+   Без масштабування: коло-підкладка не масштабується разом
+   із графікою, тож вона вилазила за контур. */
+.brand__head { transform-origin: 50% 54%; }
+.brand:hover .brand__head { animation: brandHeadTilt 2.4s cubic-bezier(.3, .8, .3, 1) infinite; }
+
+.brand__ear {
+  transform-box: view-box; transform-origin: 140px 30px;
+  transition: transform .25s ease-out;
+}
+.brand:hover .brand__ear { animation: brandDogEar 2.4s cubic-bezier(.3, .8, .3, 1) infinite; }
+
+@keyframes brandDogEar {
+  0%, 6%    { transform: rotate(0deg); }
+  16%       { transform: rotate(-14deg); }
+  26%       { transform: rotate(5deg); }
+  34%       { transform: rotate(-7deg); }
+  44%       { transform: rotate(0deg); }
+  62%       { transform: rotate(-9deg); }
+  72%       { transform: rotate(3deg); }
+  82%, 100% { transform: rotate(0deg); }
+}
+@keyframes brandHeadTilt {
+  0%, 8%    { transform: rotate(0deg); }
+  24%       { transform: rotate(-2.8deg); }
+  44%       { transform: rotate(.8deg); }
+  58%       { transform: rotate(-1.6deg); }
+  76%, 100% { transform: rotate(0deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand:hover .brand__head,
+  .brand:hover .brand__ear { animation: none; transform: none; }
 }
 .brand__text { display: flex; flex-direction: column; line-height: 1.1; }
 .brand__name { font-size: 1.32rem; font-weight: 800; letter-spacing: -.02em; white-space: nowrap; }
@@ -266,6 +299,28 @@ ul { margin: 0; padding: 0; list-style: none; }
 .section__head--light h2 { color: #fff; }
 .section__head--light p { color: #d9c5b6; }
 
+/* шапка секції: текст ліворуч, реальні фото з клініки праворуч */
+.grooming__head {
+  display: grid; grid-template-columns: 1.25fr .75fr;
+  gap: 46px; align-items: center; margin-bottom: 42px;
+}
+.grooming__intro h2 { color: #fff; margin-bottom: 16px; }
+.grooming__intro p { margin: 0; color: #d9c5b6; }
+
+.grooming__photos { position: relative; padding: 0 0 26px 30px; }
+/* height:auto — інакше атрибут height="..." в <img> фіксує висоту
+   як presentational hint і aspect-ratio не спрацьовує */
+.gphoto { display: block; height: auto; border-radius: var(--radius-lg); object-fit: cover; }
+.gphoto--main {
+  width: 100%; aspect-ratio: 1 / 1;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, .42);
+}
+.gphoto--accent {
+  position: absolute; left: 0; bottom: 0; width: 46%; aspect-ratio: 4 / 3;
+  border: 6px solid var(--brown);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+}
+
 .grid--groom { grid-template-columns: repeat(3, 1fr); }
 .gcard {
   padding: 26px 24px; border-radius: var(--radius);
@@ -337,6 +392,16 @@ ul { margin: 0; padding: 0; list-style: none; }
 .reviews__more { margin-top: 30px; text-align: center; }
 .avatar { display: grid; place-items: center; width: 42px; height: 42px; background: var(--red); color: #fff; border-radius: 50%; font-weight: 800; }
 .review blockquote { margin: 0; font-size: .92rem; color: var(--ink-2); line-height: 1.62; }
+
+/* ─── Список з галочками ─────────────────────────────────── */
+.checks { display: grid; gap: 12px; margin: 26px 0 30px; }
+.checks li { display: flex; align-items: flex-start; gap: 13px; font-size: .97rem; line-height: 1.5; }
+.checks .icon {
+  flex: none; width: 24px; height: 24px; margin-top: 1px; padding: 5px;
+  background: var(--yellow); color: var(--brown);
+  border-radius: 50%; stroke-width: 3.2;
+}
+.checks--light li { color: #f4e5d7; }
 
 /* ─── Заявка ─────────────────────────────────────────────── */
 .booking { position: relative; overflow: hidden; padding: 84px 0; background: linear-gradient(135deg, var(--red-dark), var(--red) 55%, #c4402a); color: #fff; }
@@ -418,7 +483,17 @@ ul { margin: 0; padding: 0; list-style: none; }
 .cinfo b { display: block; margin-bottom: 3px; }
 .cinfo p { margin: 0; color: var(--ink-2); font-size: .94rem; }
 .contacts__map { overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 1px solid var(--line); }
-.contacts__map iframe { display: block; width: 100%; height: 420px; border: 0; filter: saturate(.92); }
+.contacts__map iframe { display: block; width: 100%; height: 300px; border: 0; filter: saturate(.92); }
+
+/* фото фасаду над картою — щоб клініку впізнали з вулиці */
+.contacts__photo { position: relative; margin: 0; }
+.contacts__photo img { display: block; width: 100%; height: 210px; object-fit: cover; }
+.contacts__photo figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 26px 18px 12px;
+  background: linear-gradient(transparent, rgba(43, 22, 16, .82));
+  color: #fff; font-size: .84rem; font-weight: 600;
+}
 
 /* ─── Футер ──────────────────────────────────────────────── */
 .footer { padding: 60px 0 26px; background: var(--brown); color: #d6c3b5; font-size: .93rem; }
@@ -477,6 +552,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 @media (max-width: 1080px) {
   .grid--services, .grid--why, .grid--groom { grid-template-columns: repeat(2, 1fr); }
+  .grooming__head { grid-template-columns: 1fr; gap: 34px; }
+  .grooming__photos { max-width: 460px; }
   .grid--reviews { columns: 2; }
   .strip__in { grid-template-columns: repeat(2, 1fr); }
   /* пігулка стискається до круглої кнопки: обнуляємо асиметричний
@@ -592,43 +669,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 .segmented__opt:has(input:checked) { color: var(--red); }
 .segmented__opt:has(input:checked) .icon { transform: scale(1.14) translateY(-1px); }
 .segmented__opt:has(input:focus-visible) { outline: 2px solid var(--red); outline-offset: 2px; }
-
-/* ─── Вік тварини ────────────────────────────────────────── */
-.agebox { display: flex; gap: 8px; align-items: stretch; }
-.stepper {
-  display: flex; align-items: center; flex: 0 0 auto; width: 128px;
-  background: var(--cream); border: 1.5px solid transparent; border-radius: 13px;
-  transition: border-color .18s ease, background .18s ease;
-}
-.stepper:focus-within { background: #fff; border-color: var(--red); }
-.stepper__btn {
-  display: grid; place-items: center; width: 38px; height: 46px; flex: none;
-  border: 0; background: none; color: var(--ink-2); cursor: pointer; border-radius: 12px;
-  transition: color .18s ease, transform .18s ease;
-}
-.stepper__btn:hover { color: var(--red); }
-.stepper__btn:active { transform: scale(.86); }
-.stepper__btn:disabled { opacity: .3; cursor: default; }
-.stepper__val {
-  width: 100%; min-width: 0; padding: 0; text-align: center;
-  font: inherit; font-weight: 800; font-size: 1.05rem; color: var(--ink);
-  background: none; border: 0;
-}
-.stepper__val:focus { outline: 0; }
-.stepper__val::placeholder { color: #c3b1a4; font-weight: 600; }
-.stepper__val.is-bumped { animation: bump .3s cubic-bezier(.4, 1.5, .5, 1); }
-@keyframes bump { 0% { transform: scale(1); } 45% { transform: scale(1.28); } 100% { transform: scale(1); } }
-
-.units { display: flex; flex: none; gap: 3px; padding: 4px; background: var(--cream); border-radius: 13px; }
-.units__opt { position: relative; display: grid; place-items: center; cursor: pointer; }
-.units__opt input { position: absolute; opacity: 0; pointer-events: none; }
-.units__opt span {
-  display: block; padding: 9px 12px; border-radius: 10px;
-  font-size: .82rem; font-weight: 700; color: var(--ink-2); white-space: nowrap;
-  transition: background .24s ease, color .24s ease, box-shadow .24s ease;
-}
-.units__opt:has(input:checked) span { background: #fff; color: var(--red); box-shadow: 0 3px 10px rgba(59, 29, 20, .12); }
-.units__opt:has(input:focus-visible) span { outline: 2px solid var(--red); outline-offset: 2px; }
 
 /* ─── Випадний список послуг ─────────────────────────────── */
 .dropdown { position: relative; }
@@ -800,8 +840,8 @@ body.is-locked { overflow: hidden; }
 
 .datepick__pop {
   position: absolute; z-index: 40; left: 0; top: calc(100% + 8px);
-  display: grid; grid-template-columns: 1fr 160px; gap: 4px;
-  width: max(100%, 400px); padding: 14px;
+  display: grid; grid-template-columns: 1fr 148px; gap: 6px;
+  width: min(470px, calc(100vw - 44px)); padding: 14px;
   background: #fff; border: 1px solid var(--line); border-radius: 20px;
   box-shadow: 0 22px 54px rgba(59, 29, 20, .2);
   opacity: 0; visibility: hidden; transform: translateY(-10px) scale(.97);
@@ -813,7 +853,7 @@ body.is-locked { overflow: hidden; }
 .dp-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 .dp-head b { font-size: .95rem; }
 .dp-nav {
-  display: grid; place-items: center; width: 32px; height: 32px; flex: none;
+  display: grid; place-items: center; width: 30px; height: 30px; flex: none;
   border: 0; border-radius: 10px; background: var(--cream); color: var(--ink-2); cursor: pointer;
   transition: background .18s ease, color .18s ease;
 }
@@ -825,7 +865,7 @@ body.is-locked { overflow: hidden; }
 .dp-week span { padding: 4px 0; text-align: center; font-size: .7rem; font-weight: 700; color: var(--ink-2); text-transform: uppercase; }
 
 .dp-day {
-  aspect-ratio: 1; display: grid; place-items: center;
+  height: 36px; display: grid; place-items: center;
   border: 0; border-radius: 10px; background: none; cursor: pointer;
   font: inherit; font-size: .88rem; font-weight: 600; color: var(--ink);
   transition: background .16s ease, color .16s ease, transform .16s ease;
@@ -843,8 +883,8 @@ body.is-locked { overflow: hidden; }
   color: var(--red); text-transform: uppercase; letter-spacing: .04em;
 }
 .dp-slots {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;
-  max-height: 224px; overflow-y: auto; overscroll-behavior: contain;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; align-content: start;
+  max-height: 268px; overflow-y: auto; overscroll-behavior: contain;
 }
 .dp-slot {
   padding: 9px 4px; border: 1px solid var(--line); border-radius: 10px;
