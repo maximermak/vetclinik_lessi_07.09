@@ -33,7 +33,7 @@ function formatLead(lead) {
 
   const when = new Date().toLocaleString('uk-UA', { timeZone: 'Europe/Kyiv' });
 
-  return `🐶🐱 <b>Нова заявка з сайту Pussy Cat</b>\n\n${body}\n\n🕒 ${escapeHtml(when)}`;
+  return `🐾 <b>Нова заявка з сайту «Лессі»</b>\n\n${body}\n\n🕒 ${escapeHtml(when)}`;
 }
 
 async function sendLead(lead, { token, chatId, timeoutMs = 10000 } = {}) {

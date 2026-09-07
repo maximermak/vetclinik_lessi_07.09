@@ -8,7 +8,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit');
 
 const {
-  clinic, services, grooming, advantages, reviews, faq,
+  clinic, services, smallPets, advantages, reviews, faq,
   serviceOptions, petAgeOptions, scheduleByWeekday
 } = require('./src/data');
 const { validateLead, plural } = require('./src/validate');
@@ -76,7 +76,7 @@ app.get('/', (req, res) => {
   });
 
   res.render('index', {
-    clinic: clinicNow, services, grooming, advantages, reviews, faq,
+    clinic: clinicNow, services, smallPets, advantages, reviews, faq,
     serviceOptions, petAgeOptions, scheduleByWeekday
   });
 });
@@ -126,12 +126,12 @@ app.use((req, res) => {
 
 function startServer() {
   return app.listen(PORT, () => {
-    console.log(`\n  🐾 Pussy Cat — http://localhost:${PORT}\n`);
+    console.log(`\n  🐾 Лессі — http://localhost:${PORT}\n`);
 
     const liveRating = googleRating.start({ placeId: clinic.placeId, apiKey: GOOGLE_KEY });
     if (!liveRating) {
-      console.log(`  ℹ️  Рейтинг показуємо з data.js (${clinic.rating}, ${clinic.reviewsCount} відгуків).`);
-      console.log('     Для автооновлення додайте GOOGLE_MAPS_API_KEY у .env\n');
+      console.log('  ℹ️  Рейтинг у шапці не показуємо: немає живих даних з Google.');
+      console.log('     Щоб він з\'явився, додайте GOOGLE_MAPS_API_KEY у .env\n');
     }
     if (!TOKEN || !CHAT_ID) {
       console.warn('  ⚠️  Заявки не підуть у Telegram: заповніть TELEGRAM_BOT_TOKEN і TELEGRAM_CHAT_ID у .env');

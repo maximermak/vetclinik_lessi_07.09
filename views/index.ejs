@@ -3,50 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><%= clinic.name %> — ветеринарна клініка та грумінг-салон у <%= clinic.cityIn %></title>
-<meta name="description" content="Ветклініка Pussy Cat у Харкові, вул. Олександра Олеся, 21: вакцинація, хірургія, стоматологія, дерматологія, лабораторна діагностика та грумінг-салон. Запис онлайн.">
+<title><%= clinic.name %> — ветеринарна клініка у <%= clinic.cityIn %>, працюємо щодня</title>
+<meta name="description" content="Ветклініка «Лессі» у Харкові, вул. Нескорених, 4а/1 (колишня Героїв Праці). Терапія, хірургія, вакцинація, аналізи. Лікуємо котів, собак, морських свинок, кроликів і гризунів. Щодня 09:00–19:00.">
 <link rel="canonical" href="<%= siteUrl %>/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="<%= clinic.name %>">
+<meta property="og:site_name" content="Ветклініка «<%= clinic.name %>»">
 <meta property="og:locale" content="uk_UA">
 <meta property="og:url" content="<%= siteUrl %>/">
-<meta property="og:title" content="<%= clinic.name %> — ветклініка та грумінг у <%= clinic.cityIn %>">
-<meta property="og:description" content="Вакцинація, хірургія, стоматологія, дерматологія та грумінг-салон у <%= clinic.cityIn %>, <%= clinic.address %>. Запис онлайн за хвилину.">
+<meta property="og:title" content="Ветклініка «<%= clinic.name %>» — щодня 09:00–19:00 у <%= clinic.cityIn %>">
+<meta property="og:description" content="Терапія, хірургія, вакцинація та аналізи. Коти, собаки, морські свинки, кролики й гризуни. <%= clinic.address %>. Запис онлайн за хвилину.">
 <meta property="og:image" content="<%= siteUrl %>/img/og.jpg?v=<%= v('/img/og.jpg') %>">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Ветеринарна клініка Pussy Cat — турбота про тих, хто вас безумовно любить">
+<meta property="og:image:alt" content="Ветеринарна клініка «Лессі» — лікуємо тих, хто чекає вас удома">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<%= clinic.name %> — ветклініка та грумінг у <%= clinic.cityIn %>">
-<meta name="twitter:description" content="Вакцинація, хірургія, стоматологія та грумінг-салон. Запис онлайн за хвилину.">
+<meta name="twitter:title" content="Ветклініка «<%= clinic.name %>» — щодня 09:00–19:00 у <%= clinic.cityIn %>">
+<meta name="twitter:description" content="Терапія, хірургія, вакцинація та аналізи. Коти, собаки, морські свинки, кролики й гризуни.">
 <meta name="twitter:image" content="<%= siteUrl %>/img/og.jpg?v=<%= v('/img/og.jpg') %>">
-<meta name="theme-color" content="#b0331f">
+<meta name="theme-color" content="#15705c">
 <link rel="icon" href="/img/favicon.svg?v=<%= v('/img/favicon.svg') %>" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css?v=<%= v('/css/style.css') %>">
 <script type="application/ld+json">
-<%- JSON.stringify({
+<%- JSON.stringify(Object.assign({
   '@context': 'https://schema.org',
   '@type': 'VeterinaryCare',
-  name: clinic.name,
-  description: clinic.tagline + ' у ' + clinic.cityIn,
+  name: 'Ветеринарна клініка «' + clinic.name + '»',
+  description: clinic.tagline + ' у ' + clinic.cityIn + ': терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики та гризуни.',
+  url: siteUrl + '/',
   address: {
     '@type': 'PostalAddress',
     streetAddress: clinic.address,
     addressLocality: clinic.city,
-    postalCode: '61000',
+    postalCode: '61168',
     addressCountry: 'UA'
   },
+  geo: { '@type': 'GeoCoordinates', latitude: clinic.geo.lat, longitude: clinic.geo.lng },
   telephone: clinic.phones.map(function (p) { return p.raw; }),
   openingHoursSpecification: clinic.schedule.map(function (s) {
     return { '@type': 'OpeningHoursSpecification', dayOfWeek: s.dayOfWeek, opens: s.opens, closes: s.closes };
   }),
   sameAs: [clinic.googleReviewsUrl],
   availableService: services.map(function (s) { return { '@type': 'MedicalProcedure', name: s.title }; })
-}) %>
+}, clinic.rating ? {
+  // рейтинг у розмітці лише тоді, коли він справді прийшов з Google
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: String(clinic.rating).replace(',', '.'),
+    reviewCount: clinic.reviewsCount
+  }
+} : {})) %>
 </script>
 </head>
 <body>
@@ -59,11 +68,12 @@
     <div class="hero__paws" aria-hidden="true"></div>
     <div class="container hero__in">
       <div class="hero__text reveal">
-        <span class="eyebrow"><svg viewBox="0 0 24 24" class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка та грумінг у <%= clinic.cityIn %></span>
-        <h1>Турбота про тих,<br>хто вас <span class="hl">безумовно любить</span></h1>
+        <span class="eyebrow"><svg viewBox="0 0 24 24" class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка у <%= clinic.cityIn %> — щодня</span>
+        <h1>Лікуємо тих,<br>хто <span class="hl">чекає вас удома</span></h1>
         <p class="hero__lead">
-          Повний спектр ветеринарних послуг і грумінг-салон під одним дахом.
-          Приймаємо котів, собак і дрібних улюбленців — від планового щеплення до складної операції.
+          Терапія, хірургія, вакцинація та аналізи в одній клініці.
+          Приймаємо котів і собак, а ще морських свинок, кроликів і гризунів —
+          щодня з 09:00 до 19:00, без вихідних.
         </p>
 
         <div class="hero__cta">
@@ -75,15 +85,25 @@
         </div>
 
         <div class="hero__trust">
-          <a class="rating" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
-            <% var ratingParts = String(clinic.rating).split(','); %>
-            <span class="rating__score"><%= ratingParts[0] %><% if (ratingParts.length > 1) { %><span class="rating__sep">,</span><%= ratingParts[1] %><% } %></span>
-            <span class="rating__body">
-              <span class="stars" aria-hidden="true">★★★★★</span>
-              <span class="rating__label"><%= clinic.reviewsCount %> <%= plural(clinic.reviewsCount, 'відгук', 'відгуки', 'відгуків') %> у Google Maps</span>
-            </span>
-          </a>
-          <span class="hero__stat"><b>10+</b> років практики</span>
+          <% if (clinic.rating) { %>
+            <a class="rating" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
+              <% var ratingParts = String(clinic.rating).split(','); %>
+              <span class="rating__score"><%= ratingParts[0] %><% if (ratingParts.length > 1) { %><span class="rating__sep">,</span><%= ratingParts[1] %><% } %></span>
+              <span class="rating__body">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span class="rating__label"><%= clinic.reviewsCount %> <%= plural(clinic.reviewsCount, 'відгук', 'відгуки', 'відгуків') %> у Google Maps</span>
+              </span>
+            </a>
+          <% } else { %>
+            <a class="rating rating--plain" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+              <span class="rating__body">
+                <span class="rating__title">Відгуки власників</span>
+                <span class="rating__label">читайте на нашій сторінці в Google Maps</span>
+              </span>
+            </a>
+          <% } %>
+          <span class="hero__stat"><b>7</b> днів на тиждень</span>
         </div>
       </div>
 
@@ -103,10 +123,11 @@
               <a href="tel:<%= p.raw %>">
                 <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
                 <%= p.pretty %>
+                <% if (p.person) { %><small><%= p.person %></small><% } %>
               </a>
             <% }) %>
           </div>
-          <p class="hcard__note">Гострі стани приймаємо без запису — попередьте нас дзвінком, і лікар буде готовий.</p>
+          <p class="hcard__note">Гострий стан не чекає запису — телефонуйте й везіть. Останній плановий прийом краще планувати до 18:30.</p>
         </div>
       </aside>
     </div>
@@ -115,10 +136,10 @@
   <!-- ══ ПЕРЕВАГИ-СТРІЧКА ══ -->
   <section class="strip">
     <div class="container strip__in">
-      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-stethoscope"/></svg><span>Досвідчені лікарі<br><small>терапія, хірургія, дерматологія</small></span></div>
-      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-flask"/></svg><span>Своя лабораторія<br><small>аналізи в день звернення</small></span></div>
-      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon icon--fill" aria-hidden="true"><use href="#i-paw"/></svg><span>Грумінг-салон<br><small>стрижка котів і собак</small></span></div>
-      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Чесні ціни<br><small>вартість — до початку прийому</small></span></div>
+      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span>Щодня 09:00–19:00<br><small>без вихідних і свят</small></span></div>
+      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-rodent"/></svg><span>Дрібні тварини<br><small>свинки, кролики, гризуни</small></span></div>
+      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-stethoscope"/></svg><span>Терапія і хірургія<br><small>від огляду до операції</small></span></div>
+      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Ціна — до початку<br><small>без несподіванок у касі</small></span></div>
     </div>
   </section>
 
@@ -128,7 +149,7 @@
       <header class="section__head reveal">
         <span class="eyebrow">Наші послуги</span>
         <h2>Усе для здоров’я улюбленця<br>в одній клініці</h2>
-        <p>Не потрібно возити тварину містом: діагностика, лікування та догляд — на одній адресі.</p>
+        <p>Не потрібно возити тварину містом: огляд, аналізи, операція та спостереження — на одній адресі.</p>
       </header>
 
       <div class="services">
@@ -148,48 +169,41 @@
     </div>
   </section>
 
-  <!-- ══ ГРУМІНГ ══ -->
-  <section class="grooming" id="grooming">
+  <!-- ══ КОГО ЛІКУЄМО ══ -->
+  <section class="pets" id="pets">
     <div class="container">
-      <div class="grooming__head reveal">
-        <div class="grooming__intro">
-          <span class="eyebrow eyebrow--light">Грумінг-салон</span>
-          <h2>Грумінг без стресу —<br>для вас і для улюбленця</h2>
-          <p>
-            Підбираємо темп під характер тварини. Якщо під час стрижки
-            щось насторожує — поруч завжди лікар клініки.
-          </p>
-        </div>
+      <header class="section__head section__head--light reveal">
+        <span class="eyebrow eyebrow--light">Кого ми лікуємо</span>
+        <h2>Не лише котів і собак</h2>
+        <p>
+          Морські свинки, кролики та гризуни — пацієнти, з якими беруться далеко не всі.
+          У них інша анатомія, інші дози і зовсім мало часу на помилку.
+        </p>
+      </header>
 
-        <div class="grooming__photos">
-          <img class="gphoto gphoto--main"
-               src="/img/photos/cat-blanket.jpg?v=<%= v('/img/photos/cat-blanket.jpg') %>"
-               width="540" height="720" loading="lazy" decoding="async"
-               alt="Кіт спокійно лежить, загорнутий у плед, на столі в клініці Pussy Cat">
-          <img class="gphoto gphoto--accent"
-               src="/img/photos/cat-calm.jpg?v=<%= v('/img/photos/cat-calm.jpg') %>"
-               width="312" height="228" loading="lazy" decoding="async"
-               alt="Чорно-білий кіт на прийомі в ветклініці Pussy Cat">
-        </div>
-      </div>
-
-      <div class="grid grid--groom">
-        <% grooming.forEach(function (g) { %>
-          <article class="gcard reveal">
-            <span class="gcard__icon">
-              <svg viewBox="0 0 24 24" class="icon<%= g.icon === 'paw' ? ' icon--fill' : '' %>" aria-hidden="true"><use href="#i-<%= g.icon %>"/></svg>
-            </span>
-            <h3><%= g.title %></h3>
-            <p><%= g.text %></p>
+      <div class="grid grid--pets">
+        <% smallPets.forEach(function (p) { %>
+          <article class="pcard reveal<%= p.cta ? ' pcard--cta' : '' %>">
+            <% if (p.img) { %>
+              <img class="pcard__art" src="/img/pets/<%= p.img %>.svg?v=<%= v('/img/pets/' + p.img + '.svg') %>"
+                   width="76" height="76" loading="lazy" decoding="async" alt="">
+            <% } else { %>
+              <span class="pcard__icon">
+                <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-<%= p.icon %>"/></svg>
+              </span>
+            <% } %>
+            <h3><%= p.title %></h3>
+            <p><%= p.text %></p>
           </article>
         <% }) %>
       </div>
 
-      <div class="grooming__cta reveal">
-        <a class="btn btn--yellow" href="#booking" data-modal-open data-service="Грумінг / стрижка">
-          Записатись на грумінг
+      <div class="pets__cta reveal">
+        <a class="btn btn--amber" href="tel:<%= clinic.phones[0].raw %>">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+          <%= clinic.phones[0].pretty %>
         </a>
-        <span>або зателефонуйте: <a href="tel:<%= clinic.phones[0].raw %>"><%= clinic.phones[0].pretty %></a></span>
+        <span>Опишіть тварину телефоном — скажемо, чи зможемо допомогти</span>
       </div>
     </div>
   </section>
@@ -200,7 +214,7 @@
       <header class="section__head reveal">
         <span class="eyebrow">Чому нас обирають</span>
         <h2>Клініка, куди повертаються</h2>
-        <p>Нас знаходять за відгуками друзів — і залишаються надовго.</p>
+        <p>Нас знаходять за порадою друзів — і лишаються з тією ж твариною роками.</p>
       </header>
 
       <div class="grid grid--why">
@@ -212,23 +226,6 @@
           </article>
         <% }) %>
       </div>
-
-      <div class="brands reveal">
-        <span class="brands__label">У клініці можна одразу купити корм</span>
-        <div class="brands__row">
-          <a class="brand-card" href="#booking" data-modal-open data-service="Консультація або інше" aria-label="Josera">
-            <img class="brand-card__logo brand-card__logo--josera" src="/img/josera.png?v=<%= v('/img/josera.png') %>"
-                 width="800" height="178" loading="lazy" alt="Josera">
-          </a>
-          <a class="brand-card" href="#booking" data-modal-open data-service="Консультація або інше" aria-label="1st Choice">
-            <img class="brand-card__logo brand-card__logo--choice" src="/img/1st-choice.png?v=<%= v('/img/1st-choice.png') %>"
-                 width="863" height="575" loading="lazy" alt="1st Choice Nutrition">
-          </a>
-        </div>
-        <span class="brands__note">
-          Повсякденні та лікувальні лінійки для котів і собак — лікар допоможе підібрати раціон під вік і діагноз
-        </span>
-      </div>
     </div>
   </section>
 
@@ -238,7 +235,7 @@
       <header class="section__head reveal">
         <span class="eyebrow">Відгуки</span>
         <h2>Що кажуть власники</h2>
-        <p>Кілька відгуків із <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">нашої сторінки в Google Maps</a>.</p>
+        <p>Кілька відгуків із <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">нашої сторінки в Google Maps</a>. Там же є і критика — читайте все, перш ніж їхати.</p>
       </header>
 
       <div class="grid grid--reviews">
@@ -289,10 +286,10 @@
         <h2>Запишіться<br>за одну хвилину</h2>
         <p>
           Заповніть форму — заявка миттєво прилетить адміністратору в Telegram.
-          Ми передзвонимо у робочі години й підберемо зручний час.
+          Ми передзвонимо в робочі години й підберемо зручний час.
         </p>
         <ul class="checks checks--light">
-          <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Передзвонюємо протягом 15 хвилин</li>
+          <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Передзвонюємо в робочі години, 09:00–19:00</li>
           <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Підкажемо, як підготувати тварину</li>
           <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Озвучимо вартість заздалегідь</li>
         </ul>
@@ -300,6 +297,14 @@
           <% clinic.phones.forEach(function (p) { %>
             <a href="tel:<%= p.raw %>"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg><%= p.pretty %></a>
           <% }) %>
+        </div>
+
+        <div class="booking__pets" aria-hidden="true">
+          <% smallPets.filter(function (p) { return p.img; }).forEach(function (p) { %>
+            <img src="/img/pets/<%= p.img %>.svg?v=<%= v('/img/pets/' + p.img + '.svg') %>"
+                 width="58" height="58" loading="lazy" decoding="async" alt="">
+          <% }) %>
+          <span>приймаємо всіх</span>
         </div>
       </div>
 
@@ -344,7 +349,8 @@
             <div>
               <b>Адреса</b>
               <p>
-                <%= clinic.addressFull %><br>
+                <%= clinic.addressFull %>
+                <span class="cinfo__old"><%= clinic.addressOld %> — за старою назвою нас теж знають</span>
                 <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">Відкрити в Google Maps</a>
               </p>
             </div>
@@ -352,10 +358,10 @@
           <div class="cinfo">
             <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span>
             <div>
-              <b>Телефони</b>
+              <b>Телефон</b>
               <p>
                 <% clinic.phones.forEach(function (p) { %>
-                  <a href="tel:<%= p.raw %>"><%= p.pretty %></a><br>
+                  <a href="tel:<%= p.raw %>"><%= p.pretty %></a><% if (p.person) { %> — <%= p.person %><% } %><br>
                 <% }) %>
               </p>
             </div>
@@ -375,15 +381,9 @@
         </div>
 
         <div class="contacts__map reveal">
-          <figure class="contacts__photo">
-            <img src="/img/photos/storefront.jpg?v=<%= v('/img/photos/storefront.jpg') %>"
-                 width="408" height="306" loading="lazy" decoding="async"
-                 alt="Фасад ветеринарної клініки Pussy Cat на вул. Олександра Олеся, 21 у Харкові">
-            <figcaption>Шукайте жовту вивіску «Ветеринарна клініка» — вхід із вулиці</figcaption>
-          </figure>
           <iframe
-            title="Карта — <%= clinic.name %>"
-            src="https://maps.google.com/maps?q=<%= encodeURIComponent(clinic.mapQuery) %>&z=16&output=embed"
+            title="Карта — ветклініка «<%= clinic.name %>», <%= clinic.addressFull %>"
+            src="https://maps.google.com/maps?q=<%= clinic.geo.lat %>,<%= clinic.geo.lng %>&z=17&output=embed"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
@@ -391,6 +391,7 @@
     </div>
   </section>
 
+  <% if (reviews.some(function (r) { return r.full; })) { %>
   <!-- ══ МОДАЛЬНЕ ВІКНО ВІДГУКУ ══ -->
   <dialog class="modal modal--review" id="reviewModal" aria-labelledby="rvName">
     <div class="modal__box">
@@ -417,6 +418,7 @@
          target="_blank" rel="noopener">Усі відгуки в Google Maps</a>
     </div>
   </dialog>
+  <% } %>
 
   <!-- ══ МОДАЛЬНЕ ВІКНО ЗАПИСУ ══ -->
   <dialog class="modal" id="bookingModal" aria-labelledby="modalTitle">

@@ -1,8 +1,8 @@
 {
-  "name": "pussycat-vet-clinic",
+  "name": "lessi-vet-clinic",
   "version": "1.0.0",
   "private": true,
-  "description": "Сайт ветеринарної клініки та грумінг-салону Pussy Cat",
+  "description": "Сайт ветеринарної клініки «Лессі» у Харкові",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

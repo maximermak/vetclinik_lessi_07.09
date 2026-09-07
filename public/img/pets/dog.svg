@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Лессі — ветеринарна клініка">
-  <circle cx="50" cy="50" r="50" fill="#15705C"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="50" fill="#e2efe9"/>
   <path fill="#fff" d="M24 50c-10 7-12 20-7 28 6 8 18 10 33 10s27-2 33-10c5-8 3-21-7-28 0 14-11 26-26 26S24 64 24 50Z"/>
   <path fill="#E8A33C" d="M38 33 27 15l-4 23Z"/>
   <path fill="#C9832A" d="M27 15l-3.4 11.6L32.6 22Z"/>
@@ -8,7 +8,9 @@
   <path fill="#E8A33C" d="M50 23c-15 0-25 11-25 25 0 10 6 18 14 22h22c8-4 14-12 14-22 0-14-10-25-25-25Z"/>
   <path fill="#fff" d="M50 25c-4.6 0-5.2 3.8-5.3 7.6L44 61h12l-.7-28.4C55.2 28.8 54.6 25 50 25Z"/>
   <path fill="#fff" d="M40.5 59h19l-2.4 19.4c-1.4 5.8-12.8 5.8-14.2 0Z"/>
-  <ellipse cx="37.4" cy="46" rx="3" ry="3.9" fill="#22150E"/>
-  <ellipse cx="62.6" cy="46" rx="3" ry="3.9" fill="#22150E"/>
+  <ellipse cx="37.4" cy="46" rx="3.4" ry="4.3" fill="#22150E"/>
+  <ellipse cx="62.6" cy="46" rx="3.4" ry="4.3" fill="#22150E"/>
+  <circle cx="38.6" cy="44.4" r="1.2" fill="#fff"/>
+  <circle cx="63.8" cy="44.4" r="1.2" fill="#fff"/>
   <ellipse cx="50" cy="70.5" rx="5.2" ry="4.1" fill="#22150E"/>
 </svg>

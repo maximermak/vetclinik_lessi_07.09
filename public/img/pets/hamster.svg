@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="50" fill="#e2efe9"/>
+  <circle cx="27" cy="27" r="11" fill="#C9832A"/>
+  <circle cx="73" cy="27" r="11" fill="#C9832A"/>
+  <circle cx="27" cy="27" r="6" fill="#f0b9c2"/>
+  <circle cx="73" cy="27" r="6" fill="#f0b9c2"/>
+  <path fill="#E8A33C" d="M50 20c-17.5 0-30 12.4-30 28s12.5 30 30 30 30-14.4 30-30-12.5-28-30-28Z"/>
+  <path fill="#fff" d="M50 46c-11 0-19.6 6-19.6 14.2S38.9 74 50 74s19.6-5.6 19.6-13.8S61 46 50 46Z"/>
+  <path fill="#fff" d="M50 20c-4 0-7.8.7-11.2 1.9-1.4 4-2.2 8.7-2.2 13.7 0 3.4.4 6.6 1 9.5 3.4-2.4 7.7-3.8 12.4-3.8s9 1.4 12.4 3.8c.6-2.9 1-6.1 1-9.5 0-5-.8-9.7-2.2-13.7A33.5 33.5 0 0 0 50 20Z"/>
+  <ellipse cx="35.5" cy="46.5" rx="4.8" ry="5.2" fill="#22150E"/>
+  <ellipse cx="64.5" cy="46.5" rx="4.8" ry="5.2" fill="#22150E"/>
+  <circle cx="37.2" cy="44.7" r="1.6" fill="#fff"/>
+  <circle cx="66.2" cy="44.7" r="1.6" fill="#fff"/>
+  <path fill="#f0b9c2" d="M50 55.5c-2.4 0-4.2 1.4-4.2 3s1.8 3 4.2 3 4.2-1.4 4.2-3-1.8-3-4.2-3Z"/>
+  <path stroke="#22150E" stroke-width="1.7" stroke-linecap="round" fill="none" d="M50 61.5v3M50 64.5c-1.6 1.9-3.8 2.3-5.4 1.1M50 64.5c1.6 1.9 3.8 2.3 5.4 1.1"/>
+  <path fill="#fff" d="M45 66.5h4v6.6h-4zM51 66.5h4v6.6h-4z"/>
+</svg>
