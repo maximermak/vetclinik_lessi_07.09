@@ -155,6 +155,15 @@ app.get('/robots.txt', (req, res) => {
     'User-agent: *\n' +
     'Allow: /\n' +
     '\n' +
+    // Cloudflare підмішує власний «керований» блок ПЕРЕД цим файлом і
+    // забороняє там Google-Extended — агента, що керує використанням
+    // вмісту в Gemini та Vertex. Змінити той блок можна лише в панелі
+    // Cloudflare. Звідси ми можемо його перебити: за RFC 9309 групи з
+    // однаковим агентом об'єднуються, а при однаковій довжині шляху
+    // Allow має перевагу над Disallow.
+    'User-agent: Google-Extended\n' +
+    'Allow: /\n' +
+    '\n' +
     // Сторінка політики має noindex, тож у карті сайту її немає.
     'Sitemap: ' + SITE_URL + '/sitemap.xml\n'
   );
