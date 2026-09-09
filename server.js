@@ -33,6 +33,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
 
 app.locals.siteUrl = SITE_URL;
+// Порожній рядок = аналітики немає. Саме так і має бути локально.
+app.locals.gaId = (process.env.GA_MEASUREMENT_ID || '').trim();
 
 app.locals.plural = function (n, one, few, many) {
   return plural(parseInt(n, 10) || 0, one, few, many);

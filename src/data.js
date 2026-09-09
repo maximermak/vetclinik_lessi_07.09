@@ -68,7 +68,7 @@ const clinic = {
     entity: 'ФОП <ПІБ власника>',
     code: '<РНОКПП / ЄДРПОУ>',
     email: 'vetklinikalessi25@gmail.com',
-    updated: '7 вересня 2026 року'
+    updated: '10 вересня 2026 року'
   }
 };
 
