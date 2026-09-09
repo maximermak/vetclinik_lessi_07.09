@@ -22,6 +22,7 @@
       <% clinic.phones.forEach(function (p) { %>
         <a href="tel:<%= p.raw %>"><%= p.pretty %><% if (p.person) { %> — <%= p.person %><% } %></a>
       <% }) %>
+      <% if (clinic.email) { %><a href="mailto:<%= clinic.email %>"><%= clinic.email %></a><% } %>
       <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener"><%= clinic.address %></a>
       <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">Ми на Google Maps</a>
     </div>

@@ -178,6 +178,7 @@ app.get('/llms.txt', (req, res) => {
       ', поруч зі станцією метро «' + clinic.metro + '»',
     '- Координати: ' + clinic.geo.lat + ', ' + clinic.geo.lng,
     '- Телефон: ' + phone.pretty + (phone.person ? ' (' + phone.person + ')' : ''),
+    ...(clinic.email ? ['- Пошта: ' + clinic.email] : []),
     '- Графік: ' + clinic.scheduleShort + ', без вихідних і свят',
     '- Запис: онлайн на сайті або телефоном; гострі стани — без запису',
     '- Google Maps: ' + clinic.googleReviewsUrl,

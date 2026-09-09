@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= clinic.name %> — ветеринарна клініка у <%= clinic.cityIn %>, працюємо щодня</title>
-<meta name="description" content="Ветклініка «Лессі» на Салтівці, Харків — вул. Нескорених, 4а/1 (колишня Героїв Праці), поруч з метро «Героїв Праці». Терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики, гризуни. Щодня 09:00–19:00 без вихідних.">
+<meta name="description" content="Ветклініка «<%= clinic.name %>» на <%= clinic.districtIn %>, <%= clinic.city %> — <%= clinic.address %> (<%= clinic.addressOld %>), поруч з метро «<%= clinic.metro %>». Терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики, гризуни. <%= clinic.scheduleShort %> без вихідних.">
 <link rel="canonical" href="<%= siteUrl %>/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ветклініка «<%= clinic.name %>»">
@@ -47,6 +47,7 @@
   image: siteUrl + '/img/og.jpg',
   logo: siteUrl + '/img/logo.svg',
   telephone: clinic.phones.map(function (p) { return p.raw; }),
+  email: clinic.email,
   openingHoursSpecification: clinic.schedule.map(function (s) {
     return { '@type': 'OpeningHoursSpecification', dayOfWeek: s.dayOfWeek, opens: s.opens, closes: s.closes };
   }),
@@ -89,7 +90,7 @@
         <h1>Лікуємо тих,<br>хто <span class="hl">чекає вас удома</span></h1>
         <p class="hero__lead">
           Терапія, хірургія, вакцинація та аналізи в одній клініці
-          на <%= clinic.district %>. Приймаємо котів і собак, а ще морських
+          на <%= clinic.districtIn %>. Приймаємо котів і собак, а ще морських
           свинок, кроликів і гризунів — щодня з 09:00 до 19:00, без вихідних.
         </p>
 
@@ -384,6 +385,15 @@
               </p>
             </div>
           </div>
+          <% if (clinic.email) { %>
+          <div class="cinfo">
+            <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
+            <div>
+              <b>Пошта</b>
+              <p><a href="mailto:<%= clinic.email %>"><%= clinic.email %></a></p>
+            </div>
+          </div>
+          <% } %>
           <div class="cinfo">
             <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
             <div>
