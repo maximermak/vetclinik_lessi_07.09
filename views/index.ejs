@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= clinic.name %> — ветеринарна клініка у <%= clinic.cityIn %>, працюємо щодня</title>
-<meta name="description" content="Ветклініка «Лессі» у Харкові, вул. Нескорених, 4а/1 (колишня Героїв Праці). Терапія, хірургія, вакцинація, аналізи. Лікуємо котів, собак, морських свинок, кроликів і гризунів. Щодня 09:00–19:00.">
+<meta name="description" content="Ветклініка «Лессі» на Салтівці, Харків — вул. Нескорених, 4а/1 (колишня Героїв Праці), поруч з метро «Героїв Праці». Терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики, гризуни. Щодня 09:00–19:00 без вихідних.">
 <link rel="canonical" href="<%= siteUrl %>/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ветклініка «<%= clinic.name %>»">
@@ -42,6 +42,10 @@
     addressCountry: 'UA'
   },
   geo: { '@type': 'GeoCoordinates', latitude: clinic.geo.lat, longitude: clinic.geo.lng },
+  hasMap: clinic.googleReviewsUrl,
+  areaServed: { '@type': 'City', name: clinic.city },
+  image: siteUrl + '/img/og.jpg',
+  logo: siteUrl + '/img/logo.svg',
   telephone: clinic.phones.map(function (p) { return p.raw; }),
   openingHoursSpecification: clinic.schedule.map(function (s) {
     return { '@type': 'OpeningHoursSpecification', dayOfWeek: s.dayOfWeek, opens: s.opens, closes: s.closes };
@@ -57,6 +61,19 @@
   }
 } : {})) %>
 </script>
+<script type="application/ld+json">
+<%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map(function (f) {
+    return {
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a }
+    };
+  })
+}) %>
+</script>
 </head>
 <body>
 <%- include('partials/icons') %>
@@ -71,9 +88,9 @@
         <span class="eyebrow"><svg viewBox="0 0 24 24" class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка у <%= clinic.cityIn %> — щодня</span>
         <h1>Лікуємо тих,<br>хто <span class="hl">чекає вас удома</span></h1>
         <p class="hero__lead">
-          Терапія, хірургія, вакцинація та аналізи в одній клініці.
-          Приймаємо котів і собак, а ще морських свинок, кроликів і гризунів —
-          щодня з 09:00 до 19:00, без вихідних.
+          Терапія, хірургія, вакцинація та аналізи в одній клініці
+          на <%= clinic.district %>. Приймаємо котів і собак, а ще морських
+          свинок, кроликів і гризунів — щодня з 09:00 до 19:00, без вихідних.
         </p>
 
         <div class="hero__cta">
@@ -351,6 +368,7 @@
               <p>
                 <%= clinic.addressFull %>
                 <span class="cinfo__old"><%= clinic.addressOld %> — за старою назвою нас теж знають</span>
+                <span class="cinfo__old"><%= clinic.district %>, поруч зі станцією метро «<%= clinic.metro %>»</span>
                 <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">Відкрити в Google Maps</a>
               </p>
             </div>

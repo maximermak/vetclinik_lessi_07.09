@@ -112,6 +112,76 @@ app.get('/privacy', (req, res) => {
   res.render('privacy', { clinic });
 });
 
+// ─── SEO / GEO ──────────────────────────────────────────────
+// Віддаємо з застосунку, а не файлом у public/: усередині потрібен
+// абсолютний домен, а він відомий лише під час виконання (SITE_URL).
+
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send(
+    'User-agent: *\n' +
+    'Allow: /\n' +
+    '\n' +
+    // Сторінка політики має noindex, тож у карті сайту її немає.
+    'Sitemap: ' + SITE_URL + '/sitemap.xml\n'
+  );
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml').send(
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    '  <url>\n' +
+    '    <loc>' + SITE_URL + '/</loc>\n' +
+    '    <lastmod>' + clinic.contentUpdated + '</lastmod>\n' +
+    '    <changefreq>monthly</changefreq>\n' +
+    '    <priority>1.0</priority>\n' +
+    '  </url>\n' +
+    '</urlset>\n'
+  );
+});
+
+// llms.txt — стисла вижимка фактів для генеративних пошукових систем.
+// Формується з тих самих даних, що й сайт, тож не розходиться з ним.
+app.get('/llms.txt', (req, res) => {
+  const phone = clinic.phones[0];
+  const lines = [
+    '# Ветеринарна клініка «' + clinic.name + '»',
+    '',
+    '> ' + clinic.tagline + ' у ' + clinic.cityIn + '. Приймає котів, собак, ' +
+      'морських свинок, кроликів і гризунів. Працює щодня без вихідних.',
+    '',
+    '## Факти',
+    '',
+    '- Адреса: ' + clinic.addressFull + ' (' + clinic.addressOld + '), район ' + clinic.district +
+      ', поруч зі станцією метро «' + clinic.metro + '»',
+    '- Координати: ' + clinic.geo.lat + ', ' + clinic.geo.lng,
+    '- Телефон: ' + phone.pretty + (phone.person ? ' (' + phone.person + ')' : ''),
+    '- Графік: ' + clinic.scheduleShort + ', без вихідних і свят',
+    '- Запис: онлайн на сайті або телефоном; гострі стани — без запису',
+    '- Google Maps: ' + clinic.googleReviewsUrl,
+    '',
+    '## Послуги',
+    '',
+    ...services.map((x) => '- ' + x.title + ' — ' + x.text),
+    '',
+    '## Яких тварин приймають',
+    '',
+    ...smallPets.filter((x) => !x.cta).map((x) => '- ' + x.title + ' — ' + x.text),
+    '',
+    '## Часті питання',
+    '',
+    ...faq.flatMap((f) => ['### ' + f.q, '', f.a, '']),
+    '## Чого на цьому сайті немає',
+    '',
+    '- Рейтинг і відгуки не наводяться як зведена оцінка: актуальні дані —',
+    '  лише на сторінці клініки в Google Maps за посиланням вище.',
+    '- Ціни на сайті не публікуються: вартість залежить від обсягу допомоги',
+    '  і озвучується до початку прийому.',
+    ''
+  ];
+  res.type('text/plain').send(lines.join('\n'));
+});
+
 app.get('/health', (req, res) => {
   res.json({
     ok: true,
