@@ -59,11 +59,33 @@ app.use(express.urlencoded({ extended: false, limit: '32kb' }));
 app.use(express.json({ limit: '32kb' }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '7d' }));
 
+/**
+ * Хто відправник — з погляду ліміту заявок.
+ *
+ * За Cloudflare до застосунку доходить ланцюжок «відвідувач → Cloudflare →
+ * Caddy», і req.ip у ньому вказує на Cloudflare, а не на людину. Без цієї
+ * функції всі відвідувачі потрапляли б в одне відро: після п'ятої заявки
+ * форма замовкла б для всіх одразу.
+ *
+ * CF-Connecting-IP ставить сам Cloudflare. Підмінити його може лише той,
+ * хто стукає в origin повз Cloudflare, знаючи IP сервера, — для форми
+ * запису такий ризик прийнятний.
+ *
+ * IPv6 ріжемо до /64: провайдер видає абоненту цілу підмережу, і без
+ * цього обійти ліміт можна було б, просто змінюючи останні групи адреси.
+ */
+function clientKey(req) {
+  const ip = String(req.headers['cf-connecting-ip'] || req.ip || '');
+  if (!ip.includes(':')) return ip;
+  return ip.split(':').slice(0, 4).join(':');
+}
+
 const leadLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   max: 5,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: clientKey,
   message: { ok: false, error: 'Забагато заявок з цієї адреси. Спробуйте за 10 хвилин або зателефонуйте нам.' }
 });
 

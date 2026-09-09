@@ -1,0 +1,29 @@
+[Unit]
+Description=Сайт ветклініки «Лессі»
+Documentation=https://github.com/maximermak/vetclinik_lessi_07.09
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lessi
+Group=lessi
+WorkingDirectory=/opt/lessi
+Environment=NODE_ENV=production
+# змінні читає сам застосунок через dotenv з /opt/lessi/.env
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=3
+
+# Обмеження: застосунку потрібно лише читати свою теку й ходити в мережу
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/lessi
+
+[Install]
+WantedBy=multi-user.target

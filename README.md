@@ -112,6 +112,57 @@ serverless-функцію, `vercel.json` спрямовує туди всі за
 Форма надсилає заявку на `/lead`; `/api/lead` лишається як синонім,
 бо теку `api/` на Vercel зарезервовано під функції.
 
+## Деплой на власний сервер (Hetzner)
+
+У теці `deploy/` лежить усе потрібне. Скрипти ідемпотентні — повторний
+запуск нічого не ламає.
+
+**Перший раз**, на чистому Debian/Ubuntu від root:
+
+```bash
+git clone https://github.com/maximermak/vetclinik_lessi_07.09.git /tmp/lessi
+bash /tmp/lessi/deploy/setup.sh              # поки без домену — HTTP на IP
+```
+
+Скрипт ставить Node.js, Caddy, заводить системного користувача `lessi`,
+кладе код у `/opt/lessi`, вмикає systemd-юніт і фаєрвол (22/80/443).
+
+Секрети скрипт не приймає — щоб вони не світилися в списку процесів.
+Після нього покладіть `.env` окремо:
+
+```bash
+scp .env root@СЕРВЕР:/opt/lessi/.env
+ssh root@СЕРВЕР 'chown lessi:lessi /opt/lessi/.env && chmod 600 /opt/lessi/.env && systemctl restart lessi'
+```
+
+**Коли DNS уже вказує на сервер** — перезапустіть із доменом, і Caddy
+сам візьме сертифікат Let's Encrypt:
+
+```bash
+bash /opt/lessi/deploy/setup.sh lessivet.com
+```
+
+Важливо: на час отримання сертифіката запис у Cloudflare має бути
+**DNS only** (сіра хмарка). За увімкненим проксі перевірка HTTP-01 не
+дійде до сервера. Отримали сертифікат — вмикайте помаранчеву хмарку
+й ставте SSL/TLS у режим **Full (strict)**.
+
+**Оновлення** після пушу в `main`:
+
+```bash
+ssh root@СЕРВЕР 'bash /opt/lessi/deploy/update.sh'
+```
+
+Корисне: `journalctl -u lessi -f` — лог застосунку (туди ж падають
+заявки, якщо Telegram недоступний), `systemctl status caddy` — стан
+проксі.
+
+### Переїзд на сервер клієнта
+
+Застосунок не зберігає стану, тож переносити нічого: на новому сервері
+проганяєте `setup.sh`, кладете `.env`, міняєте A-запис у Cloudflare.
+Старий сервер після цього можна просто видалити.
+
 ## Деплой на постійний процес
 
 Railway, Render, Fly.io чи VPS — там нічого адаптувати не треба:
