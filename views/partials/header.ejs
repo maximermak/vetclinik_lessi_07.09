@@ -1,4 +1,11 @@
-<header class="header" id="top">
+<%
+  /* Якір «наверх» винесено ПЕРЕД шапкою окремим елементом.
+     На самій шапці він не працював: вона position: sticky, і коли
+     сторінку прокручено, браузер бачить її вже прилиплою до верху
+     екрана — вважає, що елемент у полі зору, і майже не прокручує. */
+%>
+<span id="top" aria-hidden="true"></span>
+<header class="header">
   <div class="container header__in">
     <a class="brand" href="/">
       <%- include('logo', { size: 52 }) %>
