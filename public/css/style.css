@@ -244,8 +244,51 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hcard__hours li { display: flex; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px dashed var(--line); font-size: .95rem; }
 .hcard__hours li span { color: var(--ink-2); }
 .hcard__phones { display: grid; gap: 8px; margin: 20px 0 16px; }
-.hcard__phones a { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--amber-soft); border-radius: 14px; font-weight: 700; color: var(--ink); }
-.hcard__phones a:hover { background: var(--amber); }
+.hcard__phones a {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; background: var(--amber-soft); border-radius: 14px;
+  font-weight: 700; color: var(--ink); letter-spacing: .01em;
+  transition: background .24s ease, box-shadow .24s ease,
+              transform .24s cubic-bezier(.3, 1.3, .5, 1);
+}
+/* трубка в білому кружечку — та сама мова, що й у пігулки телефону в шапці */
+.hcard__phones .icon {
+  width: 32px; height: 32px; padding: 7px; flex: none;
+  background: #fff; color: var(--green); border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(21, 112, 92, .16);
+  transition: box-shadow .24s ease;
+}
+/* ім'я праворуч окремим бейджем, щоб не сперечалось із самим номером */
+.hcard__phones small {
+  margin-left: auto; padding: 4px 10px; border-radius: 999px;
+  background: rgba(255, 255, 255, .72); color: var(--ink-2);
+  font-size: .76rem; font-weight: 700; letter-spacing: .03em;
+  transition: background .24s ease, color .24s ease;
+}
+.hcard__phones a:hover,
+.hcard__phones a:focus-visible {
+  outline: 0; background: var(--amber); transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(234, 166, 60, .42);
+}
+.hcard__phones a:hover .icon,
+.hcard__phones a:focus-visible .icon {
+  box-shadow: 0 4px 12px rgba(20, 51, 43, .22);
+  animation: phoneRing 1.25s ease-in-out infinite;
+}
+.hcard__phones a:hover small,
+.hcard__phones a:focus-visible small { background: #fff; color: var(--dark); }
+.hcard__phones a:active { transform: translateY(0); box-shadow: 0 6px 14px rgba(234, 166, 60, .3); }
+
+/* трубка «дзвонить»: рух дрібний і з довгою паузою, щоб не набридав */
+@keyframes phoneRing {
+  0%, 62%, 100% { transform: rotate(0); }
+  8%  { transform: rotate(-13deg); }
+  16% { transform: rotate(11deg); }
+  24% { transform: rotate(-8deg); }
+  32% { transform: rotate(6deg); }
+  40% { transform: rotate(-4deg); }
+  48% { transform: rotate(2deg); }
+}
 .hcard__note { margin: 0; padding: 14px 16px; background: var(--green-soft); border-radius: 14px; font-size: .85rem; color: var(--dark-2); }
 
 /* ─── Стрічка переваг ────────────────────────────────────── */
@@ -547,6 +590,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
+  .hcard__phones a:hover, .hcard__phones a:focus-visible { transform: none; }
+  .hcard__phones a:hover .icon, .hcard__phones a:focus-visible .icon { animation: none; }
 }
 
 /* ─── 404 ────────────────────────────────────────────────── */
