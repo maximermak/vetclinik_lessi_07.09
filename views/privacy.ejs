@@ -18,17 +18,17 @@
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/style.css?v=<%= v('/css/style.css') %>">
 <%- include('partials/analytics') %>
 </head>
 <body>
+<a class="skip" href="#main">Перейти до вмісту</a>
 <%- include('partials/icons') %>
 <%- include('partials/header', { clinic: clinic }) %>
 
-<main class="legal">
+<main id="main" tabindex="-1" class="legal">
   <div class="container container--narrow">
     <header class="legal__head">
       <span class="eyebrow">Правова інформація</span>
@@ -154,10 +154,11 @@
         ретаргетингу на сайті немає.
       </p>
       <p>
-        Сторінка контактів підвантажує карту Google Maps, а шрифти —
-        з Google Fonts; ці сервіси теж можуть встановлювати власні cookie
-        відповідно до
+        Сторінка контактів підвантажує карту Google Maps — цей сервіс може
+        встановлювати власні cookie відповідно до
         <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">політики Google</a>.
+        Шрифти сайт віддає зі свого сервера, тож при завантаженні сторінки
+        ваша IP-адреса стороннім сервісам шрифтів не передається.
       </p>
       <p>
         Ви можете <b>відмовитися від статистики</b>: заблокувати cookie в

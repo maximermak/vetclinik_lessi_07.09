@@ -88,6 +88,18 @@ www.$DOMAIN {
 
 $DOMAIN {
 	encode zstd gzip
+
+	header {
+		# Заголовки безпеки. Раніше вони жили у vercel.json — і не діяли
+		# взагалі, бо сайт переїхав на Caddy.
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "SAMEORIGIN"
+		Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+		-Server
+	}
+
 	reverse_proxy 127.0.0.1:3000
 	tls {
 		issuer acme {
@@ -110,6 +122,12 @@ else
 
 :80 {
 	encode zstd gzip
+	header {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "SAMEORIGIN"
+		-Server
+	}
 	reverse_proxy 127.0.0.1:3000
 }
 CADDY

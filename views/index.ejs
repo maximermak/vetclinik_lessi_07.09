@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= clinic.name %> — ветеринарна клініка у <%= clinic.cityIn %>, працюємо щодня</title>
-<meta name="description" content="Ветклініка «<%= clinic.name %>» на <%= clinic.districtIn %>, <%= clinic.city %> — <%= clinic.address %> (<%= clinic.addressOld %>), поруч з метро «<%= clinic.metro %>». Терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики, гризуни. <%= clinic.scheduleShort %> без вихідних.">
+<meta name="description" content="Ветклініка «<%= clinic.name %>» на <%= clinic.districtIn %>, <%= clinic.city %> — <%= clinic.address %>. Терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики. <%= clinic.scheduleShort %>.">
 <link rel="canonical" href="<%= siteUrl %>/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ветклініка «<%= clinic.name %>»">
@@ -26,9 +26,8 @@
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/style.css?v=<%= v('/css/style.css') %>">
 <%- include('partials/analytics') %>
 <script type="application/ld+json">
@@ -81,10 +80,11 @@
 </script>
 </head>
 <body>
+<a class="skip" href="#main">Перейти до вмісту</a>
 <%- include('partials/icons') %>
 <%- include('partials/header', { clinic: clinic }) %>
 
-<main>
+<main id="main" tabindex="-1">
   <!-- ══ HERO ══ -->
   <section class="hero">
     <div class="hero__paws" aria-hidden="true"></div>

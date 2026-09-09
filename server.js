@@ -28,6 +28,10 @@ const SITE_URL = (
   `http://localhost:${PORT}`
 ).replace(/\/$/, '');
 
+// Express за замовчуванням підписується заголовком X-Powered-By.
+// Користі нуль, а зловмиснику це підказка, під що добирати вразливості.
+app.disable('x-powered-by');
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
