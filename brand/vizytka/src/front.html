@@ -2,31 +2,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="_base.css">
 <style>
-  .card { background: linear-gradient(146deg, #0d4a3d 0%, #14332b 42%, #15705c 100%); }
-  .paws { position: absolute; inset: 0; opacity: .055;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cellipse cx='6.5' cy='10' rx='2.1' ry='2.6'/%3E%3Cellipse cx='10.5' cy='6.5' rx='2.1' ry='2.6'/%3E%3Cellipse cx='15' cy='6.8' rx='2.1' ry='2.6'/%3E%3Cellipse cx='18.5' cy='10.6' rx='2' ry='2.4'/%3E%3Cpath d='M12.4 12.4c2.6 0 5.4 2 5.4 4.6 0 1.8-1.4 3-3.2 3-1 0-1.6-.4-2.4-.4s-1.4.4-2.4.4c-1.8 0-3.2-1.2-3.2-3 0-2.6 2.6-4.6 5.8-4.6Z'/%3E%3C/svg%3E");
-    background-size: 132px; }
-  .glow { position: absolute; right: -170px; top: -210px; width: 640px; height: 640px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(234,166,60,.30), rgba(234,166,60,0) 68%); }
-  .stripe { position: absolute; left: 0; right: 0; bottom: 0; height: 52px; background: #eaa63c; }
+  .card { background: #f6f4ec; color: #16211d; }
+  .paws { position: absolute; inset: 0; opacity: .045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 24 24' fill='%2315705c'%3E%3Cellipse cx='6.5' cy='10' rx='2.1' ry='2.6'/%3E%3Cellipse cx='10.5' cy='6.5' rx='2.1' ry='2.6'/%3E%3Cellipse cx='15' cy='6.8' rx='2.1' ry='2.6'/%3E%3Cellipse cx='18.5' cy='10.6' rx='2' ry='2.4'/%3E%3Cpath d='M12.4 12.4c2.6 0 5.4 2 5.4 4.6 0 1.8-1.4 3-3.2 3-1 0-1.6-.4-2.4-.4s-1.4.4-2.4.4c-1.8 0-3.2-1.2-3.2-3 0-2.6 2.6-4.6 5.8-4.6Z'/%3E%3C/svg%3E");
+    background-size: 138px; }
+  /* зона під фото такси: тепле світло праворуч, щоб кут не був мертвим,
+     і великий слід лапи — він же орієнтир, куди класти знімок */
+  .glow { position: absolute; right: -150px; top: -170px; width: 620px; height: 620px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(234,166,60,.34), rgba(234,166,60,0) 66%); }
+  .bigpaw { position: absolute; right: -34px; bottom: -56px; width: 400px; height: 400px; opacity: .085;
+            fill: #15705c; }
+
   .in { position: absolute; inset: 0; display: flex; flex-direction: column;
-        align-items: center; justify-content: center; gap: 0; padding: 72px; }
-  .logo { width: 158px; height: 158px; display: block; border-radius: 50%;
-          box-shadow: 0 0 0 5px rgba(234,166,60,.55); }
-  h1 { margin-top: 26px; font-size: 70px; font-weight: 800; letter-spacing: -.025em; color: #fff; line-height: 1; }
-  .rule { width: 92px; height: 4px; background: #eaa63c; border-radius: 2px; margin: 20px 0 18px; }
-  .sub { font-size: 20px; font-weight: 700; letter-spacing: .34em; color: #a9c2b8; text-transform: uppercase; }
-  .city { position: absolute; left: 0; right: 0; bottom: 92px; text-align: center;
-          font-size: 18px; font-weight: 600; letter-spacing: .22em; color: rgba(255,255,255,.42); text-transform: uppercase; }
+        justify-content: space-between; align-items: flex-start;
+        padding: 72px 380px 72px 72px; }
+
+  .badge { display: flex; align-items: center; gap: 15px; padding: 11px 26px 11px 11px;
+           background: #14332b; border-radius: 999px; }
+  .badge img { width: 58px; height: 58px; border-radius: 50%; display: block; }
+  .badge span { font-size: 31px; font-weight: 800; color: #fff; letter-spacing: -.01em; }
+
+  h1 { font-size: 51px; font-weight: 800; line-height: 1.1; letter-spacing: -.028em; }
+  h1 em { font-style: normal; color: #15705c; }
+
+  .foot { display: flex; flex-direction: column; gap: 11px; }
+  .rule { width: 62px; height: 4px; background: #eaa63c; border-radius: 2px; }
+  .sub { font-size: 17px; font-weight: 700; letter-spacing: .2em; color: #5b6b64; text-transform: uppercase; }
 </style></head>
 <body><div class="card">
   <div class="paws"></div><div class="glow"></div>
+  <svg class="bigpaw" viewBox="0 0 24 24"><ellipse cx="6.5" cy="10" rx="2.1" ry="2.6"/><ellipse cx="10.5" cy="6.5" rx="2.1" ry="2.6"/><ellipse cx="15" cy="6.8" rx="2.1" ry="2.6"/><ellipse cx="18.5" cy="10.6" rx="2" ry="2.4"/><path d="M12.4 12.4c2.6 0 5.4 2 5.4 4.6 0 1.8-1.4 3-3.2 3-1 0-1.6-.4-2.4-.4s-1.4.4-2.4.4c-1.8 0-3.2-1.2-3.2-3 0-2.6 2.6-4.6 5.8-4.6Z"/></svg>
+
   <div class="in">
-    <img class="logo" src="logo.svg">
-    <h1>Лессі</h1>
-    <div class="rule"></div>
-    <div class="sub">Ветеринарна клініка</div>
+    <div class="badge"><img src="logo.svg"><span>Лессі</span></div>
+    <h1>Лікуємо тих,<br>хто <em>чекає вас удома</em></h1>
+    <div class="foot">
+      <div class="rule"></div>
+      <div class="sub">Ветеринарна клініка · Харків</div>
+    </div>
   </div>
-  <div class="city">Харків</div>
-  <div class="stripe"></div>
 </div></body>
