@@ -7,3 +7,6 @@ npm-debug.log*
 
 # оригінали знімків з телефона — у репозиторій не йдуть
 photos-original/
+
+# TIF макетів важкі, відтворюються скриптом brand/vizytka/build.py
+brand/vizytka/out/*.tif
