@@ -3,6 +3,9 @@
 set -euo pipefail
 APP_DIR=/opt/lessi
 
+# тека належить користувачу lessi, а git тут працює від root —
+# без винятку він відмовляється чіпати «чужий» репозиторій
+git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
 git -C "$APP_DIR" fetch --quiet --depth 1 origin main
 git -C "$APP_DIR" reset --hard --quiet FETCH_HEAD
 chown -R lessi:lessi "$APP_DIR"

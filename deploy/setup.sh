@@ -44,6 +44,9 @@ fi
 
 say "Користувач і код"
 id -u "$APP_USER" >/dev/null 2>&1 || useradd --system --create-home --home-dir "$APP_DIR" --shell /usr/sbin/nologin "$APP_USER"
+# тека належить користувачу lessi, а git тут працює від root —
+# без винятку він відмовляється чіпати «чужий» репозиторій
+git config --global --add safe.directory "$APP_DIR" 2>/dev/null || true
 # init+fetch, а не clone: useradd --create-home уже поклав у теку
 # скелетні дотфайли, і clone на непорожній теці падає
 git init --quiet "$APP_DIR"
