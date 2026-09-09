@@ -858,15 +858,24 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 980px) {
   .modal { padding: 0; align-items: end; }
   .modal__box {
-    width: 100%; margin: 0;
+    width: 100%;
+    /* margin-top: auto — другий, незалежний спосіб притиснути шторку
+       донизу, крім align-items: end у контейнера. Підстраховка на
+       випадок, якщо браузер із <dialog> у верхньому шарі поведеться
+       зі сіткою по-своєму */
+    margin: auto 0 0;
     /* svh, а не dvh: dvh змінюється, коли ховається адресний рядок
-       браузера, і висота шторки стрибає просто під час анімації */
+       браузера, і висота шторки стрибала просто під час анімації */
     max-height: 88svh;
     padding: 24px 20px 22px; border-radius: 24px 24px 0 0;
-    transform: translateY(100%);
-    /* окремий шар: інакше браузер перемальовує шторку разом із
-       розмитим тлом на кожному кадрі */
-    will-change: transform;
+    /* Підйом на фіксовані 22px, а не translateY(100%) на всю висоту.
+       Відсоток рахується від висоти самої шторки, а вона на телефоні
+       нестабільна: залежить від адресного рядка, від клавіатури, від
+       того, коли доміряється вміст. Через це виїзд і смикався.
+       22px не залежать ні від чого. */
+    transform: translateY(22px);
+    transition: opacity .24s ease, transform .26s ease-out;
+    will-change: transform, opacity;
   }
   .modal.is-open .modal__box { transform: none; }
   .modal__head h2 { font-size: 1.3rem; }

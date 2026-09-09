@@ -735,10 +735,16 @@
           if (dd && dd.selectByValue) dd.selectByValue(service);
         }
 
-        setTimeout(function () {
-          var field = $('input[name="name"]', booking.el);
-          if (field) field.focus({ preventScroll: true });
-        }, 280);
+        // Фокус у поле ставимо лише на широких екранах. На телефоні це
+        // одразу піднімає екранну клавіатуру, вікно перебудовується
+        // просто під час анімації появи — і вона смикається. Та й без
+        // клавіатури одразу видно всю форму, а не самий її верх.
+        if (window.matchMedia('(min-width: 981px)').matches) {
+          setTimeout(function () {
+            var field = $('input[name="name"]', booking.el);
+            if (field) field.focus({ preventScroll: true });
+          }, 280);
+        }
       });
     });
   }
