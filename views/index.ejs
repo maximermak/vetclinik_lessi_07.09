@@ -193,14 +193,27 @@
   <!-- ══ КОГО ЛІКУЄМО ══ -->
   <section class="pets" id="pets">
     <div class="container">
-      <header class="section__head section__head--light reveal">
-        <span class="eyebrow eyebrow--light">Кого ми лікуємо</span>
-        <h2>Не лише котів і собак</h2>
-        <p>
-          Морські свинки, кролики та гризуни — пацієнти, з якими беруться далеко не всі.
-          У них інша анатомія, інші дози і зовсім мало часу на помилку.
-        </p>
-      </header>
+      <div class="pets__head reveal">
+        <div class="pets__intro">
+          <span class="eyebrow eyebrow--light">Кого ми лікуємо</span>
+          <h2>Не лише котів і собак</h2>
+          <p>
+            Морські свинки, кролики та гризуни — пацієнти, з якими беруться далеко не всі.
+            У них інша анатомія, інші дози і зовсім мало часу на помилку.
+          </p>
+        </div>
+
+        <div class="pets__photos">
+          <img class="pphoto pphoto--main"
+               src="/img/photos/clinic-wall.webp?v=<%= v('/img/photos/clinic-wall.webp') %>"
+               width="880" height="660" loading="lazy" decoding="async"
+               alt="Кабінет ветклініки «Лессі»: стіна з таблицями порід котів і собак">
+          <img class="pphoto pphoto--accent"
+               src="/img/photos/anatomy.webp?v=<%= v('/img/photos/anatomy.webp') %>"
+               width="560" height="420" loading="lazy" decoding="async"
+               alt="Анатомічний плакат скелета собаки в кабінеті клініки">
+        </div>
+      </div>
 
       <div class="grid grid--pets">
         <% smallPets.forEach(function (p) { %>
@@ -409,9 +422,16 @@
             </div>
           </div>
           <a class="btn btn--primary" href="#booking" data-modal-open>Записатись на прийом</a>
+
         </div>
 
         <div class="contacts__map reveal">
+          <figure class="contacts__photo">
+            <img src="/img/photos/entrance.webp?v=<%= v('/img/photos/entrance.webp') %>"
+                 width="1000" height="417" loading="lazy" decoding="async"
+                 alt="Вхід до ветклініки «Лессі» — сірі металеві двері збоку будівлі">
+            <figcaption>Шукайте сірі металеві двері — це наш вхід</figcaption>
+          </figure>
           <iframe
             title="Карта — ветклініка «<%= clinic.name %>», <%= clinic.addressFull %>"
             src="https://maps.google.com/maps?q=<%= clinic.geo.lat %>,<%= clinic.geo.lng %>&z=17&output=embed"

@@ -307,8 +307,25 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: radial-gradient(circle, rgba(21, 112, 92, .3), transparent 70%);
 }
 .pets .container { position: relative; z-index: 1; }
-.section__head--light h2 { color: #fff; }
-.section__head--light p { color: #b9cdc4; }
+
+/* шапка секції: текст ліворуч, справжні знімки клініки праворуч */
+.pets__head {
+  display: grid; grid-template-columns: 1.12fr .88fr;
+  gap: 46px; align-items: center; margin-bottom: 44px;
+}
+.pets__intro h2 { color: #fff; margin-bottom: 16px; }
+.pets__intro p { margin: 0; color: #b9cdc4; }
+
+.pets__photos { position: relative; padding: 0 0 30px 26px; }
+/* height:auto — інакше атрибут height="..." в <img> фіксує висоту
+   як presentational hint і aspect-ratio не спрацьовує */
+.pphoto { display: block; height: auto; border-radius: var(--radius-lg); object-fit: cover; }
+.pphoto--main { width: 100%; aspect-ratio: 4 / 3; box-shadow: 0 22px 50px rgba(0, 0, 0, .42); }
+.pphoto--accent {
+  position: absolute; left: 0; bottom: 0; width: 47%; aspect-ratio: 4 / 3;
+  border: 6px solid var(--dark);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .45);
+}
 
 
 .grid--pets { grid-template-columns: repeat(3, 1fr); }
@@ -478,9 +495,24 @@ ul { margin: 0; padding: 0; list-style: none; }
 .contacts__map { overflow: hidden; border-radius: var(--radius-lg); box-shadow: var(--shadow); border: 1px solid var(--line); }
 .contacts__map iframe { display: block; width: 100%; height: 300px; border: 0; filter: saturate(.92); }
 
+/* знімок входу над картою: сірі двері легко проїхати повз.
+   Кадр ріжемо через object-fit, а не в самому файлі — так висоту
+   смуги можна міняти, не перезбираючи зображення. */
+.contacts__photo { position: relative; margin: 0; }
+.contacts__photo img {
+  display: block; width: 100%; height: 240px;
+  object-fit: cover; object-position: center;
+}
+.contacts__photo figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 30px 18px 12px;
+  background: linear-gradient(transparent, rgba(12, 32, 27, .86));
+  color: #fff; font-size: .85rem; font-weight: 600;
+}
+
 /* стара назва вулиці — половина міста шукає клініку саме за нею */
 .cinfo__old { display: block; margin-top: 2px; font-size: .84rem; color: var(--ink-2); }
-.contacts__map iframe { height: 420px; }
+.contacts__map iframe { height: 380px; }
 
 /* ─── Футер ──────────────────────────────────────────────── */
 .footer { padding: 60px 0 26px; background: var(--dark); color: #bcd0c8; font-size: .93rem; }
@@ -539,6 +571,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 @media (max-width: 1080px) {
   .grid--why, .grid--pets { grid-template-columns: repeat(2, 1fr); }
+  .pets__head { grid-template-columns: 1fr; gap: 32px; }
+  .pets__photos { max-width: 460px; margin-inline: auto; }
   .grid--reviews { grid-template-columns: repeat(2, 1fr); }
   .strip__in { grid-template-columns: repeat(2, 1fr); }
   /* пігулка стискається до круглої кнопки: обнуляємо асиметричний
@@ -971,7 +1005,8 @@ body.is-locked { overflow: hidden; }
   }
   .hero__stat b { display: inline; font-size: 1.2rem; }
 
-  .contacts__map iframe { height: 320px; }
+  .contacts__map iframe { height: 300px; }
+  .contacts__photo img { height: 190px; }
 }
 
 @media (max-width: 780px) {

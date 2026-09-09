@@ -4,3 +4,6 @@ node_modules/
 npm-debug.log*
 *.log
 .vercel
+
+# оригінали знімків з телефона — у репозиторій не йдуть
+photos-original/
