@@ -1007,6 +1007,11 @@ body.is-locked { overflow: hidden; }
 .dp-slots {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; align-content: start;
   max-height: 268px; overflow-y: auto; overscroll-behavior: contain;
+  /* Запас під підйом плашки на ховері. Прокрутка обрізає вміст по
+     межі поля відступів, тож без цих 5px верхній ряд на ховері
+     зрізало зверху. Від'ємні поля повертають блок на місце, щоб
+     розмітка навколо не зсунулась. */
+  padding: 5px 0 6px; margin: -5px 0 -6px;
 }
 .dp-slot {
   padding: 9px 4px; border: 1px solid var(--line); border-radius: 10px;
