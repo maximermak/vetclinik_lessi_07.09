@@ -434,7 +434,7 @@
           </figure>
           <iframe
             title="Карта — ветклініка «<%= clinic.name %>», <%= clinic.addressFull %>"
-            src="https://maps.google.com/maps?q=<%= clinic.geo.lat %>,<%= clinic.geo.lng %>&z=17&output=embed"
+            src="https://maps.google.com/maps?q=<%= encodeURIComponent(clinic.geo.lat + ',' + clinic.geo.lng + ' (Ветклініка «' + clinic.name + '»)') %>&hl=uk&z=17&output=embed"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
