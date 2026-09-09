@@ -144,7 +144,7 @@
             <% clinic.phones.forEach(function (p) { %>
               <a href="tel:<%= p.raw %>">
                 <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
-                <%= p.pretty %>
+                <span class="hcard__num"><%= p.pretty %></span>
                 <% if (p.person) { %><small><%= p.person %></small><% } %>
               </a>
             <% }) %>

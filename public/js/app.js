@@ -45,18 +45,28 @@
       burger.setAttribute('aria-expanded', 'true');
     };
 
-    var closeNav = function () {
+    // instant — прибрати шухляду без анімації. Потрібно, коли з неї
+    // одразу відкривається модалка: виїзд шухляди накладався б на появу
+    // вікна, а це два перетворення й два розмиття фону водночас —
+    // на телефоні анімація помітно смикається.
+    var closeNav = function (instant) {
       // idempotent: без цього застереження клік по .nav__cta (вона теж
       // data-modal-open, тобто відкриває модалку і лежить всередині
       // <nav>) знімав би блокування скролу, накинуте модалкою, навіть
       // коли сама шухляда вже була закрита
       if (!nav.classList.contains('is-open')) return;
+      if (instant) nav.classList.add('nav--instant');
       nav.classList.remove('is-open');
       unlockScroll();
       burger.setAttribute('aria-expanded', 'false');
+      if (instant) {
+        // знімаємо наступним кадром, коли шухляда вже поїхала за екран
+        requestAnimationFrame(function () { nav.classList.remove('nav--instant'); });
+      }
       if (!navOverlay) return;
       navOverlay.classList.remove('is-on');
       var hide = function () { navOverlay.hidden = true; };
+      if (instant) { hide(); return; }
       navOverlay.addEventListener('transitionend', hide, { once: true });
       setTimeout(hide, 400);
     };
@@ -66,11 +76,16 @@
     });
 
     $$('[data-nav-close]').forEach(function (el) {
-      el.addEventListener('click', closeNav);
+      // обгортка обов'язкова: інакше в closeNav першим аргументом
+      // прилетить об'єкт події, а він істинний — і закриття щоразу
+      // виходило б миттєвим, без анімації
+      el.addEventListener('click', function () { closeNav(); });
     });
 
     nav.addEventListener('click', function (e) {
-      if (e.target.closest('a')) closeNav();
+      var link = e.target.closest('a');
+      if (!link) return;
+      closeNav(link.hasAttribute('data-modal-open'));
     });
 
     document.addEventListener('keydown', function (e) {
