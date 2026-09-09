@@ -3,8 +3,8 @@
 set -euo pipefail
 APP_DIR=/opt/lessi
 
-git -C "$APP_DIR" fetch --quiet origin main
-git -C "$APP_DIR" reset --hard --quiet origin/main
+git -C "$APP_DIR" fetch --quiet --depth 1 origin main
+git -C "$APP_DIR" reset --hard --quiet FETCH_HEAD
 chown -R lessi:lessi "$APP_DIR"
 sudo -u lessi npm ci --omit=dev --silent --prefix "$APP_DIR"
 systemctl restart lessi

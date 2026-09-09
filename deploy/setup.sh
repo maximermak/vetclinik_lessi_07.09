@@ -44,13 +44,13 @@ fi
 
 say "Користувач і код"
 id -u "$APP_USER" >/dev/null 2>&1 || useradd --system --create-home --home-dir "$APP_DIR" --shell /usr/sbin/nologin "$APP_USER"
-if [ -d "$APP_DIR/.git" ]; then
-  git -C "$APP_DIR" fetch --quiet origin main
-  git -C "$APP_DIR" reset --hard --quiet origin/main
-else
-  rm -rf "${APP_DIR:?}"/* 2>/dev/null || true
-  git clone --quiet "$REPO" "$APP_DIR"
-fi
+# init+fetch, а не clone: useradd --create-home уже поклав у теку
+# скелетні дотфайли, і clone на непорожній теці падає
+git init --quiet "$APP_DIR"
+git -C "$APP_DIR" remote add origin "$REPO" 2>/dev/null \
+  || git -C "$APP_DIR" remote set-url origin "$REPO"
+git -C "$APP_DIR" fetch --quiet --depth 1 origin main
+git -C "$APP_DIR" reset --hard --quiet FETCH_HEAD
 
 # .env не чіпаємо, якщо він уже є: там живі токени
 if [ ! -f "$APP_DIR/.env" ]; then
