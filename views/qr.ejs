@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Запис на прийом — ветклініка «<%= clinic.name %>»</title>
+<meta name="description" content="Запис на прийом до ветклініки «Лессі» у Харкові. Зателефонуйте або залиште заявку — передзвонимо в робочі години.">
+<%# сторінка з візитки: дублює контент головної, тож у пошук їй не треба %>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#15705c">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css?v=<%= v('/css/style.css') %>">
+<%- include('partials/analytics') %>
+</head>
+<body class="qrpage">
+<%- include('partials/icons') %>
+
+<main class="qrp">
+  <header class="qrp__head">
+    <%- include('partials/logo', { size: 88 }) %>
+    <h1>Ветклініка «<%= clinic.name %>»</h1>
+    <p class="qrp__sub"><%= clinic.addressFull %></p>
+    <p class="qrp__hours">
+      <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-clock"/></svg>
+      <%= clinic.scheduleShort %>, без вихідних
+    </p>
+  </header>
+
+  <div class="qrp__actions">
+    <a class="btn btn--primary btn--wide" href="tel:<%= clinic.phones[0].raw %>">
+      <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+      <%= clinic.phones[0].pretty %>
+    </a>
+    <div class="qrp__row">
+      <a class="btn btn--ghost btn--sm" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-pin"/></svg>
+        Маршрут
+      </a>
+      <a class="btn btn--ghost btn--sm" href="/">
+        <svg viewBox="0 0 24 24" class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg>
+        Сайт клініки
+      </a>
+    </div>
+    <p class="qrp__note">Гострий стан не чекає запису — телефонуйте й везіть.</p>
+  </div>
+
+  <section class="qrp__form">
+    <h2 class="form__title">Записатись на прийом</h2>
+    <%- include('partials/form', { prefix: 'qr', serviceOptions: serviceOptions, petAgeOptions: petAgeOptions, scheduleByWeekday: scheduleByWeekday }) %>
+  </section>
+
+  <footer class="qrp__foot">
+    <a href="mailto:<%= clinic.email %>"><%= clinic.email %></a>
+    <span>© <%= new Date().getFullYear() %> Ветклініка «<%= clinic.name %>»</span>
+  </footer>
+</main>
+
+<script src="/js/app.js?v=<%= v('/js/app.js') %>" defer></script>
+</body>
+</html>

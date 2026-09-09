@@ -132,6 +132,12 @@ app.post(['/lead', '/api/lead'], leadLimiter, async (req, res) => {
   }
 });
 
+// Сторінка з візитки: коротка адреса, щоб QR-код вийшов простим
+// і сканувався навіть з надрукованого дрібно квадрата.
+app.get('/qr', (req, res) => {
+  res.render('qr', { clinic, serviceOptions, petAgeOptions, scheduleByWeekday });
+});
+
 app.get('/privacy', (req, res) => {
   res.render('privacy', { clinic });
 });
