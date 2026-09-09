@@ -89,6 +89,16 @@ www.$DOMAIN {
 $DOMAIN {
 	encode zstd gzip
 	reverse_proxy 127.0.0.1:3000
+	tls {
+		issuer acme {
+			# За Cloudflare 443 термінує сам Cloudflare, тож перевірка
+			# через TLS-ALPN до нас не дійде — лишаємо тільки HTTP-01.
+			# Cloudflare навмисно не редиректить /.well-known/acme-challenge/
+			# на HTTPS і пропускає його на origin по 80-му, тож це працює
+			# навіть з увімкненим проксі.
+			disable_tlsalpn_challenge
+		}
+	}
 }
 CADDY
 else
