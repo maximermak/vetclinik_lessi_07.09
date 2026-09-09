@@ -47,7 +47,7 @@ const clinic = {
   rating: null,
   reviewsCount: null,
   phones: [
-    { raw: '+380974081632', pretty: '+38 (097) 408-16-32', person: 'Юрій' }
+    { raw: '+380974081632', pretty: '+38 (097) 408-16-32', person: 'Сергій' }
   ],
   email: 'vetklinikalessi25@gmail.com',
   // Єдине джерело правди: звідси беруться і секції сайту, і розмітка для Google
