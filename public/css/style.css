@@ -1218,3 +1218,35 @@ body.is-locked { overflow: hidden; }
   .qrp { padding: 22px 14px 32px; }
   .qrp__form { padding: 20px 16px; }
 }
+
+/* ─── Перемикач мов ──────────────────────────────────────── */
+/* Компактна пігулка поруч із телефоном: назва мови повністю
+   з'їдала б місце в шапці, тож у ній двобуквений код. */
+.langswitch {
+  display: inline-grid; place-items: center; min-width: 42px; height: 42px;
+  padding: 0 10px; border-radius: 999px;
+  background: var(--amber-soft); color: var(--dark-2);
+  font-weight: 800; font-size: .84rem; letter-spacing: .06em;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.langswitch:hover { background: var(--amber); color: var(--dark); transform: translateY(-1px); }
+.langswitch:focus-visible { outline: 3px solid var(--amber-dark); outline-offset: 3px; }
+
+/* У шухляді — окремим рядком повною назвою, там місця вистачає */
+.nav__lang { display: none; }
+@media (max-width: 980px) {
+  .nav a.nav__lang { display: block; color: var(--green); font-weight: 700; }
+  .nav a.nav__lang::before { content: "🌐"; margin-right: 8px; }
+  /* у шапці пігулка лишається: нею користуються частіше, ніж меню */
+}
+@media (max-width: 420px) {
+  .langswitch { min-width: 38px; height: 38px; font-size: .78rem; padding: 0 8px; }
+}
+
+/* На сторінці з візитки перемикач стоїть над лого */
+.qrp__lang {
+  display: inline-block; margin-bottom: 12px; padding: 7px 16px;
+  border-radius: 999px; background: #fff; box-shadow: var(--shadow);
+  font-size: .84rem; font-weight: 700; color: var(--green);
+}
+.qrp__lang:hover { background: var(--amber-soft); }

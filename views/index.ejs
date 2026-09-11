@@ -1,25 +1,38 @@
 <!doctype html>
-<html lang="uk">
+<html lang="<%= lang %>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><%= clinic.name %> — ветеринарна клініка у <%= clinic.cityIn %>, працюємо щодня</title>
-<meta name="description" content="Ветклініка «<%= clinic.name %>» на <%= clinic.districtIn %>, <%= clinic.city %> — <%= clinic.address %>. Терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики. <%= clinic.scheduleShort %>.">
-<link rel="canonical" href="<%= siteUrl %>/">
+<%
+  var M = t.meta;
+  var vars = {
+    name: clinic.name, city: clinic.city, cityIn: clinic.cityIn,
+    district: clinic.district, districtIn: clinic.districtIn,
+    address: clinic.address, schedule: clinic.scheduleShort,
+    tagline: clinic.tagline, metro: clinic.metro, old: clinic.addressOld
+  };
+%>
+<title><%= fill(M.title, vars) %></title>
+<meta name="description" content="<%= fill(M.description, vars) %>">
+<link rel="canonical" href="<%= siteUrl + alt[lang] %>">
+<% LANGS.forEach(function (l) { %>
+<link rel="alternate" hreflang="<%= l %>" href="<%= siteUrl + alt[l] %>">
+<% }) %>
+<link rel="alternate" hreflang="x-default" href="<%= siteUrl %>/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Ветклініка «<%= clinic.name %>»">
-<meta property="og:locale" content="uk_UA">
-<meta property="og:url" content="<%= siteUrl %>/">
-<meta property="og:title" content="Ветклініка «<%= clinic.name %>» — щодня 09:00–19:00 у <%= clinic.cityIn %>">
-<meta property="og:description" content="Терапія, хірургія, вакцинація та аналізи. Коти, собаки, морські свинки, кролики й гризуни. <%= clinic.address %>. Запис онлайн за хвилину.">
+<meta property="og:site_name" content="<%= fill(M.siteName, vars) %>">
+<meta property="og:locale" content="<%= lang === 'ru' ? 'ru_UA' : 'uk_UA' %>">
+<meta property="og:url" content="<%= siteUrl + alt[lang] %>">
+<meta property="og:title" content="<%= fill(M.ogTitle, vars) %>">
+<meta property="og:description" content="<%= fill(M.ogDescription, vars) %>">
 <meta property="og:image" content="<%= siteUrl %>/img/og.jpg?v=<%= v('/img/og.jpg') %>">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Ветеринарна клініка «Лессі» — лікуємо тих, хто чекає вас удома">
+<meta property="og:image:alt" content="<%= fill(M.ogAlt, vars) %>">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ветклініка «<%= clinic.name %>» — щодня 09:00–19:00 у <%= clinic.cityIn %>">
-<meta name="twitter:description" content="Терапія, хірургія, вакцинація та аналізи. Коти, собаки, морські свинки, кролики й гризуни.">
+<meta name="twitter:title" content="<%= fill(M.ogTitle, vars) %>">
+<meta name="twitter:description" content="<%= fill(M.twDescription, vars) %>">
 <meta name="twitter:image" content="<%= siteUrl %>/img/og.jpg?v=<%= v('/img/og.jpg') %>">
 <meta name="theme-color" content="#15705c">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -34,15 +47,16 @@
 <%- JSON.stringify(Object.assign({
   '@context': 'https://schema.org',
   '@type': 'VeterinaryCare',
-  name: 'Ветеринарна клініка «' + clinic.name + '»',
+  name: fill(M.schemaName, vars),
   alternateName: clinic.alternateNames,
-  description: clinic.tagline + ' у ' + clinic.cityIn + ': терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики та гризуни.',
-  url: siteUrl + '/',
+  description: fill(M.schemaDescription, vars),
+  url: siteUrl + alt[lang],
+  inLanguage: lang,
   address: {
     '@type': 'PostalAddress',
     streetAddress: clinic.address,
     addressLocality: clinic.city,
-    postalCode: '61168',
+    postalCode: clinic.postalCode,
     addressCountry: 'UA'
   },
   geo: { '@type': 'GeoCoordinates', latitude: clinic.geo.lat, longitude: clinic.geo.lng },
@@ -73,20 +87,18 @@
 <%- JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
+  inLanguage: lang,
   mainEntity: faq.map(function (f) {
-    return {
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a }
-    };
+    return { '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } };
   })
 }) %>
 </script>
 </head>
 <body>
-<a class="skip" href="#main">Перейти до вмісту</a>
+<a class="skip" href="#main"><%= t.skip %></a>
+<span id="top" aria-hidden="true"></span>
 <%- include('partials/icons') %>
-<%- include('partials/header', { clinic: clinic }) %>
+<%- include('partials/header') %>
 
 <main id="main" tabindex="-1">
   <!-- ══ HERO ══ -->
@@ -94,19 +106,15 @@
     <div class="hero__paws" aria-hidden="true"></div>
     <div class="container hero__in">
       <div class="hero__text reveal">
-        <span class="eyebrow"><svg viewBox="0 0 24 24" class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> Ветклініка у <%= clinic.cityIn %> — щодня</span>
-        <h1>Лікуємо тих,<br>хто <span class="hl">чекає вас удома</span></h1>
-        <p class="hero__lead">
-          Терапія, хірургія, вакцинація та аналізи в одній клініці
-          на <%= clinic.districtIn %>. Приймаємо котів і собак, а ще морських
-          свинок, кроликів і гризунів — щодня з 09:00 до 19:00, без вихідних.
-        </p>
+        <span class="eyebrow"><svg viewBox="0 0 24 24" class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg> <%= fill(t.hero.eyebrow, vars) %></span>
+        <h1><%= t.hero.h1a %><br><%= t.hero.h1b %> <span class="hl"><%= t.hero.h1c %></span></h1>
+        <p class="hero__lead"><%= fill(t.hero.lead, vars) %></p>
 
         <div class="hero__cta">
-          <a class="btn btn--primary" href="#booking" data-modal-open>Записатись на прийом</a>
+          <a class="btn btn--primary" href="#booking" data-modal-open><%= t.nav.book %></a>
           <a class="btn btn--ghost" href="tel:<%= clinic.phones[0].raw %>">
             <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
-            Зателефонувати
+            <%= t.hero.call %>
           </a>
         </div>
 
@@ -117,19 +125,19 @@
               <span class="rating__score"><%= ratingParts[0] %><% if (ratingParts.length > 1) { %><span class="rating__sep">,</span><%= ratingParts[1] %><% } %></span>
               <span class="rating__body">
                 <span class="stars" aria-hidden="true">★★★★★</span>
-                <span class="rating__label"><%= clinic.reviewsCount %> <%= plural(clinic.reviewsCount, 'відгук', 'відгуки', 'відгуків') %> у Google Maps</span>
+                <span class="rating__label"><%= clinic.reviewsCount %> <%= t.hero.reviewsCount %></span>
               </span>
             </a>
           <% } else { %>
             <a class="rating rating--plain" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
               <span class="rating__body">
-                <span class="rating__title">Відгуки власників</span>
-                <span class="rating__label">читайте на нашій сторінці в Google Maps</span>
+                <span class="rating__title"><%= t.hero.reviewsTitle %></span>
+                <span class="rating__label"><%= t.hero.reviewsSub %></span>
               </span>
             </a>
           <% } %>
-          <span class="hero__stat"><b>7</b> днів на тиждень</span>
+          <span class="hero__stat"><b>7</b> <%= t.hero.days %></span>
         </div>
       </div>
 
@@ -137,7 +145,7 @@
         <div class="hcard">
           <div class="hcard__head">
             <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-clock"/></svg>
-            <h2>Графік роботи</h2>
+            <h2><%= t.hero.scheduleTitle %></h2>
           </div>
           <ul class="hcard__hours">
             <% clinic.schedule.forEach(function (s) { %>
@@ -153,7 +161,7 @@
               </a>
             <% }) %>
           </div>
-          <p class="hcard__note">Гострий стан не чекає запису — телефонуйте й везіть. Останній плановий прийом краще планувати до 18:30.</p>
+          <p class="hcard__note"><%= t.hero.note %></p>
         </div>
       </aside>
     </div>
@@ -162,10 +170,12 @@
   <!-- ══ ПЕРЕВАГИ-СТРІЧКА ══ -->
   <section class="strip">
     <div class="container strip__in">
-      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span>Щодня 09:00–19:00<br><small>без вихідних і свят</small></span></div>
-      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-rodent"/></svg><span>Дрібні тварини<br><small>свинки, кролики, гризуни</small></span></div>
-      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-stethoscope"/></svg><span>Терапія і хірургія<br><small>від огляду до операції</small></span></div>
-      <div class="strip__item reveal"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Ціна — до початку<br><small>без несподіванок у касі</small></span></div>
+      <% t.strip.forEach(function (s) { %>
+        <div class="strip__item reveal">
+          <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-<%= s.icon %>"/></svg>
+          <span><%= s.title %><br><small><%= s.sub %></small></span>
+        </div>
+      <% }) %>
     </div>
   </section>
 
@@ -173,9 +183,9 @@
   <section class="section" id="services">
     <div class="container">
       <header class="section__head reveal">
-        <span class="eyebrow">Наші послуги</span>
-        <h2>Усе для здоров’я улюбленця<br>в одній клініці</h2>
-        <p>Не потрібно возити тварину містом: огляд, аналізи, операція та спостереження — на одній адресі.</p>
+        <span class="eyebrow"><%= t.servicesSec.eyebrow %></span>
+        <h2><%= t.servicesSec.h2a %><br><%= t.servicesSec.h2b %></h2>
+        <p><%= t.servicesSec.lead %></p>
       </header>
 
       <div class="services">
@@ -200,23 +210,20 @@
     <div class="container">
       <div class="pets__head reveal">
         <div class="pets__intro">
-          <span class="eyebrow eyebrow--light">Кого ми лікуємо</span>
-          <h2>Не лише котів і собак</h2>
-          <p>
-            Морські свинки, кролики та гризуни — пацієнти, з якими беруться далеко не всі.
-            У них інша анатомія, інші дози і зовсім мало часу на помилку.
-          </p>
+          <span class="eyebrow eyebrow--light"><%= t.petsSec.eyebrow %></span>
+          <h2><%= t.petsSec.h2 %></h2>
+          <p><%= t.petsSec.lead %></p>
         </div>
 
         <div class="pets__photos">
           <img class="pphoto pphoto--main"
                src="/img/photos/clinic-wall.webp?v=<%= v('/img/photos/clinic-wall.webp') %>"
                width="880" height="660" loading="lazy" decoding="async"
-               alt="Кабінет ветклініки «Лессі»: стіна з таблицями порід котів і собак">
+               alt="<%= fill(t.petsSec.photoMain, vars) %>">
           <img class="pphoto pphoto--accent"
                src="/img/photos/anatomy.webp?v=<%= v('/img/photos/anatomy.webp') %>"
                width="560" height="420" loading="lazy" decoding="async"
-               alt="Анатомічний плакат скелета собаки в кабінеті клініки">
+               alt="<%= t.petsSec.photoAccent %>">
         </div>
       </div>
 
@@ -242,7 +249,7 @@
           <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
           <%= clinic.phones[0].pretty %>
         </a>
-        <span>Опишіть тварину телефоном — скажемо, чи зможемо допомогти</span>
+        <span><%= t.petsSec.ctaNote %></span>
       </div>
     </div>
   </section>
@@ -251,9 +258,9 @@
   <section class="section section--cream" id="why">
     <div class="container">
       <header class="section__head reveal">
-        <span class="eyebrow">Чому нас обирають</span>
-        <h2>Клініка, куди повертаються</h2>
-        <p>Нас знаходять за порадою друзів — і лишаються з тією ж твариною роками.</p>
+        <span class="eyebrow"><%= t.whySec.eyebrow %></span>
+        <h2><%= t.whySec.h2 %></h2>
+        <p><%= t.whySec.lead %></p>
       </header>
 
       <div class="grid grid--why">
@@ -272,28 +279,24 @@
   <section class="section" id="reviews">
     <div class="container">
       <header class="section__head reveal">
-        <span class="eyebrow">Відгуки</span>
-        <h2>Що кажуть власники</h2>
-        <p>Кілька відгуків із <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">нашої сторінки в Google Maps</a>. Там же є і критика — читайте все, перш ніж їхати.</p>
+        <span class="eyebrow"><%= t.reviewsSec.eyebrow %></span>
+        <h2><%= t.reviewsSec.h2 %></h2>
+        <p><%= t.reviewsSec.leadA %> <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener"><%= t.reviewsSec.leadLink %></a><%= t.reviewsSec.leadB %></p>
       </header>
 
       <div class="grid grid--reviews">
         <% reviews.forEach(function (r) { %>
           <figure class="review reveal<%= r.full ? ' review--more' : '' %>"
             <% if (r.full) { %>
-              data-review
-              data-name="<%= r.name %>"
-              data-pet="<%= r.pet %>"
-              data-full="<%= r.full %>"
-              role="button" tabindex="0"
-              aria-label="Читати повний відгук: <%= r.name %>"
+              data-review data-name="<%= r.name %>" data-pet="<%= r.pet %>" data-full="<%= r.full %>"
+              role="button" tabindex="0" aria-label="<%= t.reviewsSec.readAria %>: <%= r.name %>"
             <% } %>>
             <div class="review__top">
               <span class="avatar"><%= r.name.charAt(0) %></span>
               <div class="review__who">
                 <b><%= r.name %></b>
                 <span class="review__meta">
-                  <span class="stars" aria-label="5 з 5">★★★★★</span>
+                  <span class="stars" aria-label="5 / 5">★★★★★</span>
                   <span class="review__pet"><%= r.pet %></span>
                 </span>
               </div>
@@ -301,7 +304,7 @@
             <blockquote>«<%= r.text %>»</blockquote>
             <% if (r.full) { %>
               <span class="review__more">
-                Читати повністю
+                <%= t.reviewsSec.readMore %>
                 <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg>
               </span>
             <% } %>
@@ -311,7 +314,7 @@
 
       <div class="reviews__more reveal">
         <a class="btn btn--ghost" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
-          Усі відгуки в Google Maps
+          <%= t.reviewsSec.all %>
         </a>
       </div>
     </div>
@@ -321,16 +324,13 @@
   <section class="booking" id="booking">
     <div class="container booking__in">
       <div class="booking__text reveal">
-        <span class="eyebrow eyebrow--light">Онлайн-запис</span>
-        <h2>Запишіться<br>за одну хвилину</h2>
-        <p>
-          Заповніть форму — заявка миттєво прилетить адміністратору в Telegram.
-          Ми передзвонимо в робочі години й підберемо зручний час.
-        </p>
+        <span class="eyebrow eyebrow--light"><%= t.bookingSec.eyebrow %></span>
+        <h2><%= t.bookingSec.h2a %><br><%= t.bookingSec.h2b %></h2>
+        <p><%= t.bookingSec.lead %></p>
         <ul class="checks checks--light">
-          <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Передзвонюємо в робочі години, 09:00–19:00</li>
-          <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Підкажемо, як підготувати тварину</li>
-          <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg>Озвучимо вартість заздалегідь</li>
+          <% t.bookingSec.checks.forEach(function (c) { %>
+            <li><svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-check"/></svg><%= c %></li>
+          <% }) %>
         </ul>
         <div class="booking__phones">
           <% clinic.phones.forEach(function (p) { %>
@@ -343,13 +343,13 @@
             <img src="/img/pets/<%= p.img %>.svg?v=<%= v('/img/pets/' + p.img + '.svg') %>"
                  width="58" height="58" loading="lazy" decoding="async" alt="">
           <% }) %>
-          <span>приймаємо всіх</span>
+          <span><%= t.bookingSec.petsNote %></span>
         </div>
       </div>
 
       <div class="formwrap reveal">
-        <h3 class="form__title">Заявка на прийом</h3>
-        <%- include('partials/form', { prefix: 'sec', serviceOptions: serviceOptions, petAgeOptions: petAgeOptions, scheduleByWeekday: scheduleByWeekday }) %>
+        <h3 class="form__title"><%= t.bookingSec.formTitle %></h3>
+        <%- include('partials/form', { prefix: 'sec' }) %>
       </div>
     </div>
   </section>
@@ -358,8 +358,8 @@
   <section class="section section--cream" id="faq">
     <div class="container container--narrow">
       <header class="section__head reveal">
-        <span class="eyebrow">Часті питання</span>
-        <h2>Коротко про головне</h2>
+        <span class="eyebrow"><%= t.faqSec.eyebrow %></span>
+        <h2><%= t.faqSec.h2 %></h2>
       </header>
 
       <div class="faq">
@@ -377,8 +377,8 @@
   <section class="section contacts" id="contacts">
     <div class="container">
       <header class="section__head reveal">
-        <span class="eyebrow">Контакти</span>
-        <h2>Як нас знайти</h2>
+        <span class="eyebrow"><%= t.contactsSec.eyebrow %></span>
+        <h2><%= t.contactsSec.h2 %></h2>
       </header>
 
       <div class="contacts__in">
@@ -386,19 +386,19 @@
           <div class="cinfo">
             <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-pin"/></svg></span>
             <div>
-              <b>Адреса</b>
+              <b><%= t.contactsSec.address %></b>
               <p>
                 <%= clinic.addressFull %>
-                <span class="cinfo__old"><%= clinic.addressOld %> — за старою назвою нас теж знають</span>
-                <span class="cinfo__old"><%= clinic.district %>, поруч зі станцією метро «<%= clinic.metro %>»</span>
-                <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">Відкрити в Google Maps</a>
+                <span class="cinfo__old"><%= fill(t.contactsSec.oldName, vars) %></span>
+                <span class="cinfo__old"><%= fill(t.contactsSec.nearMetro, vars) %></span>
+                <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener"><%= t.contactsSec.openMaps %></a>
               </p>
             </div>
           </div>
           <div class="cinfo">
             <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span>
             <div>
-              <b>Телефон</b>
+              <b><%= t.contactsSec.phone %></b>
               <p>
                 <% clinic.phones.forEach(function (p) { %>
                   <a href="tel:<%= p.raw %>"><%= p.pretty %></a><% if (p.person) { %> — <%= p.person %><% } %><br>
@@ -410,7 +410,7 @@
           <div class="cinfo">
             <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-mail"/></svg></span>
             <div>
-              <b>Пошта</b>
+              <b><%= t.contactsSec.mail %></b>
               <p><a href="mailto:<%= clinic.email %>"><%= clinic.email %></a></p>
             </div>
           </div>
@@ -418,7 +418,7 @@
           <div class="cinfo">
             <span class="cinfo__ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-clock"/></svg></span>
             <div>
-              <b>Графік роботи</b>
+              <b><%= t.contactsSec.schedule %></b>
               <p>
                 <% clinic.schedule.forEach(function (s) { %>
                   <%= s.days %>: <%= s.hours %><br>
@@ -426,20 +426,19 @@
               </p>
             </div>
           </div>
-          <a class="btn btn--primary" href="#booking" data-modal-open>Записатись на прийом</a>
-
+          <a class="btn btn--primary" href="#booking" data-modal-open><%= t.nav.book %></a>
         </div>
 
         <div class="contacts__map reveal">
           <figure class="contacts__photo">
             <img src="/img/photos/entrance.webp?v=<%= v('/img/photos/entrance.webp') %>"
                  width="1000" height="417" loading="lazy" decoding="async"
-                 alt="Вхід до ветклініки «Лессі» — сірі металеві двері збоку будівлі">
-            <figcaption>Шукайте сірі металеві двері — це наш вхід</figcaption>
+                 alt="<%= fill(t.contactsSec.photoAlt, vars) %>">
+            <figcaption><%= t.contactsSec.photoCaption %></figcaption>
           </figure>
           <iframe
-            title="Карта — ветклініка «<%= clinic.name %>», <%= clinic.addressFull %>"
-            src="https://maps.google.com/maps?q=<%= encodeURIComponent(clinic.geo.lat + ',' + clinic.geo.lng + ' (Ветклініка «' + clinic.name + '»)') %>&hl=uk&z=17&output=embed"
+            title="<%= fill(t.contactsSec.mapTitle, { name: clinic.name, address: clinic.addressFull }) %>"
+            src="https://maps.google.com/maps?q=<%= encodeURIComponent(clinic.geo.lat + ',' + clinic.geo.lng + ' (' + fill(M.schemaName, vars) + ')') %>&hl=<%= lang %>&z=17&output=embed"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
@@ -448,30 +447,21 @@
   </section>
 
   <% if (reviews.some(function (r) { return r.full; })) { %>
-  <!-- ══ МОДАЛЬНЕ ВІКНО ВІДГУКУ ══ -->
   <dialog class="modal modal--review" id="reviewModal" aria-labelledby="rvName">
     <div class="modal__box">
-      <button class="modal__close" type="button" data-modal-close aria-label="Закрити">
+      <button class="modal__close" type="button" data-modal-close aria-label="<%= t.nav.close %>">
         <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-close"/></svg>
       </button>
-
       <div class="modal__head">
         <span class="avatar avatar--lg" data-rv="avatar"></span>
         <div>
           <h2 id="rvName" data-rv="name"></h2>
-          <p class="modal__sub">
-            <span class="stars" aria-label="5 з 5">★★★★★</span>
-            <span data-rv="pet"></span>
-          </p>
+          <p class="modal__sub"><span class="stars" aria-label="5 / 5">★★★★★</span><span data-rv="pet"></span></p>
         </div>
       </div>
-
-      <div class="modal__body">
-        <blockquote class="rv-text" data-rv="text"></blockquote>
-      </div>
-
+      <div class="modal__body"><blockquote class="rv-text" data-rv="text"></blockquote></div>
       <a class="btn btn--ghost btn--sm rv-link" href="<%= clinic.googleReviewsUrl %>"
-         target="_blank" rel="noopener">Усі відгуки в Google Maps</a>
+         target="_blank" rel="noopener"><%= t.reviewsSec.all %></a>
     </div>
   </dialog>
   <% } %>
@@ -479,26 +469,26 @@
   <!-- ══ МОДАЛЬНЕ ВІКНО ЗАПИСУ ══ -->
   <dialog class="modal" id="bookingModal" aria-labelledby="modalTitle">
     <div class="modal__box">
-      <button class="modal__close" type="button" data-modal-close aria-label="Закрити">
+      <button class="modal__close" type="button" data-modal-close aria-label="<%= t.nav.close %>">
         <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-close"/></svg>
       </button>
 
       <div class="modal__head">
         <img src="/img/logo.svg?v=<%= v('/img/logo.svg') %>" width="52" height="52" alt="">
         <div>
-          <h2 id="modalTitle">Запис на прийом</h2>
-          <p>Передзвонимо й підберемо зручний час</p>
+          <h2 id="modalTitle"><%= t.bookingSec.modalTitle %></h2>
+          <p><%= t.bookingSec.modalSub %></p>
         </div>
       </div>
 
       <div class="modal__body">
-        <%- include('partials/form', { prefix: 'mod', serviceOptions: serviceOptions, petAgeOptions: petAgeOptions, scheduleByWeekday: scheduleByWeekday }) %>
+        <%- include('partials/form', { prefix: 'mod' }) %>
       </div>
     </div>
   </dialog>
 </main>
 
-<%- include('partials/footer', { clinic: clinic }) %>
+<%- include('partials/footer') %>
 <script src="/js/app.js?v=<%= v('/js/app.js') %>" defer></script>
 </body>
 </html>

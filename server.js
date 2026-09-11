@@ -7,10 +7,11 @@ const fs = require('fs');
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 
-const {
-  clinic, services, smallPets, advantages, reviews, faq,
-  serviceOptions, petAgeOptions, scheduleByWeekday
-} = require('./src/data');
+const content = require('./src/data');
+const { LANGS, DEFAULT_LANG } = content;
+// Для службових маршрутів (robots, sitemap, llms) беремо українську:
+// вона основна, і саме її адреси йдуть у пошук.
+const { clinic, services, smallPets, faq } = content.get(DEFAULT_LANG);
 const { validateLead, plural } = require('./src/validate');
 const { sendLead } = require('./src/telegram');
 const googleRating = require('./src/googleRating');
@@ -95,18 +96,29 @@ const leadLimiter = rateLimit({
   message: { ok: false, error: 'Забагато заявок з цієї адреси. Спробуйте за 10 хвилин або зателефонуйте нам.' }
 });
 
-app.get('/', (req, res) => {
-  // рейтинг береться з кешу Google, якщо він є, інакше — з data.js
-  const live = googleRating.get(clinic);
-  const clinicNow = Object.assign({}, clinic, {
-    rating: live.rating,
-    reviewsCount: live.reviewsCount
+/** Спільна підготовка даних для будь-якої сторінки будь-якою мовою. */
+function view(lang, page) {
+  const c = content.get(lang);
+  const live = googleRating.get(c.clinic);
+  return Object.assign({}, c, {
+    clinic: Object.assign({}, c.clinic, {
+      rating: live.rating,
+      reviewsCount: live.reviewsCount
+    }),
+    page: page,
+    path: content.path,
+    LANGS: LANGS,
+    // адреси цієї ж сторінки всіма мовами — для hreflang і перемикача
+    alt: LANGS.reduce(function (acc, l) { acc[l] = content.path(l, page); return acc; }, {})
   });
+}
 
-  res.render('index', {
-    clinic: clinicNow, services, smallPets, advantages, reviews, faq,
-    serviceOptions, petAgeOptions, scheduleByWeekday
-  });
+// Сторінки в обох мовах. Українська — у корені, російська — під /ru:
+// адреси української вже пішли в пошук і на візитку, переносити їх не можна.
+LANGS.forEach(function (lang) {
+  app.get(content.path(lang, '/'), (req, res) => res.render('index', view(lang, '/')));
+  app.get(content.path(lang, '/privacy'), (req, res) => res.render('privacy', view(lang, '/privacy')));
+  app.get(content.path(lang, '/qr'), (req, res) => res.render('qr', view(lang, '/qr')));
 });
 
 // Два шляхи навмисно: на Vercel тека api/ зарезервована під функції,
@@ -136,16 +148,6 @@ app.post(['/lead', '/api/lead'], leadLimiter, async (req, res) => {
   }
 });
 
-// Сторінка з візитки: коротка адреса, щоб QR-код вийшов простим
-// і сканувався навіть з надрукованого дрібно квадрата.
-app.get('/qr', (req, res) => {
-  res.render('qr', { clinic, serviceOptions, petAgeOptions, scheduleByWeekday });
-});
-
-app.get('/privacy', (req, res) => {
-  res.render('privacy', { clinic });
-});
-
 // ─── SEO / GEO ──────────────────────────────────────────────
 // Віддаємо з застосунку, а не файлом у public/: усередині потрібен
 // абсолютний домен, а він відомий лише під час виконання (SITE_URL).
@@ -170,15 +172,28 @@ app.get('/robots.txt', (req, res) => {
 });
 
 app.get('/sitemap.xml', (req, res) => {
+  // Обидві мовні версії головної, кожна з перехресними hreflang —
+  // так Google розуміє, що це один документ двома мовами, а не дублі.
+  const urls = LANGS.map(function (lang) {
+    const links = LANGS.map(function (l) {
+      return '    <xhtml:link rel="alternate" hreflang="' + l +
+             '" href="' + SITE_URL + content.path(l, '/') + '"/>\n';
+    }).join('') +
+    '    <xhtml:link rel="alternate" hreflang="x-default" href="' + SITE_URL + '/"/>\n';
+    return '  <url>\n' +
+           '    <loc>' + SITE_URL + content.path(lang, '/') + '</loc>\n' +
+           links +
+           '    <lastmod>' + clinic.contentUpdated + '</lastmod>\n' +
+           '    <changefreq>monthly</changefreq>\n' +
+           '    <priority>1.0</priority>\n' +
+           '  </url>\n';
+  }).join('');
+
   res.type('application/xml').send(
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    '  <url>\n' +
-    '    <loc>' + SITE_URL + '/</loc>\n' +
-    '    <lastmod>' + clinic.contentUpdated + '</lastmod>\n' +
-    '    <changefreq>monthly</changefreq>\n' +
-    '    <priority>1.0</priority>\n' +
-    '  </url>\n' +
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
+    '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
+    urls +
     '</urlset>\n'
   );
 });
@@ -237,7 +252,9 @@ app.get('/health', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).render('404', { clinic });
+  // мову беремо з адреси: /ru/щось → російська сторінка помилки
+  const lang = /^\/ru(\/|$)/.test(req.path) ? 'ru' : DEFAULT_LANG;
+  res.status(404).render('404', view(lang, req.path));
 });
 
 function startServer() {

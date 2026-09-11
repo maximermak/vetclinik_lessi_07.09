@@ -4,31 +4,30 @@
       <img src="/img/logo.svg?v=<%= v('/img/logo.svg') %>" width="56" height="56" alt="">
       <div>
         <strong>«<%= clinic.name %>»</strong>
-        <p><%= clinic.tagline %> у <%= clinic.cityIn %>, <%= clinic.address %>. Коти, собаки, морські свинки, кролики та гризуни — щодня, без вихідних.</p>
+        <p><%= fill(t.footer.about, { tagline: clinic.tagline, cityIn: clinic.cityIn, address: clinic.address }) %></p>
       </div>
     </div>
 
     <div class="footer__col">
-      <h3>Клініка</h3>
-      <a href="#services">Послуги</a>
-      <a href="#pets">Кого лікуємо</a>
-      <a href="#why">Про нас</a>
-      <a href="#faq">Часті питання</a>
-      <a href="/privacy">Політика конфіденційності</a>
+      <h3><%= t.footer.clinic %></h3>
+      <a href="#services"><%= t.nav.services %></a>
+      <a href="#pets"><%= t.nav.pets %></a>
+      <a href="#why"><%= t.nav.why %></a>
+      <a href="#faq"><%= t.faqSec.eyebrow %></a>
+      <a href="<%= path(lang, '/privacy') %>"><%= t.footer.privacy %></a>
     </div>
 
     <div class="footer__col">
-      <h3>Контакти</h3>
+      <h3><%= t.footer.contacts %></h3>
       <% clinic.phones.forEach(function (p) { %>
         <a href="tel:<%= p.raw %>"><%= p.pretty %><% if (p.person) { %> — <%= p.person %><% } %></a>
       <% }) %>
       <% if (clinic.email) { %><a href="mailto:<%= clinic.email %>"><%= clinic.email %></a><% } %>
       <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener"><%= clinic.address %></a>
-      <a href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">Ми на Google Maps</a>
     </div>
 
     <div class="footer__col">
-      <h3>Графік</h3>
+      <h3><%= t.footer.schedule %></h3>
       <% clinic.schedule.forEach(function (s) { %>
         <span><%= s.days %><br><b><%= s.hours %></b></span>
       <% }) %>
@@ -36,12 +35,12 @@
   </div>
 
   <div class="container footer__bottom">
-    <span>© <%= new Date().getFullYear() %> Ветклініка «<%= clinic.name %>». Усі права захищені.</span>
-    <a href="#top">Наверх ↑</a>
+    <span><%= fill(t.footer.rights, { year: new Date().getFullYear(), name: clinic.name }) %></span>
+    <a href="#top"><%= t.footer.top %></a>
   </div>
 </footer>
 
-<a class="fab" href="#booking" data-modal-open aria-label="Записатись на прийом">
+<a class="fab" href="#booking" data-modal-open aria-label="<%= t.nav.book %>">
   <svg viewBox="0 0 24 24" class="icon icon--fill" aria-hidden="true"><use href="#i-paw"/></svg>
-  <span>Записатись</span>
+  <span><%= t.nav.bookShort %></span>
 </a>

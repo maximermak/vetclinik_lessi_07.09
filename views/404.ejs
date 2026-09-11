@@ -1,24 +1,23 @@
 <!doctype html>
-<html lang="uk">
+<html lang="<%= lang %>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Сторінку не знайдено — <%= clinic.name %></title>
+<title><%= t.e404.title %> — <%= fill(t.meta.siteName, { name: clinic.name }) %></title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#15705c">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-<link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/style.css?v=<%= v('/css/style.css') %>">
-<%- include('partials/analytics') %>
 </head>
 <body class="page-404">
   <div class="e404">
     <img src="/img/logo.svg?v=<%= v('/img/logo.svg') %>" width="110" height="110" alt="">
     <h1>404</h1>
-    <p>Схоже, ця сторінка зірвалася з повідка й побігла гуляти. Повертайтесь на головну — там усе на місці.</p>
-    <a class="btn btn--primary" href="/">На головну</a>
+    <p><%= t.e404.text %></p>
+    <a class="btn btn--primary" href="<%= path(lang, '/') %>"><%= t.e404.home %></a>
   </div>
 </body>
 </html>

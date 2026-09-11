@@ -4,38 +4,38 @@
 %>
 <form class="form" data-lead-form novalidate>
   <div class="field field--full">
-    <span class="field__label">Хто ваш улюбленець?</span>
-    <div class="segmented" data-segmented role="radiogroup" aria-label="Вид тварини">
+    <span class="field__label"><%= t.form.who %></span>
+    <div class="segmented" data-segmented role="radiogroup" aria-label="<%= t.form.petAria %>">
       <span class="segmented__thumb" aria-hidden="true"></span>
       <label class="segmented__opt">
-        <input type="radio" name="petType" value="Кіт" checked>
+        <input type="radio" name="petType" value="<%= t.form.cat %>" checked>
         <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-cat"/></svg>
-        <span>Кіт</span>
+        <span><%= t.form.cat %></span>
       </label>
       <label class="segmented__opt">
-        <input type="radio" name="petType" value="Собака">
+        <input type="radio" name="petType" value="<%= t.form.dog %>">
         <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-dog"/></svg>
-        <span>Собака</span>
+        <span><%= t.form.dog %></span>
       </label>
       <label class="segmented__opt">
-        <input type="radio" name="petType" value="Інша тварина">
+        <input type="radio" name="petType" value="<%= t.form.other %>">
         <svg viewBox="0 0 24 24" class="icon icon--fill" aria-hidden="true"><use href="#i-paw"/></svg>
-        <span>Інша</span>
+        <span><%= t.form.other %></span>
       </label>
     </div>
   </div>
 
   <div class="field">
-    <label for="<%= p %>-name">Ваше ім’я <span>*</span></label>
+    <label for="<%= p %>-name"><%= t.form.name %> <span>*</span></label>
     <div class="control">
       <svg viewBox="0 0 24 24" class="control__ic icon icon--sm" aria-hidden="true"><use href="#i-user"/></svg>
-      <input id="<%= p %>-name" name="name" type="text" autocomplete="name" placeholder="Олена" required>
+      <input id="<%= p %>-name" name="name" type="text" autocomplete="name" placeholder="<%= t.form.namePh %>" required>
     </div>
     <small class="err" data-err="name"></small>
   </div>
 
   <div class="field">
-    <label for="<%= p %>-phone">Телефон <span>*</span></label>
+    <label for="<%= p %>-phone"><%= t.form.phone %> <span>*</span></label>
     <div class="control">
       <svg viewBox="0 0 24 24" class="control__ic icon icon--sm" aria-hidden="true"><use href="#i-phone"/></svg>
       <input id="<%= p %>-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel"
@@ -45,23 +45,23 @@
   </div>
 
   <div class="field">
-    <label for="<%= p %>-pet">Кличка тварини</label>
+    <label for="<%= p %>-pet"><%= t.form.petName %></label>
     <div class="control">
       <svg viewBox="0 0 24 24" class="control__ic icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg>
       <input id="<%= p %>-pet" name="petName" type="text" maxlength="40"
-             autocomplete="off" placeholder="Мурзик">
+             autocomplete="off" placeholder="<%= t.form.petNamePh %>">
     </div>
   </div>
 
   <div class="field">
-    <span class="field__label">Вік тварини</span>
-    <div class="dropdown" data-dropdown data-placeholder="Оберіть вік">
+    <span class="field__label"><%= t.form.petAge %></span>
+    <div class="dropdown" data-dropdown data-placeholder="<%= t.form.petAgePh %>">
       <input type="hidden" name="petAge" value="">
       <button class="dropdown__btn" type="button" aria-haspopup="listbox" aria-expanded="false">
-        <span class="dropdown__value is-placeholder">Оберіть вік</span>
+        <span class="dropdown__value is-placeholder"><%= t.form.petAgePh %></span>
         <svg viewBox="0 0 24 24" class="icon icon--sm dropdown__chev" aria-hidden="true"><use href="#i-chev"/></svg>
       </button>
-      <ul class="dropdown__list" role="listbox" tabindex="-1" aria-label="Вік тварини">
+      <ul class="dropdown__list" role="listbox" tabindex="-1" aria-label="<%= t.form.petAge %>">
         <% petAgeOptions.forEach(function (o, i) { %>
           <li class="dropdown__opt" role="option" aria-selected="false"
               data-value="<%= o %>" style="--i: <%= i %>"><%= o %></li>
@@ -71,14 +71,14 @@
   </div>
 
   <div class="field field--full">
-    <span class="field__label">Послуга</span>
-    <div class="dropdown" data-dropdown data-placeholder="Оберіть послугу">
+    <span class="field__label"><%= t.form.service %></span>
+    <div class="dropdown" data-dropdown data-placeholder="<%= t.form.servicePh %>">
       <input type="hidden" name="service" value="">
       <button class="dropdown__btn" type="button" aria-haspopup="listbox" aria-expanded="false">
-        <span class="dropdown__value is-placeholder">Оберіть послугу</span>
+        <span class="dropdown__value is-placeholder"><%= t.form.servicePh %></span>
         <svg viewBox="0 0 24 24" class="icon icon--sm dropdown__chev" aria-hidden="true"><use href="#i-chev"/></svg>
       </button>
-      <ul class="dropdown__list" role="listbox" tabindex="-1" aria-label="Послуги">
+      <ul class="dropdown__list" role="listbox" tabindex="-1" aria-label="<%= t.form.servicesAria %>">
         <% serviceOptions.forEach(function (o, i) { %>
           <li class="dropdown__opt" role="option" aria-selected="false"
               data-value="<%= o %>" style="--i: <%= i %>"><%= o %></li>
@@ -88,34 +88,35 @@
   </div>
 
   <div class="field field--full">
-    <span class="field__label">Бажаний час візиту</span>
-    <div class="datepick" data-datepick data-hours='<%- JSON.stringify(scheduleByWeekday) %>'>
+    <span class="field__label"><%= t.form.time %></span>
+    <div class="datepick" data-datepick data-hours='<%- JSON.stringify(scheduleByWeekday) %>'
+         data-lang="<%= lang %>">
       <input type="hidden" name="preferredTime" value="">
       <button class="datepick__btn" type="button" aria-haspopup="dialog" aria-expanded="false">
         <svg viewBox="0 0 24 24" class="control__ic icon icon--sm" aria-hidden="true"><use href="#i-calendar"/></svg>
-        <span class="datepick__value is-placeholder">Оберіть дату та час</span>
+        <span class="datepick__value is-placeholder"><%= t.form.timePh %></span>
         <svg viewBox="0 0 24 24" class="icon icon--sm datepick__chev" aria-hidden="true"><use href="#i-chev"/></svg>
       </button>
 
-      <div class="datepick__pop" role="dialog" aria-label="Вибір дати та часу">
+      <div class="datepick__pop" role="dialog" aria-label="<%= t.form.timeAria %>">
         <div class="dp-cal">
           <div class="dp-head">
-            <button class="dp-nav" type="button" data-dp-prev aria-label="Попередній місяць">
+            <button class="dp-nav" type="button" data-dp-prev aria-label="<%= t.form.prevMonth %>">
               <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg>
             </button>
             <b data-dp-month></b>
-            <button class="dp-nav" type="button" data-dp-next aria-label="Наступний місяць">
+            <button class="dp-nav" type="button" data-dp-next aria-label="<%= t.form.nextMonth %>">
               <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-chev"/></svg>
             </button>
           </div>
           <div class="dp-week">
-            <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Нд</span>
+            <% t.form.weekdays.forEach(function (d) { %><span><%= d %></span><% }) %>
           </div>
           <div class="dp-days" data-dp-days></div>
         </div>
 
         <div class="dp-times">
-          <span class="dp-times__head" data-dp-label>Спершу оберіть день</span>
+          <span class="dp-times__head" data-dp-label><%= t.form.pickDay %></span>
           <div class="dp-slots" data-dp-slots></div>
         </div>
       </div>
@@ -123,9 +124,9 @@
   </div>
 
   <div class="field field--full">
-    <label for="<%= p %>-msg">Що турбує?</label>
+    <label for="<%= p %>-msg"><%= t.form.message %></label>
     <textarea id="<%= p %>-msg" name="message" rows="3"
-              placeholder="Коротко опишіть симптоми або питання"></textarea>
+              placeholder="<%= t.form.messagePh %>"></textarea>
   </div>
 
   <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -136,15 +137,15 @@
       <svg viewBox="0 0 24 24" class="icon icon--sm"><use href="#i-check"/></svg>
     </span>
     <span class="consent__text">
-      Даю згоду на обробку персональних даних згідно з
-      <a href="/privacy" target="_blank" rel="noopener">політикою конфіденційності</a>
+      <%= t.form.consentA %>
+      <a href="<%= path(lang, '/privacy') %>" target="_blank" rel="noopener"><%= t.form.consentLink %></a>
     </span>
   </label>
   <small class="err err--consent" data-err="consent"></small>
 
   <button class="btn btn--primary btn--wide" type="submit">
     <svg viewBox="0 0 24 24" class="icon icon--fill" aria-hidden="true"><use href="#i-tg"/></svg>
-    <span class="btn__label">Надіслати заявку</span>
+    <span class="btn__label"><%= t.form.submit %></span>
   </button>
 
   <p class="form__status" role="status" aria-live="polite"></p>
@@ -152,7 +153,7 @@
 
 <div class="form__done" hidden>
   <span class="form__done-ic"><svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
-  <h3>Дякуємо, заявку прийнято!</h3>
-  <p>Адміністратор передзвонить вам найближчим часом у робочі години.</p>
-  <button class="btn btn--ghost btn--sm" type="button" data-reset>Надіслати ще одну</button>
+  <h3><%= t.form.doneTitle %></h3>
+  <p><%= t.form.doneText %></p>
+  <button class="btn btn--ghost btn--sm" type="button" data-reset><%= t.form.doneAgain %></button>
 </div>

@@ -1,12 +1,16 @@
 <!doctype html>
-<html lang="uk">
+<html lang="<%= lang %>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Запис на прийом — ветклініка «<%= clinic.name %>»</title>
-<meta name="description" content="Запис на прийом до ветклініки «Лессі» у Харкові. Зателефонуйте або залиште заявку — передзвонимо в робочі години.">
+<title><%= fill(t.qr.title, { name: clinic.name }) %></title>
+<meta name="description" content="<%= t.qr.description %>">
 <%# сторінка з візитки: дублює контент головної, тож у пошук їй не треба %>
 <meta name="robots" content="noindex, follow">
+<link rel="canonical" href="<%= siteUrl + alt[lang] %>">
+<% LANGS.forEach(function (l) { %>
+<link rel="alternate" hreflang="<%= l %>" href="<%= siteUrl + alt[l] %>">
+<% }) %>
 <meta name="theme-color" content="#15705c">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
@@ -17,17 +21,18 @@
 <%- include('partials/analytics') %>
 </head>
 <body class="qrpage">
-<a class="skip" href="#main">Перейти до вмісту</a>
+<a class="skip" href="#main"><%= t.skip %></a>
 <%- include('partials/icons') %>
 
 <main id="main" tabindex="-1" class="qrp">
   <header class="qrp__head">
+    <a class="qrp__lang" href="<%= alt[otherLang] %>" hreflang="<%= otherLang %>" lang="<%= otherLang %>"><%= t.otherLangName %></a>
     <%- include('partials/logo', { size: 88 }) %>
-    <h1>Ветклініка «<%= clinic.name %>»</h1>
+    <h1><%= fill(t.qr.clinicTitle, { name: clinic.name }) %></h1>
     <p class="qrp__sub"><%= clinic.addressFull %></p>
     <p class="qrp__hours">
       <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-clock"/></svg>
-      <%= clinic.scheduleShort %>, без вихідних
+      <%= clinic.scheduleShort %><%= t.qr.withoutWeekend %>
     </p>
   </header>
 
@@ -39,24 +44,24 @@
     <div class="qrp__row">
       <a class="btn btn--ghost btn--sm" href="<%= clinic.googleReviewsUrl %>" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" class="icon icon--sm" aria-hidden="true"><use href="#i-pin"/></svg>
-        Маршрут
+        <%= t.qr.route %>
       </a>
-      <a class="btn btn--ghost btn--sm" href="/">
+      <a class="btn btn--ghost btn--sm" href="<%= path(lang, '/') %>">
         <svg viewBox="0 0 24 24" class="icon icon--sm icon--fill" aria-hidden="true"><use href="#i-paw"/></svg>
-        Сайт клініки
+        <%= t.qr.site %>
       </a>
     </div>
-    <p class="qrp__note">Гострий стан не чекає запису — телефонуйте й везіть.</p>
+    <p class="qrp__note"><%= t.qr.note %></p>
   </div>
 
   <section class="qrp__form">
-    <h2 class="form__title">Записатись на прийом</h2>
-    <%- include('partials/form', { prefix: 'qr', serviceOptions: serviceOptions, petAgeOptions: petAgeOptions, scheduleByWeekday: scheduleByWeekday }) %>
+    <h2 class="form__title"><%= t.qr.formTitle %></h2>
+    <%- include('partials/form', { prefix: 'qr' }) %>
   </section>
 
   <footer class="qrp__foot">
     <a href="mailto:<%= clinic.email %>"><%= clinic.email %></a>
-    <span>© <%= new Date().getFullYear() %> Ветклініка «<%= clinic.name %>»</span>
+    <span><%= fill(t.footer.rights, { year: new Date().getFullYear(), name: clinic.name }) %></span>
   </footer>
 </main>
 

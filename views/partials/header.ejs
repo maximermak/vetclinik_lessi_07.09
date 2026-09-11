@@ -1,43 +1,39 @@
-<%
-  /* Якір «наверх» винесено ПЕРЕД шапкою окремим елементом.
-     На самій шапці він не працював: вона position: sticky, і коли
-     сторінку прокручено, браузер бачить її вже прилиплою до верху
-     екрана — вважає, що елемент у полі зору, і майже не прокручує. */
-%>
-<span id="top" aria-hidden="true"></span>
 <header class="header">
   <div class="container header__in">
-    <a class="brand" href="/">
+    <a class="brand" href="<%= path(lang, '/') %>">
       <%- include('logo', { size: 52 }) %>
       <span class="brand__text">
         <span class="brand__name">«<%= clinic.name %>»</span>
-        <span class="brand__sub">ветеринарна клініка</span>
+        <span class="brand__sub"><%= t.brandSub %></span>
       </span>
     </a>
 
-    <nav class="nav" id="nav" aria-label="Основне меню">
+    <nav class="nav" id="nav" aria-label="<%= t.nav.menu %>">
       <span class="nav__head">
-        <b>Меню</b>
-        <button class="nav__close" type="button" data-nav-close aria-label="Закрити меню">
+        <b><%= t.nav.menu %></b>
+        <button class="nav__close" type="button" data-nav-close aria-label="<%= t.nav.close %>">
           <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-close"/></svg>
         </button>
       </span>
-      <a style="--i: 0" href="#services">Послуги</a>
-      <a style="--i: 1" href="#pets">Кого лікуємо</a>
-      <a style="--i: 2" href="#why">Про нас</a>
-      <a style="--i: 3" href="#reviews">Відгуки</a>
-      <a style="--i: 4" href="#faq">Питання</a>
-      <a style="--i: 5" href="#contacts">Контакти</a>
-      <a class="btn btn--primary nav__cta" style="--i: 6" href="#booking" data-modal-open>Записатись на прийом</a>
+      <a style="--i: 0" href="#services"><%= t.nav.services %></a>
+      <a style="--i: 1" href="#pets"><%= t.nav.pets %></a>
+      <a style="--i: 2" href="#why"><%= t.nav.why %></a>
+      <a style="--i: 3" href="#reviews"><%= t.nav.reviews %></a>
+      <a style="--i: 4" href="#faq"><%= t.nav.faq %></a>
+      <a style="--i: 5" href="#contacts"><%= t.nav.contacts %></a>
+      <a class="nav__lang" style="--i: 6" href="<%= alt[otherLang] %>" hreflang="<%= otherLang %>"><%= t.otherLangName %></a>
+      <a class="btn btn--primary nav__cta" style="--i: 7" href="#booking" data-modal-open><%= t.nav.book %></a>
     </nav>
 
     <div class="header__actions">
-      <a class="header__phone" href="tel:<%= clinic.phones[0].raw %>" aria-label="Зателефонувати">
+      <a class="langswitch" href="<%= alt[otherLang] %>" hreflang="<%= otherLang %>"
+         lang="<%= otherLang %>" title="<%= t.otherLangName %>"><%= otherLang === 'ru' ? 'RU' : 'UA' %></a>
+      <a class="header__phone" href="tel:<%= clinic.phones[0].raw %>" aria-label="<%= t.callAria %>">
         <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
         <span><%= clinic.phones[0].pretty %></span>
       </a>
-      <a class="btn btn--primary btn--sm" href="#booking" data-modal-open>Записатись</a>
-      <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav">
+      <a class="btn btn--primary btn--sm" href="#booking" data-modal-open><%= t.nav.bookShort %></a>
+      <button class="burger" type="button" aria-label="<%= t.nav.menu %>" aria-expanded="false" aria-controls="nav">
         <span></span><span></span><span></span>
       </button>
     </div>

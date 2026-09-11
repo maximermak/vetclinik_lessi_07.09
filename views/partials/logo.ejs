@@ -4,7 +4,7 @@
   var size = typeof size !== 'undefined' ? size : 52;
 %>
 <span class="brand__logo" style="width: <%= size %>px; height: <%= size %>px" aria-hidden="true">
-  <svg viewBox="0 0 100 100" role="img" aria-label="Лессі — ветеринарна клініка">
+  <svg viewBox="0 0 100 100" role="img" aria-label="<%= clinic.name %> — <%= t.brandSub %>">
     <circle cx="50" cy="50" r="50" fill="#15705C"/>
     <!-- комір лишається нерухомим: інакше під час нахилу він «відклеюється» від шиї -->
     <path fill="#fff" d="M24 50c-10 7-12 20-7 28 6 8 18 10 33 10s27-2 33-10c5-8 3-21-7-28 0 14-11 26-26 26S24 64 24 50Z"/>

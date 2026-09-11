@@ -2,7 +2,10 @@
 
 const MAX = { name: 80, phone: 30, petType: 30, petName: 40, petAge: 30, service: 120, preferredTime: 60, message: 1000 };
 
-const PET_TYPES = ['Кіт', 'Собака', 'Інша тварина'];
+// Значення приходять із форми тією мовою, якою її бачив відвідувач.
+// Приймаємо обидва набори: інакше заявка російською втрачала б вид тварини.
+const PET_TYPES = ['Кіт', 'Собака', 'Інша', 'Інша тварина',
+                   'Кот', 'Собака', 'Другое'];
 
 function clean(value, limit) {
   return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, limit);
