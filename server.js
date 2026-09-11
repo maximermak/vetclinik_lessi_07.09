@@ -108,6 +108,11 @@ function view(lang, page) {
     page: page,
     path: content.path,
     LANGS: LANGS,
+    // Перемикач мов показуємо лише на неукраїнських сторінках: з
+    // російської має бути вихід на українську, а навпаки — ні.
+    // На hreflang це не впливає: вони лишаються на обох версіях,
+    // бо потрібні пошуковикам, а не відвідувачам.
+    canSwitchLang: lang !== DEFAULT_LANG,
     // адреси цієї ж сторінки всіма мовами — для hreflang і перемикача
     alt: LANGS.reduce(function (acc, l) { acc[l] = content.path(l, page); return acc; }, {})
   });

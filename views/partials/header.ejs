@@ -21,13 +21,17 @@
       <a style="--i: 3" href="#reviews"><%= t.nav.reviews %></a>
       <a style="--i: 4" href="#faq"><%= t.nav.faq %></a>
       <a style="--i: 5" href="#contacts"><%= t.nav.contacts %></a>
+      <% if (canSwitchLang) { %>
       <a class="nav__lang" style="--i: 6" href="<%= alt[otherLang] %>" hreflang="<%= otherLang %>"><%= t.otherLangName %></a>
+      <% } %>
       <a class="btn btn--primary nav__cta" style="--i: 7" href="#booking" data-modal-open><%= t.nav.book %></a>
     </nav>
 
     <div class="header__actions">
+      <% if (canSwitchLang) { %>
       <a class="langswitch" href="<%= alt[otherLang] %>" hreflang="<%= otherLang %>"
          lang="<%= otherLang %>" title="<%= t.otherLangName %>"><%= otherLang === 'ru' ? 'RU' : 'UA' %></a>
+      <% } %>
       <a class="header__phone" href="tel:<%= clinic.phones[0].raw %>" aria-label="<%= t.callAria %>">
         <svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
         <span><%= clinic.phones[0].pretty %></span>
