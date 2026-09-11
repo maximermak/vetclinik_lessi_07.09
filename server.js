@@ -190,6 +190,8 @@ app.get('/llms.txt', (req, res) => {
   const lines = [
     '# Ветеринарна клініка «' + clinic.name + '»',
     '',
+    'Інші написання назви: ' + clinic.alternateNames.join(', ') + '.',
+    '',
     '> ' + clinic.tagline + ' у ' + clinic.cityIn + '. Приймає котів, собак, ' +
       'морських свинок, кроликів і гризунів. Працює щодня без вихідних.',
     '',

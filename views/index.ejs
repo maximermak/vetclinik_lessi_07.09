@@ -35,6 +35,7 @@
   '@context': 'https://schema.org',
   '@type': 'VeterinaryCare',
   name: 'Ветеринарна клініка «' + clinic.name + '»',
+  alternateName: clinic.alternateNames,
   description: clinic.tagline + ' у ' + clinic.cityIn + ': терапія, хірургія, вакцинація, аналізи. Коти, собаки, морські свинки, кролики та гризуни.',
   url: siteUrl + '/',
   address: {
@@ -46,7 +47,10 @@
   },
   geo: { '@type': 'GeoCoordinates', latitude: clinic.geo.lat, longitude: clinic.geo.lng },
   hasMap: clinic.googleReviewsUrl,
-  areaServed: { '@type': 'City', name: clinic.city },
+  areaServed: [
+    { '@type': 'City', name: clinic.city },
+    { '@type': 'Place', name: clinic.district }
+  ],
   image: siteUrl + '/img/og.jpg',
   logo: siteUrl + '/img/logo.svg',
   telephone: clinic.phones.map(function (p) { return p.raw; }),
