@@ -89,6 +89,18 @@ www.$DOMAIN {
 $DOMAIN {
 	encode zstd gzip
 
+	# Журнал запитів. Потрібен, щоб було видно, чи приходив Googlebot і
+	# коли саме, — інакше на питання «чому сайт не в пошуку» відповісти
+	# нічим. Файл сам обертається, місце не з'їсть.
+	log {
+		output file /var/log/caddy/access.log {
+			roll_size 10MiB
+			roll_keep 5
+		}
+		format json
+	}
+
+
 	header {
 		# Заголовки безпеки. Раніше вони жили у vercel.json — і не діяли
 		# взагалі, бо сайт переїхав на Caddy.
@@ -133,6 +145,8 @@ else
 CADDY
 fi
 systemctl reload caddy 2>/dev/null || systemctl restart caddy
+
+mkdir -p /var/log/caddy && chown caddy:caddy /var/log/caddy
 
 say "Фаєрвол"
 ufw allow 22/tcp  >/dev/null
