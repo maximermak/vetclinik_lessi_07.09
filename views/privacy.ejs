@@ -46,8 +46,8 @@
 
       <h2>1. Хто обробляє ваші дані</h2>
       <p>
-        Володілець персональних даних — <b><%= clinic.legal.entity %></b>,
-        код <%= clinic.legal.code %>, адреса: <%= clinic.addressFull %>.
+        Володілець персональних даних — <b><%= clinic.legal.entity %></b><% if (clinic.legal.code) { %>,
+        код <%= clinic.legal.code %><% } %>, адреса: <%= clinic.addressFull %>.
       </p>
       <p>
         Зв’язатися щодо обробки даних:
